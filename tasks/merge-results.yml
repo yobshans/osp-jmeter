@@ -1,0 +1,166 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Merge Trx result files for compariion
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name:  Copy merge template files
+    shell: "cp /opt/osp-jmeter/templates/merge-rt-results.properties /opt/osp-jmeter/results/{{ test_run_name }}/mrg/"
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge-rt-results.properties
+      regexp='result1.jtl'
+      replace='/opt/osp-jmeter/results/{{ current_run_name }}/xml/result.jtl'
+      backup=no
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge-rt-results.properties
+      regexp='result2.jtl'
+      replace='/opt/osp-jmeter/results/{{ baseline_run_name }}/xml/result.jtl'
+      backup=no
+
+  - name: CMDRunner - merge 2 result files
+    shell: >
+      cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-csv /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge-rt-results.properties 
+      --plugin-type MergeResults --relative-times yes
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Merge PerMon CPU files for compariion
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name:  Copy properties template files for PerfMon CPU statistics
+    shell: "cp /opt/osp-jmeter/templates/merge-rt-results.properties /opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties"
+    with_items: "{{ perfmon_cpu }}"
+    when: perf_monitor
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties
+      regexp='result1.jtl'
+      replace='/opt/osp-jmeter/results/{{ current_run_name }}/xml/{{ item }}.jtl'
+      backup=no
+    with_items: "{{ perfmon_cpu }}"
+    when: perf_monitor
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties
+      regexp='result2.jtl'
+      replace='/opt/osp-jmeter/results/{{ baseline_run_name }}/xml/{{ item }}.jtl'
+      backup=no
+    with_items: "{{ perfmon_cpu }}"
+    when: perf_monitor
+
+  - name: CMDRunner - merge 2 PerfMon CPU jtl files
+    shell: >
+      cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-csv /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ item }}12.csv 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties 
+      --plugin-type MergeResults --relative-times yes
+    with_items: "{{ perfmon_cpu }}"
+    when: perf_monitor
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Merge PerMon Memory files for compariion
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name:  Copy properties template files for PerfMon Memory statistics
+    shell: "cp /opt/osp-jmeter/templates/merge-rt-results.properties /opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties"
+    with_items: "{{ perfmon_mem }}"
+    when: perf_monitor
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties
+      regexp='result1.jtl'
+      replace='/opt/osp-jmeter/results/{{ current_run_name }}/xml/{{ item }}.jtl'
+      backup=no
+    with_items: "{{ perfmon_mem }}"
+    when: perf_monitor
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties
+      regexp='result2.jtl'
+      replace='/opt/osp-jmeter/results/{{ baseline_run_name }}/xml/{{ item }}.jtl'
+      backup=no
+    with_items: "{{ perfmon_mem }}"
+    when: perf_monitor
+
+  - name: CMDRunner - merge 2 PerfMon Memory jtl files
+    shell: >
+      cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-csv /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ item }}12.csv 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties 
+      --plugin-type MergeResults --relative-times yes
+    with_items: "{{ perfmon_mem }}"
+    when: perf_monitor
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Merge PerMon Network files for compariion
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name:  Copy properties template files for PerfMon Network statistics
+    shell: "cp /opt/osp-jmeter/templates/merge-rt-results.properties /opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties"
+    with_items: "{{ perfmon_net }}"
+    when: perf_monitor
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties
+      regexp='result1.jtl'
+      replace='/opt/osp-jmeter/results/{{ current_run_name }}/xml/{{ item }}.jtl'
+      backup=no
+    with_items: "{{ perfmon_net }}"
+    when: perf_monitor
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties
+      regexp='result2.jtl'
+      replace='/opt/osp-jmeter/results/{{ baseline_run_name }}/xml/{{ item }}.jtl'
+      backup=no
+    with_items: "{{ perfmon_net }}"
+    when: perf_monitor
+
+  - name: CMDRunner - merge 2 PerfMon Network jtl files
+    shell: >
+      cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-csv /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ item }}12.csv 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties 
+      --plugin-type MergeResults --relative-times yes
+    with_items: "{{ perfmon_net }}"
+    when: perf_monitor
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Merge PerMon Disk files for compariion
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name:  Copy properties template files for PerfMon Disk statistics
+    shell: "cp /opt/osp-jmeter/templates/merge-rt-results.properties /opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties"
+    with_items: "{{ perfmon_disk }}"
+    when: perf_monitor
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties
+      regexp='result1.jtl'
+      replace='/opt/osp-jmeter/results/{{ current_run_name }}/xml/{{ item }}.jtl'
+      backup=no
+    with_items: "{{ perfmon_disk }}"
+    when: perf_monitor
+
+  - replace:
+      dest=/opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties
+      regexp='result2.jtl'
+      replace='/opt/osp-jmeter/results/{{ baseline_run_name }}/xml/{{ item }}.jtl'
+      backup=no
+    with_items: "{{ perfmon_disk }}"
+    when: perf_monitor
+
+  - name: CMDRunner - merge 2 PerfMon Disk jtl files
+    shell: >
+      cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-csv /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ item }}12.csv 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/merge_{{ item }}.properties 
+      --plugin-type MergeResults --relative-times yes
+    with_items: "{{ perfmon_disk }}"
+    when: perf_monitor
+    
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

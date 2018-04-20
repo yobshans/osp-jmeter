@@ -1,0 +1,107 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Run test using JMeter 
+# --------------------------------------------------------------------------------------------------------------------------------------
+  
+  - replace: 
+      dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+      regexp='testname="29.UI.Proj.Shutdown.Instance.Trx" enabled="true"'
+      replace='testname="29.UI.Proj.Shutdown.Instance.Trx" enabled="false"'
+      backup=no
+    when: system_os.stdout.find("CentOS") != -1
+    ignore_errors: yes
+
+  - replace: 
+      dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+      regexp='testname="30.UI.Proj.Start.Instance.Trx" enabled="true"'
+      replace='testname="30.UI.Proj.Start.Instance.Trx" enabled="false"'
+      backup=no
+    when: system_os.stdout.find("CentOS") != -1
+    ignore_errors: yes
+
+  - block:
+      - replace:
+          dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+          regexp='testname="Thread Group - Monitor Not Full" enabled="false"'
+          replace='testname="Thread Group - Monitor Not Full" enabled="true"'
+          backup=no
+        when: ceph_count.stdout == "0"
+        
+      - replace:
+          dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+          regexp='testname="Thread Group - Monitor Full" enabled="false"'
+          replace='testname="Thread Group - Monitor Full" enabled="true"'
+          backup=no
+        when: ceph_count.stdout != "0"
+    when: perf_monitor
+    
+  - name: Start Date and Time
+    shell: "date +'%F %T'"
+    register: start_date
+
+  - name: JMeter - Run REST API Performance Test
+    shell: >
+      $JMETER_HOME/bin/jmeter -n 
+      -t /opt/osp-jmeter/scripts/{{ jmeter_test }} 
+      -l /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      -j /opt/osp-jmeter/results/{{ test_run_name }}/log/jmeter.log 
+      -Djmeter.save.saveservice.output_format=xml 
+      -Djmeter.save.saveservice.thread_counts=true 
+      -Djmeter.save.saveservice.bytes=true 
+      -Djmeter.save.saveservice.response_data.on_error=true 
+      -Jthreadgroup.count={{ thread_count }} 
+      -Jthreadgroup.rampup={{ thread_rampup }} 
+      -Jiteration.count={{ iteration_count }} 
+      -Jproj.path=/opt/osp-jmeter 
+      -Jrun.name={{ test_run_name }} 
+      -Jcontr.host={{ contr_0_node.stdout }} 
+      -Jcomp.host={{ comp_0_node.stdout }} 
+      -Jceph.host={{ ceph_0_node.stdout | default('1.1.1.1')}} 
+      -Jospd.host={{ uc_node_ip.stdout }} 
+      -Jimage.name={{ image_name }} 
+      -Jflavor.ref={{ flavor_ref }}
+      -Jssl.mode={{ ssl_mode }}
+    
+  - name: End Date and Time
+    shell: "date +'%F %T'"
+    register: end_date
+    
+  - name: Test Duration
+    shell: "date -u -d @$(($(date -d \"{{ end_date.stdout}}\" '+%s') - $(date -d \"{{ start_date.stdout}}\" '+%s'))) '+%T'"
+    register: test_duration
+
+  - block:
+      - replace:
+          dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+          regexp='testname="Thread Group - Monitor Not Full" enabled="true"'
+          replace='testname="Thread Group - Monitor Not Full" enabled="false"'
+          backup=no
+        when: ceph_count.stdout == "0"
+        
+      - replace:
+          dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+          regexp='testname="Thread Group - Monitor Full" enabled="true"'
+          replace='testname="Thread Group - Monitor Full" enabled="false"'
+          backup=no
+        when: ceph_count.stdout != "0"
+    when: perf_monitor
+    
+  - replace: 
+      dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+      regexp='testname="29.UI.Proj.Shutdown.Instance.Trx" enabled="false"'
+      replace='testname="29.UI.Proj.Shutdown.Instance.Trx" enabled="true"'
+      backup=no
+    when: system_os.stdout.find("CentOS") != -1
+    ignore_errors: yes
+
+  - replace: 
+      dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+      regexp='testname="30.UI.Proj.Start.Instance.Trx" enabled="false"'
+      replace='testname="30.UI.Proj.Start.Instance.Trx" enabled="true"'
+      backup=no
+    when: system_os.stdout.find("CentOS") != -1
+    ignore_errors: yes
+    
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

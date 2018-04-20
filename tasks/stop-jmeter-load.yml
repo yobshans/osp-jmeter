@@ -1,0 +1,58 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Stop test using JMeter 
+# --------------------------------------------------------------------------------------------------------------------------------------
+  
+#   - name: Start Date and Time
+#     shell: "date +'%F %T'"
+#     register: start_date
+
+  - name: JMeter - Stop Test
+    shell: >
+      $JMETER_HOME/bin/shutdown.sh
+
+  - name: Start Date and Time
+    shell: "cat /opt/osp-jmeter/results/{{ test_run_name }}/log/start-date.txt"
+    register: start_date
+      
+  - name: End Date and Time
+    shell: "date +'%F %T'"
+    register: end_date
+    
+  - name: Test Duration
+    shell: "date -u -d @$(($(date -d \"{{ end_date.stdout}}\" '+%s') - $(date -d \"{{ start_date.stdout}}\" '+%s'))) '+%T'"
+    register: test_duration
+
+  - block:
+      - replace:
+          dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+          regexp='testname="Thread Group - Monitor Not Full" enabled="true"'
+          replace='testname="Thread Group - Monitor Not Full" enabled="false"'
+          backup=no
+        when: ceph_count.stdout == "0"
+        
+      - replace:
+          dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+          regexp='testname="Thread Group - Monitor Full" enabled="true"'
+          replace='testname="Thread Group - Monitor Full" enabled="false"'
+          backup=no
+        when: ceph_count.stdout != "0"
+    when: perf_monitor
+
+  - replace: 
+      dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+      regexp='name=public</stringProp>'
+      replace='name=nova</stringProp>'
+      backup=no
+    when: system_os.stdout.find("CentOS") != -1
+
+  - replace: 
+      dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+      regexp='centos'
+      replace='cloud-user'
+      backup=no
+    when: system_os.stdout.find("CentOS") != -1
+    
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

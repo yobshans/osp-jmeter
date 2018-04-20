@@ -1,0 +1,107 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Create APIs/transactions response time charts
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name: CMDRunner - create keystone api charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      --plugin-type ResponseTimesOverTime --width 800 --height 600 
+      --include-labels {{ item }} --include-label-regex true --auto-scale no
+    with_items: "{{ keystone_api_name }}"
+    ignore_errors: yes
+    
+  - name: CMDRunner - create nova api charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      --plugin-type ResponseTimesOverTime --width 800 --height 600 
+      --include-labels {{ item }} --include-label-regex true --auto-scale no
+    with_items: "{{ nova_api_name }}"
+    ignore_errors: yes
+
+  - name: CMDRunner - create neutron api charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      --plugin-type ResponseTimesOverTime --width 800 --height 600 
+      --include-labels {{ item }} --include-label-regex true --auto-scale no
+    with_items: "{{ neutron_api_name }}"
+    ignore_errors: yes
+
+  - name: CMDRunner - create cinder api charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      --plugin-type ResponseTimesOverTime --width 800 --height 600 
+      --include-labels {{ item }} --include-label-regex true --auto-scale no
+    with_items: "{{ cinder_api_name }}"
+    ignore_errors: yes
+
+  - name: CMDRunner - create glance api charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      --plugin-type ResponseTimesOverTime --width 800 --height 600 
+      --include-labels {{ item }} --include-label-regex true --auto-scale no
+    with_items: "{{ glance_api_name }}"
+    ignore_errors: yes
+
+  - name: CMDRunner - create transactions charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      --plugin-type ResponseTimesOverTime --width 800 --height 600 
+      --include-labels {{ item }} --include-label-regex true --auto-scale no
+    with_items: "{{ trx_name }}"
+    ignore_errors: yes
+
+  - name: CMDRunner - create identity request charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      --plugin-type ResponseTimesOverTime --width 800 --height 600 
+      --include-labels {{ item }} --include-label-regex true --auto-scale no
+    with_items: "{{ identity_api_name }}"
+    ignore_errors: yes
+
+  - name: CMDRunner - create project request charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      --plugin-type ResponseTimesOverTime --width 800 --height 600 
+      --include-labels {{ item }} --include-label-regex true --auto-scale no
+    with_items: "{{ project_api_name }}"
+    ignore_errors: yes
+
+  - name: CMDRunner - create ssh charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      --plugin-type ResponseTimesOverTime --width 800 --height 600 
+      --include-labels {{ item }}.* --include-label-regex true --auto-scale no
+    with_items: "{{ ssh_name }}"
+    ignore_errors: yes
+
+  - name: CMDRunner - create 05.SSH.PING.Instance TPS charts
+    shell: >
+      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/05.SSH.PING.Instance.TPS.png 
+      --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/TPS.jtl
+      --plugin-type TransactionsPerSecond --width 800 --height 600 
+      --include-labels 05.SSH.PING.Instance.* --include-label-regex true --auto-scale no
+    ignore_errors: yes
+    
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

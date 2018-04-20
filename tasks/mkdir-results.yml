@@ -1,0 +1,39 @@
+
+# --------------------------------------------------------------------------------------------------------------------------------------  
+# Prepare results directories to save data
+# --------------------------------------------------------------------------------------------------------------------------------------
+  - name: Current Date and Time
+    shell: "sudo date +'%Y%m%d%m%H%S'"
+    register: cur_date_time
+
+  - name: Verify Test results folder exists
+    stat:
+      path: "/opt/osp-jmeter/results/{{ test_run_name }}"
+    register: test_dir
+    
+  - name: Rename old Test results folder
+    shell: "mv /opt/osp-jmeter/results/{{ test_run_name }} /opt/osp-jmeter/results/{{ test_run_name }}-{{ cur_date_time.stdout }}"
+    when: test_dir.stat.exists
+
+  - name: Create test directory - /opt/osp-jmeter/results/{{ test_run_name }}
+    file: path=/opt/osp-jmeter/results/{{ test_run_name }} state=directory mode=0755
+
+  - name: Create test charts directory - /opt/osp-jmeter/results/{{ test_run_name }}/img
+    file: path=/opt/osp-jmeter/results/{{ test_run_name }}/img state=directory mode=0755
+
+  - name: Create test jmeter log directory - /opt/osp-jmeter/results/{{ test_run_name }}/log
+    file: path=/opt/osp-jmeter/results/{{ test_run_name }}/log state=directory mode=0755
+
+  - name: Create test xml directory - /opt/osp-jmeter/results/{{ test_run_name }}/xml
+    file: path=/opt/osp-jmeter/results/{{ test_run_name }}/xml state=directory mode=0755
+
+  - name: Create test html directory - /opt/osp-jmeter/results/{{ test_run_name }}/html
+    file: path=/opt/osp-jmeter/results/{{ test_run_name }}/html state=directory mode=0755
+
+  - name: Create test html directory - /opt/osp-jmeter/results/{{ test_run_name }}/dashboard
+    file: path=/opt/osp-jmeter/results/{{ test_run_name }}/html state=directory mode=0755
+    
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

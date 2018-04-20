@@ -1,0 +1,46 @@
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Run test using JMeter script
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name: Start Date and Time
+    shell: "date +'%F %T'"
+    register: start_date
+
+  - name: JMeter - Run REST API Sanity Functional Test
+    shell: >
+     $JMETER_HOME/bin/jmeter -n 
+     -t /opt/osp-jmeter/scripts/{{ jmeter_test }} 
+     -l /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+     -j /opt/osp-jmeter/results/{{ test_run_name }}/log/jmeter.log 
+     -Djmeter.save.saveservice.output_format=xml 
+     -Djmeter.save.saveservice.bytes=true 
+     -Djmeter.save.saveservice.samplerData=true 
+     -Djmeter.save.saveservice.response_data=true 
+     -Djmeter.save.saveservice.time=true 
+     -Djmeter.save.saveservice.requestHeaders=true 
+     -Djmeter.save.saveservice.url=true 
+     -Djmeter.save.saveservice.responseHeaders=true 
+     -Djmeter.save.saveservice.response_data.on_error=true 
+     -Jthreadgroup.count={{ thread_count }} 
+     -Jthreadgroup.rampup={{ thread_rampup }} 
+     -Jiteration.count={{ iteration_count }} 
+     -Jproj.path=/opt/osp-jmeter 
+     -Jrun.name={{ test_run_name }} 
+     -Jospd.host={{ uc_node_ip.stdout }} 
+     -Jimage.name={{ image_name }}
+     -Jflavor.ref={{ flavor_ref }}
+     -Jssl.mode={{ ssl_mode }}
+
+  - name: End Date and Time
+    shell: "date +'%F %T'"
+    register: end_date
+    
+  - name: Test Duration
+    shell: "date -u -d @$(($(date -d \"{{ end_date.stdout}}\" '+%s') - $(date -d \"{{ start_date.stdout}}\" '+%s'))) '+%T'"
+    register: test_duration
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

@@ -1,0 +1,104 @@
+# ------------------------------------------------------------------------------
+# Install Java, Unzip and Wget
+# ------------------------------------------------------------------------------
+
+  - name:  Install Java OpenJDK Runtime Environment
+    shell: "sudo yum -y install {{ jdk_ver }}"
+
+  - name: Install Unzip
+    shell: "sudo yum -y install unzip.x86_64"
+
+  - name: Install wget
+    shell: "sudo yum -y install wget.x86_64"
+    
+# ------------------------------------------------------------------------------
+# Install JMeter and plugins
+# ------------------------------------------------------------------------------
+
+  - name: Current Date and Time
+    shell: "sudo date +'%Y%m%d%m%H%S'"
+    register: cur_date_time
+
+  - name: Verify JMeter folder exists
+    stat:
+      path: "{{jmeter_home}}"
+    register: jm_dir
+    
+  - name: Rename old JMeter folder
+    shell: "mv {{ jmeter_home }} {{ jmeter_home }}-{{ cur_date_time.stdout }}"
+    when: jm_dir.stat.exists
+
+  - name: Download JMeter
+    get_url:
+      url={{ jmeter_url }}
+      dest={{ jmeter_dir_tmp }}
+      
+  - name: Extract archive JMeter
+    unarchive:
+      src={{ jmeter_dir_tmp }}/{{ jmeter_ver }}.zip
+      dest={{ jmeter_base_dir }}
+      creates={{ jmeter_base_dir }}/{{ jmeter_ver }}
+      copy=no
+ 
+  - name: Download JMeter plugin manager
+    get_url:
+      url={{ jmeter_plugins_manager_url }}
+      dest={{ jmeter_home }}/lib/ext/
+      
+  - name: Download JMeter plugins common
+    get_url:
+      url={{ jmeter_plugins_cmn_url }}
+      dest={{ jmeter_home }}/lib
+
+  - name: Download JMeter PerfMon 
+    get_url:
+      url={{ jmeter_perfmon_url }}
+      dest={{ jmeter_home }}/lib/
+      
+  - name: Download JMeter PerfMon plugins
+    get_url:
+      url={{ jmeter_plugins_perfmon_url }}
+      dest={{ jmeter_home }}/lib/ext
+
+  - name: Download JMeter Graph Basic plugins
+    get_url:
+      url={{ jmeter_plugins_graphs_basic_url }}
+      dest={{ jmeter_home }}/lib/ext
+
+  - name: Download JMeter Graph Additional plugins
+    get_url:
+      url={{ jmeter_plugins_graphs_add_url }}
+      dest={{ jmeter_home }}/lib/ext
+      
+  - name: Download JMeter CMD plugins
+    get_url:
+      url={{ jmeter_plugins_cmd_url }}
+      dest={{ jmeter_home }}/lib/ext
+
+  - name: Download JMeter Merge Results plugins
+    get_url:
+      url={{ jmeter_plugins_mrg_url }}
+      dest={{ jmeter_home }}/lib/ext
+      
+  - name: Download JMeter ssh sampler jar
+    get_url:
+      url={{ jmeter_ssh_sampler_url }}
+      dest={{ jmeter_home }}/lib/ext/
+
+  - name: Download JMeter parallel controller jar
+    get_url:
+      url={{ jmeter_parallel_url }}
+      dest={{ jmeter_home }}/lib/ext/
+      
+  - name: Download JMeter jsch jar
+    get_url:
+      url={{ jmeter_jsch_url }}
+      dest={{ jmeter_home }}/lib/
+      
+  - name: Download JMeter cmdrunner jar
+    get_url:
+      url={{ jmeter_cmdrunner_url }}
+      dest={{ jmeter_home }}/lib/
+      
+  - name: Cleanup temporary JMeter zip
+    file: name={{ jmeter_dir_tmp }}/{{ jmeter_ver }}.zip state=absent

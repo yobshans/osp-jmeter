@@ -1,0 +1,210 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Generate reports 
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name: Xalan-J - Generate comparison HTML Summary for baseline test report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM testRunName '{{ test_run_name }}' 
+      -PARAM baselineTest '{{ baseline_run_name }}' 
+      -PARAM currentTest '{{ current_run_name }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ baseline_run_name }}/xml/result-90percent.xml
+      -PARAM perfMon '{{ perf_monitor }}'
+      -IN /opt/osp-jmeter/results/{{ baseline_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/compare-base-web-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/base_sum.html -HTML 
+
+  - name: Xalan-J - Generate comparison HTML Summary for current test report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM testRunName '{{ test_run_name }}' 
+      -PARAM baselineTest '{{ baseline_run_name }}' 
+      -PARAM currentTest '{{ current_run_name }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ current_run_name }}/xml/result-90percent.xml
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/compare-cur-web-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/cur_sum.html -HTML 
+
+  - name:  Merge Summary  html reports into single 
+    shell: >
+      cat /opt/osp-jmeter/results/{{ test_run_name }}/html/base_sum.html
+      /opt/osp-jmeter/results/{{ test_run_name }}/html/cur_sum.html > 
+      /opt/osp-jmeter/results/{{ test_run_name }}/index.html
+
+  - name: Xalan-J - Generate comparison HTML HTTP Requests report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM testRunName '{{ test_run_name }}' 
+      -PARAM baselineTest '{{ baseline_run_name }}' 
+      -PARAM currentTest '{{ current_run_name }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ baseline_run_name }}/xml/result-90percent.xml 
+      -PARAM perfMon '{{ perf_monitor }}'
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/result-90percent.xml 
+      -XSL /opt/osp-jmeter/templates/compare-http-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/api.html -HTML
+
+  - name: Xalan-J - Generate comparison HTML Transaction report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM testRunName '{{ test_run_name }}' 
+      -PARAM baselineTest '{{ baseline_run_name }}' 
+      -PARAM currentTest '{{ current_run_name }}' 
+      -PARAM tabName 'HTTP Requests Response Time Report'
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ baseline_run_name }}/xml/result-90percent.xml 
+      -PARAM perfMon {{ perf_monitor }}
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/result-90percent.xml 
+      -XSL /opt/osp-jmeter/templates/compare-trx-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/trx.html -HTML
+
+  - name: Xalan-J - Generate HTML CPU Header report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM activeTab CPU
+      -PARAM tabName 'HTTP Requests Response Time Report'
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/generate-header-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/cpu_header.html -HTML
+    when: perf_monitor
+
+  - name: Xalan-J - Generate comparison HTML report of CPU statistics
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM perfmonType {{ item }} 
+      -PARAM baselineTest '{{ baseline_run_name }}' 
+      -PARAM currentTest '{{ current_run_name }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ baseline_run_name }}/xml/xml_result_{{ item }}.xml 
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/xml_result_{{ item }}.xml  
+      -XSL /opt/osp-jmeter/templates/compare-cpu-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/html_cpu_{{ item }}.html -HTML
+    with_items: "{{ perfmon_cpu }}"
+    when: perf_monitor
+
+  - name:  Merge CPU html reports into single 
+    shell: >
+      cat /opt/osp-jmeter/results/{{ test_run_name }}/html/html_cpu_{{ item }}.html >> /opt/osp-jmeter/results/{{ test_run_name }}/html/html_cpu.html
+    with_items: "{{ perfmon_cpu }}"
+    when: perf_monitor
+    
+  - name: Xalan-J - Generate HTML Footer report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/generate-footer-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/footer.html -HTML
+    when: perf_monitor
+
+  - name:  Final Merge all CPU html reports into single 
+    shell: >
+      cat /opt/osp-jmeter/results/{{ test_run_name }}/html/cpu_header.html /opt/osp-jmeter/results/{{ test_run_name }}/html/html_cpu.html /opt/osp-jmeter/results/{{ test_run_name }}/html/footer.html > 
+      /opt/osp-jmeter/results/{{ test_run_name }}/html/cpu.html
+    when: perf_monitor
+
+  - name: Xalan-J - Generate HTML Memory Header report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM activeTab Mem
+      -PARAM tabName 'HTTP Requests Response Time Report'
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/generate-header-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/mem_header.html -HTML
+    when: perf_monitor
+
+  - name: Xalan-J - Generate comparison HTML report of Memory statistics
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM perfmonType {{ item }} 
+      -PARAM baselineTest '{{ baseline_run_name }}' 
+      -PARAM currentTest '{{ current_run_name }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ baseline_run_name }}/xml/xml_result_{{ item }}.xml 
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/xml_result_{{ item }}.xml  
+      -XSL /opt/osp-jmeter/templates/compare-mem-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/html_mem_{{ item }}.html -HTML
+    with_items: "{{ perfmon_mem }}"
+    when: perf_monitor
+
+  - name:  Merge Memory html reports into single 
+    shell: >
+      cat /opt/osp-jmeter/results/{{ test_run_name }}/html/html_mem_{{ item }}.html >> /opt/osp-jmeter/results/{{ test_run_name }}/html/html_mem.html
+    with_items: "{{ perfmon_mem }}"
+    when: perf_monitor
+    
+  - name:  Final Merge all Memory html reports into single 
+    shell: >
+      cat /opt/osp-jmeter/results/{{ test_run_name }}/html/mem_header.html /opt/osp-jmeter/results/{{ test_run_name }}/html/html_mem.html /opt/osp-jmeter/results/{{ test_run_name }}/html/footer.html > 
+      /opt/osp-jmeter/results/{{ test_run_name }}/html/mem.html
+    when: perf_monitor
+
+  - name: Xalan-J - Generate HTML Network Header report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM activeTab Net
+      -PARAM tabName 'HTTP Requests Response Time Report'
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/generate-header-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/net_header.html -HTML
+    when: perf_monitor
+
+  - name: Xalan-J - Generate comparison HTML report of Network statistics
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM perfmonType {{ item }} 
+      -PARAM baselineTest '{{ baseline_run_name }}' 
+      -PARAM currentTest '{{ current_run_name }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ baseline_run_name }}/xml/xml_result_{{ item }}.xml 
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/xml_result_{{ item }}.xml  
+      -XSL /opt/osp-jmeter/templates/compare-net-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/html_net_{{ item }}.html -HTML
+    with_items: "{{ perfmon_net }}"
+    when: perf_monitor
+
+  - name:  Merge Network html reports into single 
+    shell: >
+      cat /opt/osp-jmeter/results/{{ test_run_name }}/html/html_net_{{ item }}.html >> /opt/osp-jmeter/results/{{ test_run_name }}/html/html_net.html
+    with_items: "{{ perfmon_net }}"
+    when: perf_monitor
+    
+  - name:  Final Merge all Network html reports into single 
+    shell: >
+      cat /opt/osp-jmeter/results/{{ test_run_name }}/html/net_header.html /opt/osp-jmeter/results/{{ test_run_name }}/html/html_net.html /opt/osp-jmeter/results/{{ test_run_name }}/html/footer.html > 
+      /opt/osp-jmeter/results/{{ test_run_name }}/html/net.html
+    when: perf_monitor
+
+  - name: Xalan-J - Generate HTML Network Disk report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM activeTab Disk
+      -PARAM tabName 'HTTP Requests Response Time Report'
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/generate-header-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/disk_header.html -HTML
+    when: perf_monitor
+
+  - name: Xalan-J - Generate comparison HTML report of Disk statistics
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM perfmonType {{ item }} 
+      -PARAM baselineTest '{{ baseline_run_name }}' 
+      -PARAM currentTest '{{ current_run_name }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ baseline_run_name }}/xml/xml_result_{{ item }}.xml 
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/xml_result_{{ item }}.xml  
+      -XSL /opt/osp-jmeter/templates/compare-disk-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/html_disk_{{ item }}.html -HTML
+    with_items: "{{ perfmon_disk }}"
+    when: perf_monitor
+
+  - name:  Merge Disk html reports into single 
+    shell: >
+      cat /opt/osp-jmeter/results/{{ test_run_name }}/html/html_disk_{{ item }}.html >> /opt/osp-jmeter/results/{{ test_run_name }}/html/html_disk.html
+    with_items: "{{ perfmon_disk }}"
+    when: perf_monitor
+    
+  - name:  Final Merge all Disk html reports into single 
+    shell: >
+      cat /opt/osp-jmeter/results/{{ test_run_name }}/html/disk_header.html /opt/osp-jmeter/results/{{ test_run_name }}/html/html_disk.html /opt/osp-jmeter/results/{{ test_run_name }}/html/footer.html > 
+      /opt/osp-jmeter/results/{{ test_run_name }}/html/disk.html
+    when: perf_monitor
+      
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

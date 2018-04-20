@@ -1,0 +1,38 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Copy results of baseline and current tests
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name: Create current test subdirectory - /opt/osp-jmeter/results/{{ test_run_name }}/{{ current_run_name }}
+    file: path=/opt/osp-jmeter/results/{{ test_run_name }}/{{ current_run_name }} state=directory mode=0755
+
+  - name: Copy current test html directory under compare test directory
+    copy: src=/opt/osp-jmeter/results/{{ current_run_name }}/html dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ current_run_name }}/
+
+  - name: Copy current test img directory under compare test directory
+    copy: src=/opt/osp-jmeter/results/{{ current_run_name }}/img dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ current_run_name }}/
+
+  - name: Copy current test result.html file under compare test directory
+    copy: src=/opt/osp-jmeter/results/{{ current_run_name }}/index.html dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ current_run_name }}/index.html
+
+  - name: Create baseline test subdirectory - /opt/osp-jmeter/results/{{ test_run_name }}/{{ baseline_run_name }}
+    file: path=/opt/osp-jmeter/results/{{ test_run_name }}/{{ baseline_run_name }} state=directory mode=0755
+
+  - name: Copy baseline test html  directory under compare test directory
+    copy: src=/opt/osp-jmeter/results/{{ baseline_run_name }}/html dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ baseline_run_name }}/
+
+  - name: Copy baseline test img  directory under compare test directory
+    copy: src=/opt/osp-jmeter/results/{{ baseline_run_name }}/img dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ baseline_run_name }}/
+
+  - name: Copy baseline test result.html file under compare test directory
+    copy: src=/opt/osp-jmeter/results/{{ baseline_run_name }}/index.html dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ baseline_run_name }}/index.html
+
+  - name:  Copy logo image files 
+    shell: "cp /opt/osp-jmeter/templates/jmeter-logo.svg /opt/osp-jmeter/templates/openstack-logo.svg /opt/osp-jmeter/results/{{ test_run_name }}/img/"
+
+  - name:  Copy CSS file
+    shell: "cp /opt/osp-jmeter/templates/result.css /opt/osp-jmeter/results/{{ test_run_name }}/html/"
+    
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

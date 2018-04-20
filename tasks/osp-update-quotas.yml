@@ -1,0 +1,45 @@
+# ------------------------------------------------------------------------------
+# Openstack Overcloud update default quotas flow
+# ------------------------------------------------------------------------------
+    
+  - name: Update defaults instances in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --instances -1 default\""
+    ignore_errors: yes
+
+  - name: Update defaults cores in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --cores -1 default\""
+    ignore_errors: yes
+
+  - name: Update defaults ram in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --ram -1 default\""
+    ignore_errors: yes
+
+  - name: Update defaults key-pairs in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --key-pairs -1 default\""
+    ignore_errors: yes
+    
+  - name: Update defaults metadata-items in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --metadata-items -1 default\""
+    ignore_errors: yes
+
+  - name: Update defaults injected-files in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --injected-files -1 default\""
+    ignore_errors: yes
+
+  - name: Update defaults injected-file-content-bytes in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --injected-file-content-bytes -1 default\""
+    ignore_errors: yes
+
+  - name: Update defaults injected-file-path-bytes in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --injected-file-path-bytes -1 default\""
+    ignore_errors: yes
+
+  - name: Update defaults server-groups in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --server-groups -1 default\""
+    ignore_errors: yes
+
+  - name: Update defaults server-group-members in Openstack Overcloud
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && nova quota-class-update --server-group-members -1 default\""
+    ignore_errors: yes
+
+# ------------------------------------------------------------------------------

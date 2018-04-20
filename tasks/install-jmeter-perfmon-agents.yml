@@ -1,0 +1,277 @@
+# ------------------------------------------------------------------------------
+# Retrive Overcloud Nodes IPs
+# ------------------------------------------------------------------------------
+
+  - name: Get Contr-0 Node 
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name controller-0 -f value -c Networks|awk -F = '{print \\$2}'\""
+    register: contr_0_node
+
+  - name: Get Contr-1 Node 
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name controller-1 -f value -c Networks|awk -F = '{print \\$2}'\""
+    register: contr_1_node
+    
+  - name: Get Comp-0 Node 
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name compute-0 -f value -c Networks|awk -F = '{print \\$2}'\""
+    register: comp_0_node
+
+  - name: Get Ceph-0 Node 
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name ceph-0 -f value -c Networks|awk -F = '{print \\$2}'\""
+    register: ceph_0_node
+
+  - name: Undercloud System-OS
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo cat /etc/redhat-release\""
+    register: system_uc
+    
+# ------------------------------------------------------------------------------
+# Install JMeter PerfMon agent on Undercloud
+# ------------------------------------------------------------------------------
+
+  - name: Undercloud - Create RHEL repo file
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo echo $'[rhel-server] \nName=RHEL server \nenabled=1 \nbaseurl=http://download.eng.tlv.redhat.com/pub/rhel/rel-eng/latest-RHEL-7/compose/Server/x86_64/os/  \ngpgcheck=0 \n'  > /tmp/rhel-osp-jmeter.repo\""
+    when: system_uc.stdout.find("Red") != -1
+ 
+  - name: Undercloud - Copy RHEL repo file
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo cp /tmp/rhel-osp-jmeter.repo /etc/yum.repos.d\""
+    when: system_uc.stdout.find("Red") != -1
+    
+  - name: Undercloud - Install Java OpenJDK Runtime Environment
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo yum -y install {{ jdk_ver }}\""
+
+  - name: Undercloud - Install unzip
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo yum -y install unzip.x86_64\""
+
+  - name: Undercloud - Install wget
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo yum -y install wget.x86_64\""
+
+  - name: Undercloud - Verify JMeter PerfMon process runs
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo ps -ef | grep -v grep | grep -w PerfMonAgent | awk '{print \\$2}'\""
+    register: contr_perfmon_id
+    ignore_errors: yes
+
+  - name: Undercloud - Kill JMeter PerfMon process
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo kill -9 {{ contr_perfmon_id.stdout }}\""
+    ignore_errors: yes
+    when: contr_perfmon_id.stdout != ""
+
+  - name: Undercloud - Verify JMeter PerfMon folder exists
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"stat {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    ignore_errors: yes
+    register: oc_perfmon_dir
+    
+  - name: Undercloud - Download JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo wget {{ jmeter_serveragent_url }} -P {{ jmeter_dir_tmp }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Undercloud - Create directory for JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo mkdir {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Undercloud - Extract archive JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo unzip {{ jmeter_dir_tmp }}/{{ jmeter_serveragent }}.zip -d {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Undercloud - Cleanup temporary directory serveragent zip
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo rm -rf {{ jmeter_dir_tmp }}/{{ jmeter_serveragent }}.zip\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Undercloud - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 4444 -j ACCEPT\""
+
+  - name: Undercloud - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 4444 -j ACCEPT\""
+
+  - name: Undercloud - Start JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo nohup {{ jmeter_base_dir }}/{{ jmeter_serveragent }}//startAgent.sh </dev/null >/dev/null 2>&1 & \""
+
+# ------------------------------------------------------------------------------
+# Install JMeter PerfMon agent on Controller node
+# ------------------------------------------------------------------------------
+
+  - name: Controller - Create RHEL repo file
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo echo $'[rhel-server] \nName=RHEL server \nenabled=1 \nbaseurl=http://download.eng.tlv.redhat.com/pub/rhel/rel-eng/latest-RHEL-7/compose/Server/x86_64/os/  \ngpgcheck=0 \n'  > /tmp/rhel-osp-jmeter.repo\""
+    when: system_uc.stdout.find("Red") != -1
+ 
+  - name: Controller - Copy RHEL repo file
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo cp /tmp/rhel-osp-jmeter.repo /etc/yum.repos.d\""
+    when: system_uc.stdout.find("Red") != -1
+    
+  - name: Controller - Install Java OpenJDK Runtime Environment
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo yum -y install {{ jdk_ver }}\""
+
+  - name: Controller - Install unzip
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo yum -y install unzip.x86_64\""
+
+  - name: Controller - Install wget
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo yum -y install wget.x86_64\""
+
+  - name: Controller - Verify JMeter PerfMon process runs
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo ps -ef | grep -v grep | grep -w PerfMonAgent | awk '{print \\$2}'\""
+    register: contr_perfmon_id
+    ignore_errors: yes
+
+  - name: Controller - Kill JMeter PerfMon process
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo kill -9 {{ contr_perfmon_id.stdout }}\""
+    ignore_errors: yes
+    when: contr_perfmon_id.stdout != ""
+
+  - name: Controller - Verify JMeter PerfMon folder exists
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"stat {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    ignore_errors: yes
+    register: oc_perfmon_dir
+    
+  - name: Controller - Download JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo wget {{ jmeter_serveragent_url }} -P {{ jmeter_dir_tmp }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Controller - Create directory for JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo mkdir {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Controller - Extract archive JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo unzip {{ jmeter_dir_tmp }}/{{ jmeter_serveragent }}.zip -d {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Controller - Cleanup temporary directory serveragent zip
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo rm -rf {{ jmeter_dir_tmp }}/{{ jmeter_serveragent }}.zip\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Controller - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 4444 -j ACCEPT\""
+
+  - name: Controller - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 4444 -j ACCEPT\""
+
+  - name: Controller - Start JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo nohup {{ jmeter_base_dir }}/{{ jmeter_serveragent }}//startAgent.sh </dev/null >/dev/null 2>&1 & \""
+
+# ------------------------------------------------------------------------------
+# Install JMeter PerfMon agent on Compute node
+# ------------------------------------------------------------------------------
+
+  - name: Compute - Create RHEL repo file
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo echo $'[rhel-server] \nName=RHEL server \nenabled=1 \nbaseurl=http://download.eng.tlv.redhat.com/pub/rhel/rel-eng/latest-RHEL-7/compose/Server/x86_64/os/  \ngpgcheck=0 \n'  > /tmp/rhel-osp-jmeter.repo\""
+    when: system_uc.stdout.find("Red") != -1
+ 
+  - name: Compute - Copy RHEL repo file
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo cp /tmp/rhel-osp-jmeter.repo /etc/yum.repos.d\""
+    when: system_uc.stdout.find("Red") != -1
+
+  - name: Compute - Install Java OpenJDK Runtime Environment
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo yum -y install {{ jdk_ver }}\""
+
+  - name: Compute - Install unzip
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo yum -y install unzip.x86_64\""
+
+  - name: Compute - Install wget
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo yum -y install wget.x86_64\""
+
+  - name: Compute - Verify JMeter PerfMon process runs
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo ps -ef | grep -v grep | grep -w PerfMonAgent | awk '{print \\$2}'\""
+    register: comp_perfmon_id
+    ignore_errors: yes
+
+  - name: Compute - Kill JMeter PerfMon process
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo kill -9 {{ comp_perfmon_id.stdout }}\""
+    ignore_errors: yes
+    when: comp_perfmon_id.stdout != ""
+
+  - name: Compute - Verify JMeter PerfMon folder exists
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"stat {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    ignore_errors: yes
+    register: oc_perfmon_dir
+    
+  - name: Compute - Download JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo wget {{ jmeter_serveragent_url }} -P {{ jmeter_dir_tmp }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Compute - Create directory for JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo mkdir {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Compute - Extract archive JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo unzip {{ jmeter_dir_tmp }}/{{ jmeter_serveragent }}.zip -d {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Compute - Cleanup temporary directory serveragent zip
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo rm -rf {{ jmeter_dir_tmp }}/{{ jmeter_serveragent }}.zip\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+
+  - name: Compute - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 4444 -j ACCEPT\""
+
+  - name: Compute - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 4444 -j ACCEPT\""
+
+  - name: Compute - Start JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo nohup {{ jmeter_base_dir }}/{{ jmeter_serveragent }}//startAgent.sh </dev/null >/dev/null 2>&1 & \""
+
+# ------------------------------------------------------------------------------
+# Install JMeter PerfMon agent on Ceph node
+# ------------------------------------------------------------------------------
+
+  - name: Ceph - Create RHEL repo file
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo echo $'[rhel-server] \nName=RHEL server \nenabled=1 \nbaseurl=http://download.eng.tlv.redhat.com/pub/rhel/rel-eng/latest-RHEL-7/compose/Server/x86_64/os/  \ngpgcheck=0 \n'  > /tmp/rhel-osp-jmeter.repo\""
+    when: system_uc.stdout.find("Red") != -1
+ 
+  - name: Ceph - Copy RHEL repo file
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo cp /tmp/rhel-osp-jmeter.repo /etc/yum.repos.d\""
+    when: system_uc.stdout.find("Red") != -1
+
+  - name: Ceph - Install Java OpenJDK Runtime Environment
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo yum -y install {{ jdk_ver }}\""
+    ignore_errors: yes
+
+  - name: Ceph - Install unzip
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo yum -y install unzip.x86_64\""
+    ignore_errors: yes
+
+  - name: Ceph - Install wget
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo yum -y install wget.x86_64\""
+    ignore_errors: yes
+
+  - name: Ceph - Verify JMeter PerfMon process runs
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo ps -ef | grep -v grep | grep -w PerfMonAgent | awk '{print \\$2}'\""
+    register: comp_perfmon_id
+    ignore_errors: yes
+
+  - name: Ceph - Kill JMeter PerfMon process
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo kill -9 {{ comp_perfmon_id.stdout }}\""
+    ignore_errors: yes
+    when: comp_perfmon_id.stdout != ""
+
+  - name: Ceph - Verify JMeter PerfMon folder exists
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"stat {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    ignore_errors: yes
+    register: oc_perfmon_dir
+    
+  - name: Ceph - Download JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo wget {{ jmeter_serveragent_url }} -P {{ jmeter_dir_tmp }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+    ignore_errors: yes
+
+  - name: Ceph - Create directory for JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo mkdir {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+    ignore_errors: yes
+
+  - name: Ceph - Extract archive JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo unzip {{ jmeter_dir_tmp }}/{{ jmeter_serveragent }}.zip -d {{ jmeter_base_dir }}/{{ jmeter_serveragent }}\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+    ignore_errors: yes
+
+  - name: Ceph - Cleanup temporary directory serveragent zip
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo rm -rf {{ jmeter_dir_tmp }}/{{ jmeter_serveragent }}.zip\""
+    when: oc_perfmon_dir.stdout.find("Device") == -1
+    ignore_errors: yes
+
+  - name: Ceph - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 4444 -j ACCEPT\""
+    ignore_errors: yes
+
+  - name: Ceph - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 4444 -j ACCEPT\""
+    ignore_errors: yes
+
+  - name: Ceph - Start JMeter PerfMon Plugins ServerAgent
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"sudo nohup {{ jmeter_base_dir }}/{{ jmeter_serveragent }}//startAgent.sh </dev/null >/dev/null 2>&1 & \""
+    ignore_errors: yes

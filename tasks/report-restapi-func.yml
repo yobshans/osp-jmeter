@@ -1,0 +1,92 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Generate reports 
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name:  Copy logo image files 
+    shell: "cp /opt/osp-jmeter/templates/jmeter-logo.svg /opt/osp-jmeter/templates/openstack-logo.svg /opt/osp-jmeter/results/{{ test_run_name }}/img/"
+
+  - name:  Copy CSS file
+    shell: "cp /opt/osp-jmeter/templates/result.css /opt/osp-jmeter/results/{{ test_run_name }}/html/"
+
+  - name: Xalan-J - Generate HTML Summary report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM testRunName '{{ test_run_name }}' 
+      -PARAM buildNum '{{ build_num }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ test_run_name }}/xml/result-90percent.xml
+      -PARAM testDuration '{{ test_duration.stdout | default('0') }}'
+      -PARAM ucSys '{{ uc_vendor.stdout }} {{ uc_product.stdout }}' 
+      -PARAM ucOs '{{ uc_os.stdout }}'
+      -PARAM ucCpu '{{ uc_cpu_count.stdout }} x {{ uc_cpu_model.stdout }}'
+      -PARAM ucMem '{{ uc_mem.stdout }}'
+      -PARAM contrSys '{{ contr_vendor.stdout }} {{ contr_product.stdout }}'
+      -PARAM contrOs '{{ contr_os.stdout }}'
+      -PARAM contrCpu '{{ contr_cpu_count.stdout }} x {{ contr_cpu_model.stdout }}'
+      -PARAM contrMem '{{ contr_mem.stdout }}'
+      -PARAM compSys '{{ comp_vendor.stdout }} {{ comp_product.stdout }}'
+      -PARAM compOs '{{ comp_os.stdout }}'
+      -PARAM compCpu '{{ comp_cpu_count.stdout }} x {{ comp_cpu_model.stdout }}'
+      -PARAM compMem '{{ comp_mem.stdout }}'
+      -PARAM cephSys '{{ ceph_vendor.stdout | default('n/a') }} {{ ceph_product.stdout | default('n/a') }}'
+      -PARAM cephOs '{{ ceph_os.stdout | default('n/a') }}'
+      -PARAM cephCpu '{{ ceph_cpu_count.stdout | default('n/a') }} x {{ ceph_cpu_model.stdout | default('n/a') }}'
+      -PARAM cephMem '{{ ceph_mem.stdout | default('n/a') }}'
+      -PARAM contrCount '{{ contr_count.stdout }}'
+      -PARAM compCount '{{ comp_count.stdout }}'
+      -PARAM cephCount '{{ ceph_count.stdout }}'
+      -PARAM note '{{ notes }}'
+      -IN /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/generate-summary-func-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/index.html -HTML
+
+  - name: Xalan-J - Generate HTML REST API Functional test report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM testRunName '{{ test_run_name }}' 
+      -PARAM buildNum '{{ build_num }}' 
+      -IN /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/generate-restapi-func-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/api.html -HTML
+
+  - name: Xalan-J - Generate Plain test REST API Functional test report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM testRunName '{{ test_run_name }}' 
+      -PARAM buildNum '{{ build_num }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ test_run_name }}/xml/result-90percent.xml
+      -PARAM testDuration '{{ test_duration.stdout | default('0') }}'
+      -PARAM ucSys '{{ uc_vendor.stdout }} {{ uc_product.stdout }}' 
+      -PARAM ucOs '{{ uc_os.stdout }}'
+      -PARAM ucCpu '{{ uc_cpu_count.stdout }} x {{ uc_cpu_model.stdout }}'
+      -PARAM ucMem '{{ uc_mem.stdout }}'
+      -PARAM contrSys '{{ contr_vendor.stdout }} {{ contr_product.stdout }}'
+      -PARAM contrOs '{{ contr_os.stdout }}'
+      -PARAM contrCpu '{{ contr_cpu_count.stdout }} x {{ contr_cpu_model.stdout }}'
+      -PARAM contrMem '{{ contr_mem.stdout }}'
+      -PARAM compSys '{{ comp_vendor.stdout }} {{ comp_product.stdout }}'
+      -PARAM compOs '{{ comp_os.stdout }}'
+      -PARAM compCpu '{{ comp_cpu_count.stdout }} x {{ comp_cpu_model.stdout }}'
+      -PARAM compMem '{{ comp_mem.stdout }}'
+      -PARAM cephSys '{{ ceph_vendor.stdout | default('n/a') }} {{ ceph_product.stdout | default('n/a') }}'
+      -PARAM cephOs '{{ ceph_os.stdout | default('n/a') }}'
+      -PARAM cephCpu '{{ ceph_cpu_count.stdout | default('n/a') }} x {{ ceph_cpu_model.stdout | default('n/a') }}'
+      -PARAM cephMem '{{ ceph_mem.stdout | default('n/a') }}'
+      -PARAM contrCount '{{ contr_count.stdout }}'
+      -PARAM compCount '{{ comp_count.stdout }}'
+      -PARAM cephCount '{{ ceph_count.stdout }}'
+      -PARAM note '{{ notes }}'
+      -IN /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
+      -XSL /opt/osp-jmeter/templates/generate-restapi-func-text-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/log/report.txt -TEXT
+
+  - name: JMeter - Generate Dashboard Report
+    shell: >
+      $JMETER_HOME/bin/jmeter 
+      -g /opt/osp-jmeter/results/{{ test_run_name }}/xml/test-result.csv
+      -o /opt/osp-jmeter/results/{{ test_run_name }}/dashboard
+    ignore_errors: yes
+      
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+
