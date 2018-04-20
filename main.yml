@@ -1,0 +1,202 @@
+---
+  - import_playbook: |
+      config-osp-jmeter.yaml -e 
+      perf_monitor="{{ test.perf.monitor }}"
+    when: 
+      test.config.osp.jmeter|bool 
+
+  - import_playbook: config-osp-cloud.yaml
+    when: 
+      test.config.osp.cloud|bool 
+
+  - import_playbook: |
+      run-restapi-functional-test.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      build_num="{{ test.build.num }}"
+      image_name="{{ test.image.name }}"
+      flavor_ref="{{ test.flavor.ref }}"
+      ssl_mode="{{ test.ssl.mode }}"
+    when: 
+      test.run.restapi.functional.test|bool 
+
+  - import_playbook: |
+      run-restapi-performance-test.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      build_num="{{ test.build.num }}"
+      image_name="{{ test.image.name }}"
+      flavor_ref="{{ test.flavor.ref }}"
+      ssl_mode="{{ test.ssl.mode }}"
+      thread_count="{{ test.thread.count }}"
+      thread_rampup="{{ test.thread.rampup }}"
+      iteration_count="{{ test.iteration.count }}"
+      perf_monitor="{{ test.perf.monitor }}"
+    when: 
+      test.run.restapi.performance.test|bool 
+  
+  - import_playbook: |
+      run-horizon-functional-test.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      build_num="{{ test.build.num }}"
+      image_name="{{ test.image.name }}"
+      flavor_ref="{{ test.flavor.ref }}"
+      ssl_mode="{{ test.ssl.mode }}"
+    when: 
+      test.run.horizon.functional.test|bool 
+  
+  - import_playbook: |
+      run-horizon-performance-test.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      build_num="{{ test.build.num }}"
+      image_name="{{ test.image.name }}"
+      flavor_ref="{{ test.flavor.ref }}"
+      ssl_mode="{{ test.ssl.mode }}"
+      thread_count="{{ test.thread.count }}"
+      thread_rampup="{{ test.thread.rampup }}"
+      iteration_count="{{ test.iteration.count }}"
+      perf_monitor="{{ test.perf.monitor }}"
+    when: 
+      test.run.horizon.performance.test|bool 
+
+  - import_playbook: |
+      run-stress-test.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      build_num="{{ test.build.num }}"
+      image_name="{{ test.image.name }}"
+      flavor_ref="{{ test.flavor.ref }}"
+      ssl_mode="{{ test.ssl.mode }}"
+      thread_count="{{ test.thread.count }}"
+      thread_rampup="{{ test.thread.rampup }}"
+      perf_monitor="{{ test.perf.monitor }}"
+      cpu_workers="{{ test.cpu.workers }}"
+      cpu_percent="{{ test.cpu.percent }}"
+      vm_workers="{{ test.vm.workers }}"
+      vm_mbytes="{{ test.vm.mbytes }}"
+      hdd_workers="{{ test.hdd.workers }}"
+      hdd_gbytes="{{ test.hdd.gbytes }}"
+      stress_time_sec="{{ test.stress.time.sec }}"
+    when: 
+      test.run.stress.test|bool 
+    
+  - import_playbook: |
+      run-system-test.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      build_num="{{ test.build.num }}"
+      image_name="{{ test.image.name }}"
+      flavor_ref="{{ test.flavor.ref }}"
+      ssl_mode="{{ test.ssl.mode }}"
+      thread_count="{{ test.thread.count }}"
+      thread_rampup="{{ test.thread.rampup }}"
+      perf_monitor="{{ test.perf.monitor }}"
+      hdd_workers="{{ test.hdd.workers }}"
+      hdd_gbytes="{{ test.hdd.gbytes }}"
+      stress_time_sec="{{ test.stress.time.sec }}"
+      sys_action="{{ test.sys.action }}"
+    when: 
+      test.run.system.test|bool 
+    
+  - import_playbook: |
+      populate-cloud.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      build_num="{{ test.build.num }}"
+      image_name="{{ test.image.name }}"
+      flavor_ref="{{ test.flavor.ref }}"
+      ssl_mode="{{ test.ssl.mode }}"
+      thread_count="{{ test.thread.count }}"
+      thread_rampup="{{ test.thread.rampup }}"
+      perf_monitor="{{ test.perf.monitor }}"
+      vm_amount="{{ test.vm.amount }}"
+    when: 
+      test.populate.cloud|bool 
+    
+  - import_playbook: |
+      remove-cloud.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      ssl_mode="{{ test.ssl.mode }}"
+      thread_count="{{ test.thread.count }}"
+      thread_rampup="{{ test.thread.rampup }}"
+      perf_monitor="{{ test.perf.monitor }}"
+    when: 
+      test.remove.cloud|bool 
+
+  - import_playbook: |
+      run-dataplane-load.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      thread_count="{{ test.thread.count }}"
+      thread_rampup="{{ test.thread.rampup }}"
+      vm_amount="{{ test.vm.amount }}"
+      perf_monitor="{{ test.perf.monitor }}"
+      ssl_mode="{{ test.ssl.mode }}"
+      cpu_workers="{{ test.cpu.workers }}"
+      cpu_percent="{{ test.cpu.percent }}"
+      vm_workers="{{ test.vm.workers }}"
+      vm_mbytes="{{ test.vm.mbytes }}"
+      hdd_workers="{{ test.hdd.workers }}"
+      hdd_gbytes="{{ test.hdd.gbytes }}"
+      stress_time_sec="{{ test.stress.time.sec }}"
+    when: 
+      test.run.dataplane.load|bool 
+    
+  - import_playbook: |
+      stop-dataplane-load.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      perf_monitor="{{ test.perf.monitor }}"
+      ssl_mode="{{ test.ssl.mode }}"
+    when: 
+      test.stop.dataplane.load|bool 
+
+  - import_playbook: |
+      run-ping-load.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      thread_count="{{ test.thread.count }}"
+      thread_rampup="{{ test.thread.rampup }}"
+      vm_amount="{{ test.vm.amount }}"
+      perf_monitor="{{ test.perf.monitor }}"
+      ssl_mode="{{ test.ssl.mode }}"
+      cpu_workers="{{ test.cpu.workers }}"
+      cpu_percent="{{ test.cpu.percent }}"
+      vm_workers="{{ test.vm.workers }}"
+      vm_mbytes="{{ test.vm.mbytes }}"
+      hdd_workers="{{ test.hdd.workers }}"
+      hdd_gbytes="{{ test.hdd.gbytes }}"
+      stress_time_sec="{{ test.stress.time.sec }}"
+    when: 
+      test.run.ping.load|bool 
+
+  - import_playbook: |
+      stop-ping-load.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      perf_monitor="{{ test.perf.monitor }}"
+      ssl_mode="{{ test.ssl.mode }}"
+    when: 
+      test.stop.ping.load|bool 
+      
+  - import_playbook: |
+      compare-restapi-performance-test.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      baseline_run_name="{{ test.baseline.run.name }}"
+      current_run_name="{{ test.current.run.name }}"
+      build_num="{{ test.build.num }}"
+      perf_monitor="{{ test.perf.monitor }}"
+    when: 
+      test.compare.restapi.performance.test|bool 
+    
+  - import_playbook: |
+      compare-horizon-performance-test.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      baseline_run_name="{{ test.baseline.run.name }}"
+      current_run_name="{{ test.current.run.name }}"
+      build_num="{{ test.build.num }}"
+      perf_monitor="{{ test.perf.monitor }}"
+    when: 
+      test.compare.horizon.performance.test|bool 
+    
+  - import_playbook: |
+      compare-stress-test.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      baseline_run_name="{{ test.baseline.run.name }}"
+      current_run_name="{{ test.current.run.name }}"
+      build_num="{{ test.build.num }}"
+      perf_monitor="{{ test.perf.monitor }}"
+    when: 
+      test.compare.stress.test|bool 
+  

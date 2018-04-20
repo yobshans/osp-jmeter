@@ -1,0 +1,66 @@
+---
+- name: Verification where is running - InfraRed or Standalone
+  hosts: localhost
+  gather_facts: no
+  any_errors_fatal: true
+  vars:
+      hypervisor_name: 127.0.0.1
+  
+  tasks:
+
+  - name: Add Hypervisor hosts to host list when run standalone
+    add_host:
+        name: "{{ hypervisor_name }}"
+        groups: hypervisor
+    when:  "'hypervisor' not in groups"
+    
+- name: Remove Cloud 
+  hosts: hypervisor
+  remote_user: root
+  gather_facts: no
+  vars_files:
+    - vars/clean-scale.yml
+  vars:
+   test_run_name: clean-cloud
+   build_num: osp-13
+   thread_count: 1 
+   thread_rampup: 100 
+   vm_amount: 1 
+   perf_monitor: false 
+   ssl_mode: false 
+
+  environment:
+   JMETER_HOME: /opt/apache-jmeter-4.0
+
+  tasks: 
+
+  - name: Undercloud IP
+    shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
+    register: uc_node_ip
+  
+  - name: System-OS
+    shell: "sudo cat /etc/system-release"
+    register: system_os
+  
+  - name: Gathering Stack env information
+    include_tasks: tasks/get-stack-info.yml
+    
+  - name: Creation directory for test result
+    include_tasks: tasks/mkdir-results.yml
+
+  - name: Run JMeter test script
+    include_tasks: tasks/run-jmeter-scale.yml
+    
+  - name: Generate API Trx charts
+    include_tasks: tasks/api-trx-charts.yml
+
+  - name: Generate PerfMon charts
+    include_tasks: tasks/perfmon-charts.yml
+
+  - name: Generate test report
+    include_tasks: tasks/report-restapi-perf.yml
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

@@ -1,0 +1,47 @@
+---
+- name: Verification where is running - InfraRed or Standalone
+  hosts: localhost
+  gather_facts: no
+  any_errors_fatal: true
+  vars:
+      hypervisor_name: 127.0.0.1
+  
+  tasks:
+
+  - name: Add hypervisor hosts to host list when run standalone
+    add_host:
+        name: "{{ hypervisor_name }}"
+        groups: hypervisor
+    when:  "'hypervisor' not in groups"
+      
+- name: Config Openstack Cloud
+  hosts: hypervisor
+  remote_user: root
+  gather_facts: no
+  vars:
+   rhel_image_url: http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/7.5/121/images/
+   rhel_image: rhel-guest-image-7.5-121.x86_64.qcow2
+   cirros_image_url: http://download.cirros-cloud.net/0.3.4/
+   cirros_image: cirros-0.3.4-x86_64-disk.img
+   centos_image_url: http://cloud.centos.org/centos/7/images/
+   centos_image: CentOS-7-x86_64-GenericCloud-1711.qcow2 
+  
+  tasks: 
+
+  - name: Indetify UC IP
+    shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
+    register: uc_node_ip
+  
+  - name: Upload images to Overcloud 
+    include_tasks: tasks/osp-upload-images.yml
+  
+  - name: Create Flavors on Overcloud
+    include_tasks: tasks/osp-create-flavors.yml
+
+  - name: Update default Quotas on Overcloud
+    include_tasks: tasks/osp-update-quotas.yml
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

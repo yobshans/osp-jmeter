@@ -1,0 +1,71 @@
+---
+- name: Verification where is running - InfraRed or Standalone
+  hosts: localhost
+  gather_facts: no
+  any_errors_fatal: true
+  vars:
+      hypervisor_name: 127.0.0.1
+  
+  tasks:
+
+  - name: Add Hypervisor hosts to host list when run standalone
+    add_host:
+        name: "{{ hypervisor_name }}"
+        groups: hypervisor
+    when:  "'hypervisor' not in groups"
+    
+- name: Run Web Horizon Performance Sanity Test
+  hosts: hypervisor
+  remote_user: root
+  gather_facts: no
+  vars_files:
+    - vars/http-perf.yml
+  vars:
+   test_run_name: osp-jmeter-test
+   build_num: osp-13
+   thread_count: 1 
+   thread_rampup: 50 
+   iteration_count: 1 
+   image_name: cirros
+   flavor_ref: 2 
+   perf_monitor: false 
+   ssl_mode: false 
+   notes: n/a 
+
+  environment:
+   JMETER_HOME: /opt/apache-jmeter-4.0
+
+  tasks: 
+  
+  - name: Undercloud IP
+    shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
+    register: uc_node_ip
+  
+  - name: System-OS
+    shell: "sudo cat /etc/system-release"
+    register: system_os
+  
+  - name: Gathering Stack env information
+    include_tasks: tasks/get-stack-info.yml
+    
+  - name: Creation directory for test result
+    include_tasks: tasks/mkdir-results.yml
+
+  - name: Run JMeter test script
+    include_tasks: tasks/run-jmeter-perf.yml
+    
+  - name: Generate API Trx charts
+    include_tasks: tasks/api-trx-charts.yml
+
+  - name: Generate PerfMon charts
+    include_tasks: tasks/perfmon-charts.yml
+    when: perf_monitor
+    
+  - name: Generate test report
+    include_tasks: tasks/report-http-perf.yml
+
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

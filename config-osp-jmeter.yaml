@@ -1,0 +1,83 @@
+---
+- name: Verification where is running - InfraRed or Standalone
+  hosts: localhost
+  gather_facts: no
+  any_errors_fatal: true
+  vars:
+      hypervisor_name: 127.0.0.1
+      osp_jmeter_dir: /opt/osp-jmeter
+  
+  tasks:
+
+  - name: Current Date and Time
+    shell: "sudo date +'%Y%m%d%m%H%S'"
+    register: cur_date_time
+
+  - block:
+      - name: Verify osp-jmeter folder exists on Hypervisor
+        stat:
+          path: "{{ osp_jmeter_dir }}"
+        delegate_to: "{{ hostvars['hypervisor'].ansible_ssh_host }}"
+        register: osp_dir
+        
+      - name: Rename old osp-jmeter folder on Hypervisor
+        shell: "mv {{ osp_jmeter_dir }} {{ osp_jmeter_dir }}-{{ cur_date_time.stdout }}"
+        delegate_to: "{{ hostvars['hypervisor'].ansible_ssh_host }}"
+        when: osp_dir.stat.exists
+    when:  "'hypervisor' in groups"
+  
+  - name: Clone osp-jmeter on Hypervisor when run by Infrared
+    shell: "sudo git clone https://github.com/yobshans/osp-jmeter /tmp/osp-jmeter"
+    delegate_to: "{{ hostvars['hypervisor'].ansible_ssh_host }}"
+    when:  "'hypervisor' in groups"
+  
+  - name: Add hypervisor hosts to host list when run standalone
+    add_host:
+        name: "{{ hypervisor_name }}"
+        groups: hypervisor
+    when:  "'hypervisor' not in groups"
+      
+- name: Config osp-jmeter on Hypervisor
+  hosts: hypervisor
+  remote_user: root
+  gather_facts: no
+  vars:
+   perf_monitor: false # JMeter with PerfMon Plugin Agents (true/false)
+   jdk_ver: java-1.8.0-openjdk.x86_64 
+   jmeter_ver: apache-jmeter-4.0 
+   jmeter_base_dir: /opt
+   jmeter_home: /opt/apache-jmeter-4.0
+   jmeter_dir_tmp: /tmp
+   jmeter_url: https://archive.apache.org/dist/jmeter/binaries/{{ jmeter_ver }}.zip
+   jmeter_plugins_manager_url: https://jmeter-plugins.org/get/
+   jmeter_plugins_cmn_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-cmn-jmeter/0.4/jmeter-plugins-cmn-jmeter-0.4.jar 
+   jmeter_perfmon_url: http://central.maven.org/maven2/kg/apc/perfmon/2.2.2/perfmon-2.2.2.jar
+   jmeter_plugins_perfmon_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-perfmon/2.1/jmeter-plugins-perfmon-2.1.jar
+   jmeter_plugins_graphs_basic_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-graphs-basic/2.0/jmeter-plugins-graphs-basic-2.0.jar
+   jmeter_plugins_graphs_add_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-graphs-additional/2.0/jmeter-plugins-graphs-additional-2.0.jar
+   jmeter_plugins_cmd_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-cmd/2.1/jmeter-plugins-cmd-2.1.jar  
+   jmeter_plugins_mrg_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-mergeresults/2.1/jmeter-plugins-mergeresults-2.1.jar
+   jmeter_ssh_sampler_url: https://github.com/yciabaud/jmeter-ssh-sampler/releases/download/jmeter-ssh-sampler-1.1.1/ApacheJMeter_ssh-1.1.1.jar
+   jmeter_jsch_url: https://github.com/yciabaud/jmeter-ssh-sampler/releases/download/jmeter-ssh-sampler-1.1.1/jsch-0.1.54.jar
+   jmeter_cmdrunner_url: http://central.maven.org/maven2/kg/apc/cmdrunner/2.0/cmdrunner-2.0.jar
+   jmeter_parallel_url: http://central.maven.org/maven2/com/blazemeter/jmeter-parallel/0.4/jmeter-parallel-0.4.jar
+   jmeter_serveragent: ServerAgent-2.2.1
+   jmeter_serveragent_url: https://jmeter-plugins.org/downloads/file/{{ jmeter_serveragent }}.zip
+
+  tasks: 
+
+  - name: Indetify UC IP
+    shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
+    register: uc_node_ip
+  
+  - name: Install JMeter
+    include_tasks: tasks/install-jmeter.yml
+
+  - name: Install JMeter PerfMon Plugin Agents
+    include_tasks: tasks/install-jmeter-perfmon-agents.yml
+    when: perf_monitor
+    
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+
