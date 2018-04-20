@@ -1,0 +1,57 @@
+---
+   thread_count: 1 # number of JMeter's concurent threads, will be pass to script's parameter-> threadgroup.count
+   thread_rampup: 1 # time required to start all threads, will be pass to script's parameter-> threadgroup.rampup
+   iteration_count: 1 # number of script's loop iterations, will be pass to script's parameter-> iteration.count
+   jmeter_test: OSP-HTTP-Horizon-Funct-Test.jmx
+ 
+# --------------------------------------------------------------------------------------------------------------------------------------
+# List of APIs and transactions names used in JMeter script
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   identity_api_name: 
+   - 01.UI.Identity.Navigate
+   - 02.UI.Identity.Login
+   - 03.UI.Identity.Identity
+   - 04.UI.Identity.Create.Project
+   - 05.UI.Identity.Users
+   - 06.UI.Identity.Create.User
+   - 07.UI.Identity.Home
+   - 08.UI.Identity.Logout
+   - 41.UI.Identity.Delete.User
+   - 42.UI.Identity.Delete.Project
+
+   project_api_name: 
+   - 09.UI.Project.Navigate
+   - 10.UI.Project.Login
+   - 11.UI.Project.Volumes
+   - 12.UI.Project.Create.Volume
+   - 13.UI.Project.Volume.Status
+   - 14.UI.Project.Images
+   - 15.UI.Project.Create.Image
+   - 16.UI.Project.Image.Status
+   - 17.UI.Project.Networks
+   - 18.UI.Project.Create.Network
+   - 19.UI.Project.Instances
+   - 20.UI.Project.Launch.Instance
+   - 21.UI.Project.Instance.Status
+   - 22.UI.Proj.Instance.Attach.Volume
+   - 23.UI.Project.Pause.Instance
+   - 24.UI.Project.Resume.Paused.Instance
+   - 25.UI.Project.Suspend.Instance
+   - 26.UI.Project.Resume.Suspended.Instance
+   - 27.UI.Project.SoftReboot.Instance
+   - 28.UI.Project.HardReboot.Instance
+   - 29.UI.Project.Shutdown.Instance
+   - 30.UI.Project.Start.Instance
+   - 31.UI.Project.Instance.Create.Snapshot
+   - 32.UI.Project.Snapshot.Status
+   - 33.UI.Project.Delete.Snapshot
+   - 34.UI.Project.Delete.Image
+   - 35.UI.Project.Instance.Detach.Volume
+   - 36.UI.Project.Delete.Volume
+   - 37.UI.Project.Delete.Instance
+   - 38.UI.Project.Delete.Network
+   - 39.UI.Project.Project
+   - 40.UI.Project.Logout
+   
+   

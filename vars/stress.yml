@@ -1,0 +1,173 @@
+---
+   jmeter_test: OSP-Stress-Test.jmx
+   
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Generic args
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   iteration_count: 1 # number of script's loop iterations 
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# List of APIs and transactions names used in JMeter script
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   keystone_api_name: 
+   - 01.KEYSTONE.POST.Admin.Token
+   - 02.KEYSTONE.GET.Admin.Tenant
+   - 03.KEYSTONE.GET.List.Tenant
+   - 04.KEYSTONE.POST.Create.Tenant
+   - 05.KEYSTONE.GET.List.User
+   - 06.KEYSTONE.POST.Create.User
+   - 07.KEYSTONE.GET.Search.Admin.Role
+   - 08.KEYSTONE.PUT.Grant.Admin.Role
+   - 09.KEYSTONE.POST.Tenant.Token
+   - 47.KEYSTONE.DELETE.User
+   - 48.KEYSTONE.DELETE.Tenant
+   
+   nova_api_name: 
+   - 10.NOVA.GET.Search.Image
+   - 11.NOVA.GET.Search.Flavor
+   - 22.NOVA.POST.Import.Keypair
+   - 23.NOVA.POST.Boot.Server
+   - 24.NOVA.GET.Server.Details
+   - 25.NOVA.POST.Add.Floating.IP
+   - 37.NOVA.POST.Remove.Floating.IP
+   - 38.NOVA.DELETE.Server
+   - 39.NOVA.GET.Search.Server
+   - 40.NOVA.DELETE.Keypair
+   
+   neutron_api_name: 
+   - 12.NEUTRON.Get.Security.Group
+   - 13.NEUTRON.POST.Create.Security.Group
+   - 14.NEUTRON.POST.Create.Sec.Group.Rule.SSH
+   - 15.NEUTRON.POST.Create.Sec.Group.Rule.PING
+   - 16.NEUTRON.Get.External.Network
+   - 17.NEUTRON.POST.Create.Network
+   - 18.NEUTRON.POST.Create.Subnet
+   - 19.NEUTRON.POST.Create.Floating.IP
+   - 20.NEUTRON.POST.Create.Router
+   - 21.NEUTRON.PUT.Add.Interface.To.Router
+   - 41.NEUTRON.PUT.Remove.Interface.From.Router
+   - 42.NEUTRON.DELETE.Router
+   - 43.NEUTRON.DELETE.Security.Group
+   - 44.NEUTRON.DELETE.Floating.IP
+   - 45.NEUTRON.DELETE.Subnet
+   - 46.NEUTRON.DELETE.Network
+   
+   ssh_name: 
+   - 26.SSH.PING.Instance
+   - 27.SSH.DATE.On.Instance
+   - 28.SSH.UPDATE.IPTABLES.On.UC
+   - 29.SSH.UPDATE.IPTABLES.On.UC
+   - 30.SSH.START.IPERF.SRV.On.UC
+   - 31.SSH.YUM.RPM.On.Instance
+   - 32.SSH.YUM.REPO.On.Instance
+   - 33.SSH.YUM.IPERF.On.Instance
+   - 34.SSH.RPM.EPEL.On.Instance
+   - 35.SSH.YUM.STRESS-NG.On.Instance
+   - 36.SSH.STRESS.On.Instance
+   - 49.SSH.GET.IPERF.PID.On.UC
+   - 50.SSH.KILL.IPERF.On.UC
+      
+   trx_name: 
+   - 23.NOVA.POST.Boot.Server.Trx
+   - 38.NOVA.DELETE.Server.Trx
+   
+# --------------------------------------------------------------------------------------------------------------------------------------
+# List of server/processes statistics names used in JMeter script with PerfMon Plugin
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   cpu_over_name:
+   - CPU Undercloud Node User Util
+   - CPU Undercloud Node System Util
+   - CPU Undercloud Node Iowait Util
+   - CPU Undercloud Node Idle Util
+
+   cpu_contr_name:
+   - CPU Controller Node User Util
+   - CPU Controller Node System Util
+   - CPU Controller Node Iowait Util
+   - CPU Controller Node Idle Util
+
+   cpu_comp_name:
+   - CPU Compute Node User Util
+   - CPU Compute Node System Util
+   - CPU Compute Node Iowait Util
+   - CPU Compute Node Idle Util
+
+   cpu_ceph_name:
+   - CPU Ceph Node User Util
+   - CPU Ceph Node System Util
+   - CPU Ceph Node Iowait Util
+   - CPU Ceph Node Idle Util
+   
+   mem_over_name:
+   - Memory Undercloud Node Total
+   - Memory Undercloud Node Free
+   - Memory Undercloud Node Used
+
+   mem_contr_name:
+   - Memory Controller Node Total
+   - Memory Controller Node Free
+   - Memory Controller Node Used
+
+   mem_comp_name:
+   - Memory Compute Node Total
+   - Memory Compute Node Free
+   - Memory Compute Node Used
+
+   mem_ceph_name:
+   - Memory Ceph Node Total
+   - Memory Ceph Node Free
+   - Memory Ceph Node Used
+   
+   net_over_name:
+   - Network I/O Undercloud Node Sent
+   - Network I/O Undercloud Node Recv
+
+   net_contr_name:
+   - Network I/O Controller Node Recv
+   - Network I/O Controller Node Sent
+
+   net_comp_name:
+   - Network I/O Compute Node Sent
+   - Network I/O Compute Node Recv
+
+   net_ceph_name:
+   - Network I/O Ceph Node Sent
+   - Network I/O Ceph Node Recv
+   
+   disk_over_name:
+   - Disks I/O Undercloud Node Writes
+   - Disks I/O Undercloud Node Reads
+
+   disk_contr_name:
+   - Disks I/O Controller Node Writes
+   - Disks I/O Controller Node Reads
+
+   disk_comp_name:
+   - Disks I/O Compute Node Writes
+   - Disks I/O Compute Node Reads
+
+   disk_ceph_name:
+   - Disks I/O Ceph Node Writes
+   - Disks I/O Ceph Node Reads
+   
+   perfmon_cpu: 
+   - Monitor_CPU_Undercloud
+   - Monitor_CPU_Controller
+   - Monitor_CPU_Compute
+   - Monitor_CPU_Ceph
+
+   perfmon_mem: 
+   - Monitor_Memory_Undercloud
+   - Monitor_Memory_Controller
+   - Monitor_Memory_Compute
+   - Monitor_Memory_Ceph
+
+   perfmon_disk: 
+   - Monitor_Disk
+
+   perfmon_net: 
+   - Monitor_Network
+

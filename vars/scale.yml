@@ -1,0 +1,151 @@
+---
+   jmeter_test: OSP-Populate-Cloud.jmx
+   
+# --------------------------------------------------------------------------------------------------------------------------------------
+# General args 
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   uc_user: root # user for ssh to undercloud node server
+   uc_pass:  #password for ssh to undercloud node server
+   iteration_count: 1 # number of script's loop iterations 
+   notes: n/a # any free text
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# List of APIs and transactions names used in JMeter script
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   keystone_api_name: 
+   - 01.KEYSTONE.POST.Admin.Token
+   - 02.KEYSTONE.GET.Admin.Tenant
+   - 03.KEYSTONE.POST.Create.Tenant
+   - 04.KEYSTONE.POST.Create.User
+   - 05.KEYSTONE.GET.Search.Admin.Role
+   - 06.KEYSTONE.PUT.Grant.Admin.Role
+   - 07.KEYSTONE.POST.Tenant.Token
+   
+   nova_api_name: 
+   - 08.NOVA.GET.Search.Image
+   - 20.NOVA.POST.Import.Keypair
+   - 21.NOVA.POST.Boot.Server
+   - 22.NOVA.GET.Server.Details
+   - 24.NOVA.POST.Add.Floating.IP
+   
+   neutron_api_name: 
+   - 11.NEUTRON.POST.Create.Security.Group
+   - 12.NEUTRON.POST.Create.Sec.Group.Rule.SSH
+   - 13.NEUTRON.POST.Create.Sec.Group.Rule.PING
+   - 14.NEUTRON.Get.External.Network
+   - 15.NEUTRON.POST.Create.Network
+   - 16.NEUTRON.POST.Create.Subnet
+   - 18.NEUTRON.POST.Create.Router
+   - 19.NEUTRON.PUT.Add.Interface.To.Router
+   - 17.NEUTRON.POST.Create.Floating.IP
+   
+   cinder_api_name: 
+   - 09.CINDER.POST.Create.Volume
+   - 10.CINDER.GET.Volume.Details
+   - 23.CINDER.POST.Attach.Volume
+   
+   trx_name: 
+   - 09.CINDER.POST.Create.Volume.Trx
+   - 20.NOVA.POST.Boot.Server.Trx
+   - 23.CINDER.POST.Attach.Volume.Trx
+   
+# --------------------------------------------------------------------------------------------------------------------------------------
+# List of server/processes statistics names used in JMeter script with PerfMon Plugin
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   cpu_over_name:
+   - CPU Undercloud Node User Util
+   - CPU Undercloud Node System Util
+   - CPU Undercloud Node Iowait Util
+   - CPU Undercloud Node Idle Util
+
+   cpu_contr_name:
+   - CPU Controller Node User Util
+   - CPU Controller Node System Util
+   - CPU Controller Node Iowait Util
+   - CPU Controller Node Idle Util
+
+   cpu_comp_name:
+   - CPU Compute Node User Util
+   - CPU Compute Node System Util
+   - CPU Compute Node Iowait Util
+   - CPU Compute Node Idle Util
+
+   cpu_ceph_name:
+   - CPU Ceph Node User Util
+   - CPU Ceph Node System Util
+   - CPU Ceph Node Iowait Util
+   - CPU Ceph Node Idle Util
+   
+   mem_over_name:
+   - Memory Undercloud Node Total
+   - Memory Undercloud Node Free
+   - Memory Undercloud Node Used
+
+   mem_contr_name:
+   - Memory Controller Node Total
+   - Memory Controller Node Free
+   - Memory Controller Node Used
+
+   mem_comp_name:
+   - Memory Compute Node Total
+   - Memory Compute Node Free
+   - Memory Compute Node Used
+
+   mem_ceph_name:
+   - Memory Ceph Node Total
+   - Memory Ceph Node Free
+   - Memory Ceph Node Used
+   
+   net_over_name:
+   - Network I/O Undercloud Node Sent
+   - Network I/O Undercloud Node Recv
+
+   net_contr_name:
+   - Network I/O Controller Node Recv
+   - Network I/O Controller Node Sent
+
+   net_comp_name:
+   - Network I/O Compute Node Sent
+   - Network I/O Compute Node Recv
+
+   net_ceph_name:
+   - Network I/O Ceph Node Sent
+   - Network I/O Ceph Node Recv
+   
+   disk_over_name:
+   - Disks I/O Undercloud Node Writes
+   - Disks I/O Undercloud Node Reads
+
+   disk_contr_name:
+   - Disks I/O Controller Node Writes
+   - Disks I/O Controller Node Reads
+
+   disk_comp_name:
+   - Disks I/O Compute Node Writes
+   - Disks I/O Compute Node Reads
+
+   disk_ceph_name:
+   - Disks I/O Ceph Node Writes
+   - Disks I/O Ceph Node Reads
+   
+   perfmon_cpu: 
+   - Monitor_CPU_Undercloud
+   - Monitor_CPU_Controller
+   - Monitor_CPU_Compute
+   - Monitor_CPU_Ceph
+
+   perfmon_mem: 
+   - Monitor_Memory_Undercloud
+   - Monitor_Memory_Controller
+   - Monitor_Memory_Compute
+   - Monitor_Memory_Ceph
+
+   perfmon_disk: 
+   - Monitor_Disk
+
+   perfmon_net: 
+   - Monitor_Network
+

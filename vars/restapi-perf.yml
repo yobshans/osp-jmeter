@@ -1,0 +1,181 @@
+---
+   jmeter_test: OSP-REST-API-All-Perf-Test.jmx
+   
+# --------------------------------------------------------------------------------------------------------------------------------------
+# List of APIs and transactions names used in JMeter script
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   keystone_api_name: 
+   - 01.KEYSTONE.POST.Admin.Token
+   - 02.KEYSTONE.GET.Admin.Tenant
+   - 03.KEYSTONE.GET.List.Tenant
+   - 04.KEYSTONE.POST.Create.Tenant
+   - 05.KEYSTONE.GET.List.User
+   - 06.KEYSTONE.POST.Create.User
+   - 07.KEYSTONE.GET.Search.Admin.Role
+   - 08.KEYSTONE.PUT.Grant.Admin.Role
+   - 09.KEYSTONE.POST.Tenant.Token
+   - 49.KEYSTONE.DELETE.Tenant
+   - 50.KEYSTONE.DELETE.User
+
+   nova_api_name: 
+   - 10.NOVA.GET.Search.Image
+   - 11.NOVA.GET.Search.Flavor
+   - 19.NOVA.GET.List.Server
+   - 20.NOVA.POST.Boot.Server
+   - 21.NOVA.GET.Server.Details
+   - 23.NOVA.PUT.Update.Server
+   - 24.NOVA.POST.Pause.Server
+   - 25.NOVA.POST.Unpause.Server
+   - 26.NOVA.POST.Suspend.Server
+   - 27.NOVA.POST.Resume.Server
+   - 28.NOVA.POST.Soft.Reboot.Server
+   - 29.NOVA.POST.Hard.Reboot.Server
+   - 30.NOVA.POST.Stop.Server
+   - 31.NOVA.POST.Start.Server
+   - 32.NOVA.POST.Create.Snapshot
+   - 33.NOVA.GET.Search.Snapshot
+   - 34.NOVA.DELETE.Snapshot
+   - 43.NOVA.DELETE.Server
+   - 44.NOVA.GET.Search.Server
+
+   neutron_api_name: 
+   - 15.NEUTRON.Get.List.Network
+   - 16.NEUTRON.POST.Create.Network
+   - 17.NEUTRON.Get.List.Subnet
+   - 18.NEUTRON.POST.Create.Subnet
+   - 45.NEUTRON.GET.Search.Subnet
+   - 46.NEUTRON.DELETE.Subnet
+   - 47.NEUTRON.GET.Search.Network
+   - 48.NEUTRON.DELETE.Network
+
+   cinder_api_name: 
+   - 12.CINDER.GET.List.Volume
+   - 13.CINDER.POST.Create.Volume
+   - 14.CINDER.GET.Volume.Details
+   - 22.CINDER.POST.Attach.Volume
+   - 40.CINDER.GET.Search.Volume
+   - 41.CINDER.POST.Dettach.Volume
+   - 42.CINDER.DELETE.Volume
+
+   glance_api_name: 
+   - 35.GLANCE.GET.List.Image
+   - 36.GLANCE.POST.Create.Image
+   - 37.GLANCE.PATCH.Update.Image
+   - 38.GLANCE.GET.Image.Details
+   - 39.GLANCE.DELETE.Image
+   
+   trx_name: 
+   - 13.CINDER.POST.Create.Volume.Trx
+   - 20.NOVA.POST.Boot.Server.Trx
+   - 22.CINDER.POST.Attach.Volume.Trx
+   - 24.NOVA.POST.Pause.Server.Trx
+   - 25.NOVA.POST.Unpause.Server.Trx
+   - 26.NOVA.POST.Suspend.Server.Trx
+   - 27.NOVA.POST.Resume.Server.Trx
+   - 28.NOVA.POST.Soft.Reboot.Server.Trx
+   - 29.NOVA.POST.Hard.Reboot.Server.Trx
+   - 30.NOVA.POST.Stop.Server.Trx
+   - 31.NOVA.POST.Start.Server.Trx
+   - 32.NOVA.POST.Create.Snapshot.Trx
+   - 41.CINDER.POST.Dettach.Volume.Trx
+   - 43.NOVA.DELETE.Server.Trx
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# List of server/processes statistics names used in JMeter script with PerfMon Plugin
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   cpu_over_name:
+   - CPU Undercloud Node User Util
+   - CPU Undercloud Node System Util
+   - CPU Undercloud Node Iowait Util
+   - CPU Undercloud Node Idle Util
+
+   cpu_contr_name:
+   - CPU Controller Node User Util
+   - CPU Controller Node System Util
+   - CPU Controller Node Iowait Util
+   - CPU Controller Node Idle Util
+
+   cpu_comp_name:
+   - CPU Compute Node User Util
+   - CPU Compute Node System Util
+   - CPU Compute Node Iowait Util
+   - CPU Compute Node Idle Util
+
+   cpu_ceph_name:
+   - CPU Ceph Node User Util
+   - CPU Ceph Node System Util
+   - CPU Ceph Node Iowait Util
+   - CPU Ceph Node Idle Util
+   
+   mem_over_name:
+   - Memory Undercloud Node Total
+   - Memory Undercloud Node Free
+   - Memory Undercloud Node Used
+
+   mem_contr_name:
+   - Memory Controller Node Total
+   - Memory Controller Node Free
+   - Memory Controller Node Used
+
+   mem_comp_name:
+   - Memory Compute Node Total
+   - Memory Compute Node Free
+   - Memory Compute Node Used
+
+   mem_ceph_name:
+   - Memory Ceph Node Total
+   - Memory Ceph Node Free
+   - Memory Ceph Node Used
+   
+   net_over_name:
+   - Network I/O Undercloud Node Sent
+   - Network I/O Undercloud Node Recv
+
+   net_contr_name:
+   - Network I/O Controller Node Recv
+   - Network I/O Controller Node Sent
+
+   net_comp_name:
+   - Network I/O Compute Node Sent
+   - Network I/O Compute Node Recv
+
+   net_ceph_name:
+   - Network I/O Ceph Node Sent
+   - Network I/O Ceph Node Recv
+   
+   disk_over_name:
+   - Disks I/O Undercloud Node Writes
+   - Disks I/O Undercloud Node Reads
+
+   disk_contr_name:
+   - Disks I/O Controller Node Writes
+   - Disks I/O Controller Node Reads
+
+   disk_comp_name:
+   - Disks I/O Compute Node Writes
+   - Disks I/O Compute Node Reads
+
+   disk_ceph_name:
+   - Disks I/O Ceph Node Writes
+   - Disks I/O Ceph Node Reads
+   
+   perfmon_cpu: 
+   - Monitor_CPU_Undercloud
+   - Monitor_CPU_Controller
+   - Monitor_CPU_Compute
+   - Monitor_CPU_Ceph
+
+   perfmon_mem: 
+   - Monitor_Memory_Undercloud
+   - Monitor_Memory_Controller
+   - Monitor_Memory_Compute
+   - Monitor_Memory_Ceph
+
+   perfmon_disk: 
+   - Monitor_Disk
+
+   perfmon_net: 
+   - Monitor_Network
+

@@ -1,0 +1,167 @@
+---
+   jmeter_test: OSP-HTTP-Horizon-Perf-Test.jmx
+   
+# --------------------------------------------------------------------------------------------------------------------------------------
+# List of APIs and transactions names used in JMeter script
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   identity_api_name: 
+   - 01.UI.Identity.Navigate
+   - 02.UI.Identity.Login
+   - 03.UI.Identity.Projects
+   - 03.UI.Identity.Identity
+   - 04.UI.Identity.Create.Project
+   - 05.UI.Identity.Users
+   - 06.UI.Identity.Create.User
+   - 07.UI.Identity.Home
+   - 08.UI.Identity.Logout
+   - 41.UI.Identity.Delete.User
+   - 42.UI.Identity.Delete.Project
+
+   project_api_name: 
+   - 09.UI.Project.Navigate
+   - 10.UI.Project.Login
+   - 11.UI.Project.Volumes
+   - 12.UI.Project.Create.Volume
+   - 13.UI.Project.Volume.Status
+   - 14.UI.Project.Images
+   - 15.UI.Project.Create.Image
+   - 16.UI.Project.Image.Status
+   - 17.UI.Project.Networks
+   - 18.UI.Project.Create.Network
+   - 19.UI.Project.Instances
+   - 20.UI.Project.Launch.Instance
+   - 21.UI.Project.Instance.Status
+   - 22.UI.Proj.Instance.Attach.Volume
+   - 23.UI.Project.Pause.Instance
+   - 24.UI.Project.Resume.Paused.Instance
+   - 25.UI.Project.Suspend.Instance
+   - 26.UI.Project.Resume.Suspended.Instance
+   - 27.UI.Project.SoftReboot.Instance
+   - 28.UI.Project.HardReboot.Instance
+   - 29.UI.Project.Shutdown.Instance
+   - 30.UI.Project.Start.Instance
+   - 31.UI.Project.Instance.Create.Snapshot
+   - 32.UI.Project.Snapshot.Status
+   - 33.UI.Project.Delete.Snapshot
+   - 34.UI.Project.Delete.Image
+   - 35.UI.Project.Instance.Detach.Volume
+   - 36.UI.Project.Delete.Volume
+   - 37.UI.Project.Delete.Instance
+   - 38.UI.Project.Delete.Network
+   - 39.UI.Project.Project
+   - 40.UI.Project.Logout
+
+   trx_name: 
+   - 12.UI.Project.Create.Volume.Trx
+   - 15.UI.Project.Create.Image.Trx
+   - 20.UI.Proj.Launch.Instance.Trx
+   - 22.UI.Proj.Instance.Attach.Volume.Trx
+   - 23.UI.Proj.Pause.Instance.Trx
+   - 24.UI.Proj.Resume.Paused.Instance.Trx
+   - 25.UI.Proj.Suspend.Instance.Trx
+   - 26.UI.Proj.Resume.Suspended.Instance.Trx
+   - 27.UI.Proj.SoftReboot.Instance.Trx
+   - 28.UI.Proj.HardReboot.Instance.Trx
+   - 29.UI.Proj.Shutdown.Instance.Trx
+   - 30.UI.Proj.Start.Instance.Trx
+   - 31.UI.Proj.Instance.Create.Snapshot.Trx
+   
+# --------------------------------------------------------------------------------------------------------------------------------------
+# List of server/processes statistics names used in JMeter script with PerfMon Plugin
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+   cpu_over_name:
+   - CPU Undercloud Node User Util
+   - CPU Undercloud Node System Util
+   - CPU Undercloud Node Iowait Util
+   - CPU Undercloud Node Idle Util
+
+   cpu_contr_name:
+   - CPU Controller Node User Util
+   - CPU Controller Node System Util
+   - CPU Controller Node Iowait Util
+   - CPU Controller Node Idle Util
+
+   cpu_comp_name:
+   - CPU Compute Node User Util
+   - CPU Compute Node System Util
+   - CPU Compute Node Iowait Util
+   - CPU Compute Node Idle Util
+
+   cpu_ceph_name:
+   - CPU Ceph Node User Util
+   - CPU Ceph Node System Util
+   - CPU Ceph Node Iowait Util
+   - CPU Ceph Node Idle Util
+   
+   mem_over_name:
+   - Memory Undercloud Node Total
+   - Memory Undercloud Node Free
+   - Memory Undercloud Node Used
+
+   mem_contr_name:
+   - Memory Controller Node Total
+   - Memory Controller Node Free
+   - Memory Controller Node Used
+
+   mem_comp_name:
+   - Memory Compute Node Total
+   - Memory Compute Node Free
+   - Memory Compute Node Used
+
+   mem_ceph_name:
+   - Memory Ceph Node Total
+   - Memory Ceph Node Free
+   - Memory Ceph Node Used
+   
+   net_over_name:
+   - Network I/O Undercloud Node Sent
+   - Network I/O Undercloud Node Recv
+
+   net_contr_name:
+   - Network I/O Controller Node Recv
+   - Network I/O Controller Node Sent
+
+   net_comp_name:
+   - Network I/O Compute Node Sent
+   - Network I/O Compute Node Recv
+
+   net_ceph_name:
+   - Network I/O Ceph Node Sent
+   - Network I/O Ceph Node Recv
+   
+   disk_over_name:
+   - Disks I/O Undercloud Node Writes
+   - Disks I/O Undercloud Node Reads
+
+   disk_contr_name:
+   - Disks I/O Controller Node Writes
+   - Disks I/O Controller Node Reads
+
+   disk_comp_name:
+   - Disks I/O Compute Node Writes
+   - Disks I/O Compute Node Reads
+
+   disk_ceph_name:
+   - Disks I/O Ceph Node Writes
+   - Disks I/O Ceph Node Reads
+   
+   perfmon_cpu: 
+   - Monitor_CPU_Undercloud
+   - Monitor_CPU_Controller
+   - Monitor_CPU_Compute
+   - Monitor_CPU_Ceph
+
+   perfmon_mem: 
+   - Monitor_Memory_Undercloud
+   - Monitor_Memory_Controller
+   - Monitor_Memory_Compute
+   - Monitor_Memory_Ceph
+
+   perfmon_disk: 
+   - Monitor_Disk
+
+   perfmon_net: 
+   - Monitor_Network
+
