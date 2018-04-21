@@ -87,7 +87,7 @@
     with_items: "{{ ceph_nodes.stdout_lines }}"
 
   - name:  Copy custer status file 
-    shell: "scp root@{{ uc_node_ip.stdout }}:/tmp/{{ status_file_name }} /opt/osp-jmeter/results/{{ test_run_name }}/log/{{ status_file_name }}"
+    shell: "scp -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }}:/tmp/{{ status_file_name }} /opt/osp-jmeter/results/{{ test_run_name }}/log/{{ status_file_name }}"
     
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
