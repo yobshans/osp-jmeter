@@ -8,10 +8,6 @@
   - name:  Copy CSS file
     shell: "cp /opt/osp-jmeter/templates/result.css /opt/osp-jmeter/results/{{ test_run_name }}/html/"
 
-  - name:  Copy custer status file after fail
-    shell: "scp root@{{ uc_node_ip.stdout }}:/tmp/stack-status-after-fail.txt /opt/osp-jmeter/results/{{ test_run_name }}/log/stack-status-after-fail.txt"
-    ignore_errors: yes
-    
   - name:  Xalan-J - Generate XML file with 90% trx response time for compare
     shell: >
       java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
