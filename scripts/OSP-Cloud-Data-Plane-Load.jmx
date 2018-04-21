@@ -3158,33 +3158,6 @@ vars.put(&quot;tenant_count&quot;, String.valueOf(c_t));</stringProp>
         <boolProp name="exclude_checkbox_state">false</boolProp>
       </kg.apc.jmeter.vizualizers.CorrectedResultCollector>
       <hashTree/>
-      <kg.apc.jmeter.listener.GraphsGeneratorListener guiclass="TestBeanGUI" testclass="kg.apc.jmeter.listener.GraphsGeneratorListener" testname="jp@gc - Graphs Generator" enabled="false">
-        <boolProp name="aggregateRows">false</boolProp>
-        <boolProp name="autoScaleRows">false</boolProp>
-        <stringProp name="endOffset"></stringProp>
-        <stringProp name="excludeLabels"></stringProp>
-        <boolProp name="excludeSamplesWithRegex">false</boolProp>
-        <intProp name="exportMode">0</intProp>
-        <stringProp name="filePrefix"></stringProp>
-        <stringProp name="forceY"></stringProp>
-        <stringProp name="granulation">60000</stringProp>
-        <intProp name="graphHeight">600</intProp>
-        <intProp name="graphWidth">800</intProp>
-        <stringProp name="includeLabels"></stringProp>
-        <boolProp name="includeSamplesWithRegex">false</boolProp>
-        <stringProp name="limitRows">150</stringProp>
-        <stringProp name="lineWeight"></stringProp>
-        <stringProp name="lowCountLimit"></stringProp>
-        <stringProp name="outputBaseFolder">${proj.path}/results/${run.name}/</stringProp>
-        <boolProp name="paintGradient">true</boolProp>
-        <boolProp name="paintZeroing">true</boolProp>
-        <boolProp name="preventOutliers">false</boolProp>
-        <boolProp name="relativeTimes">false</boolProp>
-        <stringProp name="resultsFileName">${proj.path}/results/${run.name}/xml/ViewResultsTree.jtl</stringProp>
-        <stringProp name="startOffset"></stringProp>
-        <stringProp name="successFilter"></stringProp>
-      </kg.apc.jmeter.listener.GraphsGeneratorListener>
-      <hashTree/>
     </hashTree>
   </hashTree>
 </jmeterTestPlan>
