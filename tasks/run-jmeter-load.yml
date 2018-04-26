@@ -31,10 +31,9 @@
         when: ceph_count.stdout != "0"
     when: perf_monitor
     
-  - name: Start Date and Time
-    shell: "date +'%F %T'"
-    register: start_date
-
+  - name: Save Start Date and Time
+    shell: "date +'%F %T' > /opt/osp-jmeter/results/{{ test_run_name }}/log/start-date.txt"
+    
   - name: JMeter - Run Load Test
     shell: >
       $JMETER_HOME/bin/jmeter -n 
@@ -54,6 +53,7 @@
       -Jcontr.host={{ contr_0_node.stdout }} 
       -Jcomp.host={{ comp_0_node.stdout }} 
       -Jceph.host={{ ceph_0_node.stdout | default('1.1.1.1')}} 
+      -Jiperf.host={{ iperf_host }} 
       -Jimage.name={{ image_name }} 
       -Jflavor.ref={{ flavor_ref }}
       -Jvm.amount={{ vm_amount }}
@@ -70,6 +70,10 @@
     shell: "date +'%F %T'"
     register: end_date
 
+  - name: Start Date and Time
+    shell: "cat /opt/osp-jmeter/results/{{ test_run_name }}/log/start-date.txt"
+    register: start_date
+    
   - name: Test Duration
     shell: "date -u -d @$(($(date -d \"{{ end_date.stdout}}\" '+%s') - $(date -d \"{{ start_date.stdout}}\" '+%s'))) '+%T'"
     register: test_duration

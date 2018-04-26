@@ -9,11 +9,11 @@
     shell: "cp /opt/osp-jmeter/templates/result.css /opt/osp-jmeter/results/{{ test_run_name }}/html/"
 
   - name:  Copy stress-ng statistics file
-    shell: "scp -r root@{{ uc_node_ip.stdout }}:/tmp/{{ test_run_name }}/*stressng.txt /opt/osp-jmeter/results/{{ test_run_name }}/log/"
+    shell: "scp -r -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }}:/tmp/{{ test_run_name }}/*stressng.txt /opt/osp-jmeter/results/{{ test_run_name }}/log/"
     ignore_errors: yes
 
   - name:  Copy iperf statistics file
-    shell: "scp -r root@{{ uc_node_ip.stdout }}:/tmp/{{ test_run_name }}/*iperf.txt /opt/osp-jmeter/results/{{ test_run_name }}/log/"
+    shell: "scp -r -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }}:/tmp/{{ test_run_name }}/*iperf.txt /opt/osp-jmeter/results/{{ test_run_name }}/log/"
     ignore_errors: yes
 
   - name: Delete tmp dir on undercloud

@@ -55,6 +55,7 @@
       -Jcontr.host={{ contr_0_node.stdout }} 
       -Jcomp.host={{ comp_0_node.stdout }} 
       -Jceph.host={{ ceph_0_node.stdout }} 
+      -Jiperf.host={{ iperf_host }} 
       -Jimage.name={{ image_name }} 
       -Jflavor.ref={{ flavor_ref }}
       -Jssl.mode={{ ssl_mode }}

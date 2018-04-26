@@ -57,6 +57,7 @@
       -Jcontr.host={{ contr_0_node.stdout }} 
       -Jcomp.host={{ comp_0_node.stdout }} 
       -Jceph.host={{ ceph_0_node.stdout | default('1.1.1.1')}} 
+      -Jiperf.host={{ iperf_host }} 
       -Jimage.name={{ image_name }} 
       -Jflavor.ref={{ flavor_ref }}
       -Jvm.amount={{ vm_amount }}
