@@ -1,11 +1,17 @@
 ---
-   jmeter_test: OSP-Stress-Test.jmx
+   jmeter_test: OSP-Cloud-Data-Plane-Load.jmx   
+   jmeter_stop_test: OSP-Stop-Cloud-Data-Plane-Load.jmx
    
 # --------------------------------------------------------------------------------------------------------------------------------------
-# Generic args
+# specific vars for JMeter with PerfMon Plugin
 # --------------------------------------------------------------------------------------------------------------------------------------
 
+   uc_user: root # user for ssh to undercloud node server
+   uc_pass:  #password for ssh to undercloud node server
    iteration_count: 1 # number of script's loop iterations 
+   image_name: rhel # name of image for boot instance (cirros/centos/rhel)
+   flavor_ref: 2 # flavor reference number
+   notes: n/a # any free text
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # List of APIs and transactions names used in JMeter script
@@ -13,55 +19,17 @@
 
    keystone_api_name: 
    - 01.KEYSTONE.POST.Admin.Token
-   - 02.KEYSTONE.GET.Admin.Tenant
-   - 03.KEYSTONE.GET.List.Tenant
-   - 04.KEYSTONE.POST.Create.Tenant
-   - 05.KEYSTONE.GET.List.User
-   - 06.KEYSTONE.POST.Create.User
-   - 07.KEYSTONE.GET.Search.Admin.Role
-   - 08.KEYSTONE.PUT.Grant.Admin.Role
-   - 09.KEYSTONE.POST.Tenant.Token
-   - 47.KEYSTONE.DELETE.User
-   - 48.KEYSTONE.DELETE.Tenant
+   - 02.KEYSTONE.GET.Search.Tenant
+   - 03.KEYSTONE.POST.Tenant.Token
    
    nova_api_name: 
-   - 10.NOVA.GET.Search.Image
-   - 11.NOVA.GET.Search.Flavor
-   - 22.NOVA.POST.Import.Keypair
-   - 23.NOVA.POST.Boot.Server
-   - 24.NOVA.GET.Server.Details
-   - 25.NOVA.POST.Add.Floating.IP
-   - 37.NOVA.POST.Remove.Floating.IP
-   - 38.NOVA.DELETE.Server
-   - 39.NOVA.GET.Search.Server
-   - 40.NOVA.DELETE.Keypair
-   
-   neutron_api_name: 
-   - 12.NEUTRON.Get.Security.Group
-   - 13.NEUTRON.POST.Create.Security.Group
-   - 14.NEUTRON.POST.Create.Sec.Group.Rule.SSH
-   - 15.NEUTRON.POST.Create.Sec.Group.Rule.PING
-   - 16.NEUTRON.Get.External.Network
-   - 17.NEUTRON.POST.Create.Network
-   - 18.NEUTRON.POST.Create.Subnet
-   - 19.NEUTRON.POST.Create.Floating.IP
-   - 20.NEUTRON.POST.Create.Router
-   - 21.NEUTRON.PUT.Add.Interface.To.Router
-   - 41.NEUTRON.PUT.Remove.Interface.From.Router
-   - 42.NEUTRON.DELETE.Router
-   - 43.NEUTRON.DELETE.Security.Group
-   - 44.NEUTRON.DELETE.Floating.IP
-   - 45.NEUTRON.DELETE.Subnet
-   - 46.NEUTRON.DELETE.Network
+   - 04.NOVA.GET.Search.Server
+   - 05.NOVA.GET.Server.Floating.IP
    
    ssh_name: 
-   - 26.SSH.PING.Instance
-   - 27.SSH.DATE.On.Instance
-   - 36.SSH.STRESS.On.Instance
-      
-   trx_name: 
-   - 23.NOVA.POST.Boot.Server.Trx
-   - 38.NOVA.DELETE.Server.Trx
+   - 06.SSH.PING.Instance
+   - 07.SSH.RUN.STRESS-NG.On.Instance
+   - 08.SSH.RUN.IPERF.On.Instance
    
 # --------------------------------------------------------------------------------------------------------------------------------------
 # List of server/processes statistics names used in JMeter script with PerfMon Plugin
