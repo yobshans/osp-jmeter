@@ -66,6 +66,7 @@
       ssl_mode="{{ test.ssl.mode }}"
       thread_count="{{ test.thread.count }}"
       thread_rampup="{{ test.thread.rampup }}"
+      iperf_host="{{ test.iperf.srv.host }}"
       perf_monitor="{{ test.perf.monitor }}"
       cpu_workers="{{ test.cpu.workers }}"
       cpu_percent="{{ test.cpu.percent }}"
@@ -126,6 +127,7 @@
       vm_amount="{{ test.vm.amount }}"
       perf_monitor="{{ test.perf.monitor }}"
       ssl_mode="{{ test.ssl.mode }}"
+      iperf_host="{{ test.iperf.srv.host }}"
       cpu_workers="{{ test.cpu.workers }}"
       cpu_percent="{{ test.cpu.percent }}"
       vm_workers="{{ test.vm.workers }}"
@@ -139,6 +141,9 @@
   - import_playbook: |
       stop-dataplane-load.yaml -e 
       test_run_name="{{ test.run.name }}"
+      iperf_host="{{ test.iperf.srv.host }}"
+      thread_count="{{ test.thread.count }}"
+      vm_amount="{{ test.vm.amount }}"
       perf_monitor="{{ test.perf.monitor }}"
       ssl_mode="{{ test.ssl.mode }}"
     when: 

@@ -46,7 +46,7 @@
     include_tasks: tasks/get-stack-info.yml
 
   - name: Run JMeter test script
-    include_tasks: tasks/stop-jmeter-load.yml
+    include_tasks: tasks/stop-jmeter-ping.yml
     
   - name: Generate API Trx charts
     include_tasks: tasks/api-trx-charts.yml

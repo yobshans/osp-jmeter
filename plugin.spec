@@ -102,6 +102,11 @@ subparsers:
                       help: |
                           Timeout after N seconds. Forever is 0.
                       default: 600
+                  iperf-srv-host:
+                      type: Value
+                      help: |
+                          IPERF server host IP
+                      default: 127.0.0.1
                   sys-action:
                       type: Value
                       help: |

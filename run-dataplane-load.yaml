@@ -37,6 +37,7 @@
    stress_time_sec: 600 
    perf_monitor: false 
    ssl_mode: false 
+   iperf_host: 127.0.0.1
 
   environment:
    JMETER_HOME: /opt/apache-jmeter-4.0

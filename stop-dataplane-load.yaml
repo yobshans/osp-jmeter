@@ -19,7 +19,7 @@
   remote_user: root
   gather_facts: no
   vars_files:
-    - vars/load.yml
+    - vars/load-stop.yml
   vars:
    test_run_name: osp-jmeter-test
    build_num: osp-13
@@ -28,6 +28,7 @@
    vm_amount: 1 
    perf_monitor: false 
    ssl_mode: false 
+   iperf_host: 127.0.0.1
 
   environment:
    JMETER_HOME: /opt/apache-jmeter-4.0
