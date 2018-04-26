@@ -11,7 +11,7 @@ Basically, it a collection of Ansible playbooks, JMeter scripts and xsl template
 
 Supported environments:
 
-Operating systems - RHEL 7.*, CentOS 7.*
+Operating systems - RHEL 7 / CentOS 7
 
 Openstack: RHOS 10/11/12/13, Newton/Ocata/Pike/Queens 
 
@@ -40,19 +40,30 @@ Install "osp-jmeter"
  - Standalone
  
 [root@undercloud-0 ~]# cd /opt
+
 [root@undercloud-0 opt]# git clone https://github.com/yobshans/osp-jmeter
+
 [root@undercloud-0 opt]# cd osp-jmeter/
+
 [root@undercloud-0 opt]# ansible-playbook -v config-osp-jmeter.yaml
+
 [root@undercloud-0 opt]# ansible-playbook -v config-osp-cloud.yaml
+
 
 - InfraRed plugin
 
 [root@hypervisor ~]# cd /root/infrared/plugins/
+
 [root@hypervisor plugins]# git clone https://github.com/yobshans/osp-jmeter
+
 [root@hypervisor ~]virtualenv .venv && source .venv/bin/activate
+
 (.venv) [root@hypervisor infrared]# ir plugin add /root/infrared/plugins/osp-jmeter
+
 (.venv) [root@hypervisor infrared]# ir osp-jmeter --config-osp-jmeter yes
+
 (.venv) [root@hypervisor infrared]# ir osp-jmeter --config-osp-cloud yes
+
 
 Optional can be installed JMeter PerfMon Plugin agents on nodes which collect CPU/Memory/Networ/Disk utilization
 and finally generate charts. To do this need provide argument when install osp-jmeter and later when run tests 
