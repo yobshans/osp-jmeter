@@ -15,7 +15,7 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="threadgroup.count" elementType="Argument">
             <stringProp name="Argument.name">threadgroup.count</stringProp>
-            <stringProp name="Argument.value">${__P(threadgroup.count,1)}</stringProp>
+            <stringProp name="Argument.value">${__P(threadgroup.count,2)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="threadgroup.rampup" elementType="Argument">
@@ -40,7 +40,7 @@
           </elementProp>
           <elementProp name="ospd.host" elementType="Argument">
             <stringProp name="Argument.name">ospd.host</stringProp>
-            <stringProp name="Argument.value">${__P(ospd.host,10.0.0.85)}</stringProp>
+            <stringProp name="Argument.value">${__P(ospd.host,10.0.0.73)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="ospd.user" elementType="Argument">
@@ -80,7 +80,7 @@
           </elementProp>
           <elementProp name="iperf.host" elementType="Argument">
             <stringProp name="Argument.name">iperf.host</stringProp>
-            <stringProp name="Argument.value">${__P(iperf.host,10.0.0.85)}</stringProp>
+            <stringProp name="Argument.value">${__P(iperf.host,10.0.0.73)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="ssl.mode" elementType="Argument">
@@ -306,7 +306,7 @@ ${__setProperty(server_ip, ${ssh_server_ip})};</stringProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">${iteration.count}</stringProp>
+          <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
         <stringProp name="ThreadGroup.num_threads">${threadgroup.count}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${threadgroup.rampup}</stringProp>
@@ -1191,250 +1191,312 @@ vars.put(&quot;vm_count&quot;, String.valueOf(c_vm));</stringProp>
             </BeanShellSampler>
             <hashTree/>
           </hashTree>
-          <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="SCRIPT Update Counters" enabled="true">
-            <stringProp name="TestPlan.comments">SCRIPT Create Counters</stringProp>
-            <stringProp name="BeanShellSampler.query">vars.put(&quot;vm_count&quot;, &quot;1&quot;);
+          <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If stress.time.sec != 0" enabled="true">
+            <stringProp name="IfController.condition">${__javaScript(&quot;${stress.time.sec}&quot; != 0)}</stringProp>
+            <boolProp name="IfController.evaluateAll">false</boolProp>
+          </IfController>
+          <hashTree>
+            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="SCRIPT Update Counters" enabled="true">
+              <stringProp name="TestPlan.comments">SCRIPT Create Counters</stringProp>
+              <stringProp name="BeanShellSampler.query">vars.put(&quot;vm_count&quot;, &quot;1&quot;);
 int t_sec = ${stress.time.sec};
 t_sec = t_sec * 1000;
 vars.put(&quot;stress.time.msec&quot;, String.valueOf(t_sec));</stringProp>
-            <stringProp name="BeanShellSampler.filename"></stringProp>
-            <stringProp name="BeanShellSampler.parameters"></stringProp>
-            <boolProp name="BeanShellSampler.resetInterpreter">true</boolProp>
-          </BeanShellSampler>
-          <hashTree/>
-          <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Pause ${stress.time.msec}" enabled="true">
-            <stringProp name="TestPlan.comments">1 min - 120000, 5 min - 300000, 30 min - 1800000</stringProp>
-            <intProp name="ActionProcessor.action">1</intProp>
-            <intProp name="ActionProcessor.target">0</intProp>
-            <stringProp name="ActionProcessor.duration">${stress.time.msec}</stringProp>
-          </TestAction>
-          <hashTree/>
-          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop ${vm_amount}" enabled="true">
-            <boolProp name="LoopController.continue_forever">true</boolProp>
-            <stringProp name="LoopController.loops">${vm_amount}</stringProp>
-          </LoopController>
-          <hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="04.NOVA.GET.Search.Server" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value"></stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
-              <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers?name=${srv_name}</stringProp>
-              <stringProp name="HTTPSampler.method">GET</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-              <stringProp name="TestPlan.comments">26.NOVA.GET.Server.Id</stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="" elementType="Header">
-                    <stringProp name="Header.name">Content-type</stringProp>
-                    <stringProp name="Header.value">application/json</stringProp>
-                  </elementProp>
-                  <elementProp name="" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json</stringProp>
-                  </elementProp>
-                  <elementProp name="" elementType="Header">
-                    <stringProp name="Header.name">X-Auth-Token</stringProp>
-                    <stringProp name="Header.value">${token_id_scale}</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-              <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
-                <collectionProp name="UserParameters.names">
-                  <stringProp name="125278163">srv_name</stringProp>
-                </collectionProp>
-                <collectionProp name="UserParameters.thread_values">
-                  <collectionProp name="1066043784">
-                    <stringProp name="-848605576">${name}-${tenant_count}-${vm_count}-vm</stringProp>
-                  </collectionProp>
-                </collectionProp>
-                <boolProp name="UserParameters.per_iteration">false</boolProp>
-              </UserParameters>
-              <hashTree/>
-              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract server_id" enabled="true">
-                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-                <stringProp name="RegexExtractor.refname">server_id</stringProp>
-                <stringProp name="RegexExtractor.regex">&quot;id&quot;: &quot;(.+?)&quot;</stringProp>
-                <stringProp name="RegexExtractor.template">$1$</stringProp>
-                <stringProp name="RegexExtractor.default">None</stringProp>
-                <stringProp name="RegexExtractor.match_number">1</stringProp>
-              </RegexExtractor>
-              <hashTree/>
-            </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="05.NOVA.GET.Server.Floating.IP" enabled="true">
-              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-                <collectionProp name="Arguments.arguments">
-                  <elementProp name="" elementType="HTTPArgument">
-                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                    <stringProp name="Argument.value"></stringProp>
-                    <stringProp name="Argument.metadata">=</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </elementProp>
-              <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
-              <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
-              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-              <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
-              <stringProp name="HTTPSampler.method">GET</stringProp>
-              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
-              <stringProp name="TestPlan.comments">NOVA.GET.Server.Details</stringProp>
-            </HTTPSamplerProxy>
-            <hashTree>
-              <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-                <collectionProp name="HeaderManager.headers">
-                  <elementProp name="" elementType="Header">
-                    <stringProp name="Header.name">Content-type</stringProp>
-                    <stringProp name="Header.value">application/json</stringProp>
-                  </elementProp>
-                  <elementProp name="" elementType="Header">
-                    <stringProp name="Header.name">Accept</stringProp>
-                    <stringProp name="Header.value">application/json</stringProp>
-                  </elementProp>
-                  <elementProp name="" elementType="Header">
-                    <stringProp name="Header.name">X-Auth-Token</stringProp>
-                    <stringProp name="Header.value">${token_id_scale}</stringProp>
-                  </elementProp>
-                </collectionProp>
-              </HeaderManager>
-              <hashTree/>
-              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract floating_ip" enabled="true">
-                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-                <stringProp name="RegexExtractor.refname">floating_ip</stringProp>
-                <stringProp name="RegexExtractor.regex">&quot;addr&quot;: &quot;(.+?)&quot;</stringProp>
-                <stringProp name="RegexExtractor.template">$1$</stringProp>
-                <stringProp name="RegexExtractor.default">None</stringProp>
-                <stringProp name="RegexExtractor.match_number">2</stringProp>
-              </RegexExtractor>
-              <hashTree/>
-            </hashTree>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SCP.STRESS.STAT" enabled="true">
-              <stringProp name="command">sudo scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no &apos;cloud-user@${floating_ip}:/tmp/${floating_ip}-*-stressng.txt&apos; /tmp/${run.name}</stringProp>
-              <intProp name="connectionTimeout">5000</intProp>
-              <stringProp name="hostname">${ospd.host}</stringProp>
-              <stringProp name="passphrase"></stringProp>
-              <stringProp name="password">${ospd.pass}</stringProp>
-              <intProp name="port">22</intProp>
-              <boolProp name="printStdErr">true</boolProp>
-              <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-              <boolProp name="useReturnCode">true</boolProp>
-              <boolProp name="useTty">false</boolProp>
-              <stringProp name="username">${ospd.user}</stringProp>
-            </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-            <hashTree/>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SCP.IPERF.STAT" enabled="true">
-              <stringProp name="command">sudo scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no &apos;cloud-user@${floating_ip}:/tmp/${floating_ip}-*-iperf.txt&apos;  /tmp/${run.name}</stringProp>
-              <intProp name="connectionTimeout">5000</intProp>
-              <stringProp name="hostname">${ospd.host}</stringProp>
-              <stringProp name="passphrase"></stringProp>
-              <stringProp name="password">${ospd.pass}</stringProp>
-              <intProp name="port">22</intProp>
-              <boolProp name="printStdErr">true</boolProp>
-              <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-              <boolProp name="useReturnCode">true</boolProp>
-              <boolProp name="useTty">false</boolProp>
-              <stringProp name="username">${ospd.user}</stringProp>
-            </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-            <hashTree/>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="REMOVE.EPEL.On.Instance" enabled="true">
-              <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo rpm -e epel-release-7-11.noarch&quot;</stringProp>
-              <intProp name="connectionTimeout">5000</intProp>
-              <stringProp name="hostname">${ospd.host}</stringProp>
-              <stringProp name="passphrase"></stringProp>
-              <stringProp name="password">${ospd.pass}</stringProp>
-              <intProp name="port">22</intProp>
-              <boolProp name="printStdErr">true</boolProp>
-              <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-              <boolProp name="useReturnCode">true</boolProp>
-              <boolProp name="useTty">false</boolProp>
-              <stringProp name="username">${ospd.user}</stringProp>
-            </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-            <hashTree/>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="GET.IPERF.PID.On.IPERF.SRV" enabled="true">
-              <stringProp name="command">sudo ps -ef | grep iperf3 |grep ${uc_port} |awk &apos;NR==1 {print $1$2$8}&apos;</stringProp>
-              <intProp name="connectionTimeout">5000</intProp>
-              <stringProp name="hostname">${iperf.host}</stringProp>
-              <stringProp name="passphrase"></stringProp>
-              <stringProp name="password">${ospd.pass}</stringProp>
-              <intProp name="port">22</intProp>
-              <boolProp name="printStdErr">true</boolProp>
-              <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-              <boolProp name="useReturnCode">true</boolProp>
-              <boolProp name="useTty">false</boolProp>
-              <stringProp name="username">${ospd.user}</stringProp>
-            </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-            <hashTree>
-              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="iperf_pid" enabled="true">
-                <stringProp name="TestPlan.comments">iperf_pid</stringProp>
-                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-                <stringProp name="RegexExtractor.refname">iperf_pid</stringProp>
-                <stringProp name="RegexExtractor.regex">root(.+?)iperf3</stringProp>
-                <stringProp name="RegexExtractor.template">$1$</stringProp>
-                <stringProp name="RegexExtractor.default">None</stringProp>
-                <stringProp name="RegexExtractor.match_number">1</stringProp>
-              </RegexExtractor>
-              <hashTree/>
-              <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
-                <collectionProp name="UserParameters.names">
-                  <stringProp name="-610784366">uc_port</stringProp>
-                </collectionProp>
-                <collectionProp name="UserParameters.thread_values">
-                  <collectionProp name="1652365656">
-                    <stringProp name="-1381713232">52${tenant_count}${vm_count}</stringProp>
-                  </collectionProp>
-                </collectionProp>
-                <boolProp name="UserParameters.per_iteration">false</boolProp>
-              </UserParameters>
-              <hashTree/>
-            </hashTree>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="KILL.IPERF.On.IPERF.SRV" enabled="true">
-              <stringProp name="command">sudo kill -9 ${iperf_pid}</stringProp>
-              <intProp name="connectionTimeout">5000</intProp>
-              <stringProp name="hostname">${iperf.host}</stringProp>
-              <stringProp name="passphrase"></stringProp>
-              <stringProp name="password">${ospd.pass}</stringProp>
-              <intProp name="port">22</intProp>
-              <boolProp name="printStdErr">true</boolProp>
-              <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-              <boolProp name="useReturnCode">true</boolProp>
-              <boolProp name="useTty">false</boolProp>
-              <stringProp name="username">${ospd.user}</stringProp>
-            </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-            <hashTree/>
-            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="SCRIPT Increment Counter Servers" enabled="true">
-              <stringProp name="BeanShellSampler.query">int c_vm = ${vm_count};
-c_vm++;
-vars.put(&quot;vm_count&quot;, String.valueOf(c_vm));</stringProp>
               <stringProp name="BeanShellSampler.filename"></stringProp>
               <stringProp name="BeanShellSampler.parameters"></stringProp>
-              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+              <boolProp name="BeanShellSampler.resetInterpreter">true</boolProp>
             </BeanShellSampler>
+            <hashTree/>
+            <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Pause ${stress.time.msec}" enabled="true">
+              <stringProp name="TestPlan.comments">1 min - 120000, 5 min - 300000, 30 min - 1800000</stringProp>
+              <intProp name="ActionProcessor.action">1</intProp>
+              <intProp name="ActionProcessor.target">0</intProp>
+              <stringProp name="ActionProcessor.duration">${stress.time.msec}</stringProp>
+            </TestAction>
+            <hashTree/>
+            <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop ${vm_amount}" enabled="true">
+              <boolProp name="LoopController.continue_forever">true</boolProp>
+              <stringProp name="LoopController.loops">${vm_amount}</stringProp>
+            </LoopController>
+            <hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="04.NOVA.GET.Search.Server" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value"></stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
+                <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
+                <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers?name=${srv_name}</stringProp>
+                <stringProp name="HTTPSampler.method">GET</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                <stringProp name="TestPlan.comments">26.NOVA.GET.Server.Id</stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                  <collectionProp name="HeaderManager.headers">
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">Content-type</stringProp>
+                      <stringProp name="Header.value">application/json</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">Accept</stringProp>
+                      <stringProp name="Header.value">application/json</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">X-Auth-Token</stringProp>
+                      <stringProp name="Header.value">${token_id_scale}</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </HeaderManager>
+                <hashTree/>
+                <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+                  <collectionProp name="UserParameters.names">
+                    <stringProp name="125278163">srv_name</stringProp>
+                  </collectionProp>
+                  <collectionProp name="UserParameters.thread_values">
+                    <collectionProp name="1066043784">
+                      <stringProp name="-848605576">${name}-${tenant_count}-${vm_count}-vm</stringProp>
+                    </collectionProp>
+                  </collectionProp>
+                  <boolProp name="UserParameters.per_iteration">false</boolProp>
+                </UserParameters>
+                <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract server_id" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                  <stringProp name="RegexExtractor.refname">server_id</stringProp>
+                  <stringProp name="RegexExtractor.regex">&quot;id&quot;: &quot;(.+?)&quot;</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">None</stringProp>
+                  <stringProp name="RegexExtractor.match_number">1</stringProp>
+                </RegexExtractor>
+                <hashTree/>
+              </hashTree>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="05.NOVA.GET.Server.Floating.IP" enabled="true">
+                <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                  <collectionProp name="Arguments.arguments">
+                    <elementProp name="" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                      <stringProp name="Argument.value"></stringProp>
+                      <stringProp name="Argument.metadata">=</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
+                <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
+                <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
+                <stringProp name="HTTPSampler.method">GET</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                <stringProp name="TestPlan.comments">NOVA.GET.Server.Details</stringProp>
+              </HTTPSamplerProxy>
+              <hashTree>
+                <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+                  <collectionProp name="HeaderManager.headers">
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">Content-type</stringProp>
+                      <stringProp name="Header.value">application/json</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">Accept</stringProp>
+                      <stringProp name="Header.value">application/json</stringProp>
+                    </elementProp>
+                    <elementProp name="" elementType="Header">
+                      <stringProp name="Header.name">X-Auth-Token</stringProp>
+                      <stringProp name="Header.value">${token_id_scale}</stringProp>
+                    </elementProp>
+                  </collectionProp>
+                </HeaderManager>
+                <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract floating_ip" enabled="true">
+                  <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                  <stringProp name="RegexExtractor.refname">floating_ip</stringProp>
+                  <stringProp name="RegexExtractor.regex">&quot;addr&quot;: &quot;(.+?)&quot;</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">None</stringProp>
+                  <stringProp name="RegexExtractor.match_number">2</stringProp>
+                </RegexExtractor>
+                <hashTree/>
+              </hashTree>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SCP.STRESS.STAT" enabled="true">
+                <stringProp name="command">sudo scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no &apos;cloud-user@${floating_ip}:/tmp/${floating_ip}-*-stressng.txt&apos; /tmp/${run.name}</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${ospd.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree/>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="RM.STRESS.STAT" enabled="true">
+                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo rm -rf /tmp/${floating_ip}-*-stressng.txt&quot;</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${ospd.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree/>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SCP.IPERF.STAT" enabled="true">
+                <stringProp name="command">sudo scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no &apos;cloud-user@${floating_ip}:/tmp/${floating_ip}-*-iperf.txt&apos;  /tmp/${run.name}</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${ospd.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree/>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="RM.IPERF.STAT" enabled="true">
+                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo rm -rf /tmp/${floating_ip}-*-iperf.txt&quot;</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${ospd.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree/>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="REMOVE.EPEL.On.Instance" enabled="true">
+                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo rpm -e epel-release-7-11.noarch&quot;</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${ospd.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree/>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="GET.IPERF.PID.On.IPERF.SRV" enabled="true">
+                <stringProp name="command">sudo ps -ef | grep iperf3 |grep ${uc_port} |awk &apos;NR==1 {print $1$2$8}&apos;</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${iperf.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="iperf_pid" enabled="true">
+                  <stringProp name="TestPlan.comments">iperf_pid</stringProp>
+                  <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                  <stringProp name="RegexExtractor.refname">iperf_pid</stringProp>
+                  <stringProp name="RegexExtractor.regex">root(.+?)iperf3</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">None</stringProp>
+                  <stringProp name="RegexExtractor.match_number">1</stringProp>
+                </RegexExtractor>
+                <hashTree/>
+                <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+                  <collectionProp name="UserParameters.names">
+                    <stringProp name="-610784366">uc_port</stringProp>
+                  </collectionProp>
+                  <collectionProp name="UserParameters.thread_values">
+                    <collectionProp name="1652365656">
+                      <stringProp name="-1381713232">52${tenant_count}${vm_count}</stringProp>
+                    </collectionProp>
+                  </collectionProp>
+                  <boolProp name="UserParameters.per_iteration">false</boolProp>
+                </UserParameters>
+                <hashTree/>
+              </hashTree>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="KILL.IPERF.On.IPERF.SRV" enabled="true">
+                <stringProp name="command">sudo kill -9 ${iperf_pid}</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${iperf.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree/>
+              <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="SCRIPT Increment Counter Servers" enabled="true">
+                <stringProp name="BeanShellSampler.query">int c_vm = ${vm_count};
+c_vm++;
+vars.put(&quot;vm_count&quot;, String.valueOf(c_vm));</stringProp>
+                <stringProp name="BeanShellSampler.filename"></stringProp>
+                <stringProp name="BeanShellSampler.parameters"></stringProp>
+                <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
+              </BeanShellSampler>
+              <hashTree/>
+            </hashTree>
+            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="PKILL.IPERF.ON.IPERF.SRV" enabled="false">
+              <stringProp name="command">sudo pkill -f iperf3</stringProp>
+              <intProp name="connectionTimeout">5000</intProp>
+              <stringProp name="hostname">${iperf.host}</stringProp>
+              <stringProp name="passphrase"></stringProp>
+              <stringProp name="password">${ospd.pass}</stringProp>
+              <intProp name="port">22</intProp>
+              <boolProp name="printStdErr">true</boolProp>
+              <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+              <boolProp name="useReturnCode">true</boolProp>
+              <boolProp name="useTty">false</boolProp>
+              <stringProp name="username">${ospd.user}</stringProp>
+            </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+            <hashTree/>
+            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="REMOVE.EPEL.On.IPERF.SRV" enabled="false">
+              <stringProp name="command">sudo rpm -e epel-release-7-11.noarch</stringProp>
+              <intProp name="connectionTimeout">5000</intProp>
+              <stringProp name="hostname">${iperf.host}</stringProp>
+              <stringProp name="passphrase"></stringProp>
+              <stringProp name="password">${ospd.pass}</stringProp>
+              <intProp name="port">22</intProp>
+              <boolProp name="printStdErr">true</boolProp>
+              <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+              <boolProp name="useReturnCode">true</boolProp>
+              <boolProp name="useTty">false</boolProp>
+              <stringProp name="username">${ospd.user}</stringProp>
+            </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
             <hashTree/>
           </hashTree>
         </hashTree>
@@ -1443,119 +1505,6 @@ vars.put(&quot;vm_count&quot;, String.valueOf(c_vm));</stringProp>
           <boolProp name="displayJMeterVariables">true</boolProp>
           <boolProp name="displaySystemProperties">true</boolProp>
         </DebugSampler>
-        <hashTree/>
-      </hashTree>
-      <PostThreadGroup guiclass="PostThreadGroupGui" testclass="PostThreadGroup" testname="tearDown Thread Group" enabled="true">
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
-        </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
-        <boolProp name="ThreadGroup.scheduler">false</boolProp>
-        <stringProp name="ThreadGroup.duration"></stringProp>
-        <stringProp name="ThreadGroup.delay"></stringProp>
-      </PostThreadGroup>
-      <hashTree>
-        <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="SCRIPT Create Counters" enabled="true">
-          <stringProp name="TestPlan.comments">SCRIPT Create Counters</stringProp>
-          <stringProp name="BeanShellSampler.query">vars.put(&quot;tenant_count&quot;, &quot;1&quot;);
-vars.put(&quot;vm_count&quot;, &quot;1&quot;);
-</stringProp>
-          <stringProp name="BeanShellSampler.filename"></stringProp>
-          <stringProp name="BeanShellSampler.parameters"></stringProp>
-          <boolProp name="BeanShellSampler.resetInterpreter">true</boolProp>
-        </BeanShellSampler>
-        <hashTree/>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop ${threadgroup.count}" enabled="true">
-          <boolProp name="LoopController.continue_forever">true</boolProp>
-          <stringProp name="LoopController.loops">${threadgroup.count}</stringProp>
-        </LoopController>
-        <hashTree>
-          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop ${vm_amount}" enabled="true">
-            <boolProp name="LoopController.continue_forever">true</boolProp>
-            <stringProp name="LoopController.loops">${vm_amount}</stringProp>
-          </LoopController>
-          <hashTree>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="GET.IPERF.PID.On.IPERF.SRV" enabled="true">
-              <stringProp name="command">sudo ps -ef | grep iperf3 |grep ${uc_port} |awk &apos;NR==1 {print $1$2$8}&apos;</stringProp>
-              <intProp name="connectionTimeout">5000</intProp>
-              <stringProp name="hostname">${iperf.host}</stringProp>
-              <stringProp name="passphrase"></stringProp>
-              <stringProp name="password">${ospd.pass}</stringProp>
-              <intProp name="port">22</intProp>
-              <boolProp name="printStdErr">true</boolProp>
-              <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-              <boolProp name="useReturnCode">true</boolProp>
-              <boolProp name="useTty">false</boolProp>
-              <stringProp name="username">${ospd.user}</stringProp>
-            </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-            <hashTree>
-              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="iperf_pid" enabled="true">
-                <stringProp name="TestPlan.comments">iperf_pid</stringProp>
-                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
-                <stringProp name="RegexExtractor.refname">iperf_pid</stringProp>
-                <stringProp name="RegexExtractor.regex">root(.+?)iperf3</stringProp>
-                <stringProp name="RegexExtractor.template">$1$</stringProp>
-                <stringProp name="RegexExtractor.default">None</stringProp>
-                <stringProp name="RegexExtractor.match_number">1</stringProp>
-              </RegexExtractor>
-              <hashTree/>
-              <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
-                <collectionProp name="UserParameters.names">
-                  <stringProp name="-610784366">uc_port</stringProp>
-                </collectionProp>
-                <collectionProp name="UserParameters.thread_values">
-                  <collectionProp name="1652365656">
-                    <stringProp name="-1381713232">52${tenant_count}${vm_count}</stringProp>
-                  </collectionProp>
-                </collectionProp>
-                <boolProp name="UserParameters.per_iteration">false</boolProp>
-              </UserParameters>
-              <hashTree/>
-            </hashTree>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="KILL.IPERF.On.IPERF.SRV" enabled="true">
-              <stringProp name="command">sudo kill -9 ${iperf_pid}</stringProp>
-              <intProp name="connectionTimeout">5000</intProp>
-              <stringProp name="hostname">${iperf.host}</stringProp>
-              <stringProp name="passphrase"></stringProp>
-              <stringProp name="password">${ospd.pass}</stringProp>
-              <intProp name="port">22</intProp>
-              <boolProp name="printStdErr">true</boolProp>
-              <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-              <boolProp name="useReturnCode">true</boolProp>
-              <boolProp name="useTty">false</boolProp>
-              <stringProp name="username">${ospd.user}</stringProp>
-            </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-            <hashTree/>
-            <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="SCRIPT Increment Counter Servers" enabled="true">
-              <stringProp name="BeanShellSampler.query">int c_vm = ${vm_count};
-int c_t = ${tenant_count};
-c_vm++;
-c_t++;
-vars.put(&quot;vm_count&quot;, String.valueOf(c_vm));
-vars.put(&quot;tenant_count&quot;, String.valueOf(c_t));</stringProp>
-              <stringProp name="BeanShellSampler.filename"></stringProp>
-              <stringProp name="BeanShellSampler.parameters"></stringProp>
-              <boolProp name="BeanShellSampler.resetInterpreter">false</boolProp>
-            </BeanShellSampler>
-            <hashTree/>
-          </hashTree>
-        </hashTree>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="REMOVE.EPEL.On.IPERF.SRV" enabled="true">
-          <stringProp name="command">sudo rpm -e epel-release-7-11.noarch</stringProp>
-          <intProp name="connectionTimeout">5000</intProp>
-          <stringProp name="hostname">${iperf.host}</stringProp>
-          <stringProp name="passphrase"></stringProp>
-          <stringProp name="password">${ospd.pass}</stringProp>
-          <intProp name="port">22</intProp>
-          <boolProp name="printStdErr">true</boolProp>
-          <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-          <boolProp name="useReturnCode">true</boolProp>
-          <boolProp name="useTty">false</boolProp>
-          <stringProp name="username">${ospd.user}</stringProp>
-        </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
         <hashTree/>
       </hashTree>
       <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - Monitor Full" enabled="false">

@@ -78,6 +78,11 @@
             <stringProp name="Argument.value">${__P(ceph.host,192.168.24.8)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="iperf.host" elementType="Argument">
+            <stringProp name="Argument.name">iperf.host</stringProp>
+            <stringProp name="Argument.value">${__P(iperf.host,10.0.0.73)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
           <elementProp name="name" elementType="Argument">
             <stringProp name="Argument.name">name</stringProp>
             <stringProp name="Argument.value">load</stringProp>
@@ -168,7 +173,7 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </SetupThreadGroup>
       <hashTree>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command admin_pass" enabled="true">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="Command admin_pass" enabled="true">
           <stringProp name="command">grep OS_PASSWORD /home/stack/overcloudrc</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
           <stringProp name="hostname">${ospd.host}</stringProp>
@@ -193,7 +198,7 @@
           </RegexExtractor>
           <hashTree/>
         </hashTree>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips" enabled="true">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="Command server_ips" enabled="true">
           <stringProp name="command">sudo grep no_proxy /home/stack/overcloudrc</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
           <stringProp name="hostname">${ospd.host}</stringProp>
@@ -228,7 +233,7 @@
           </RegexExtractor>
           <hashTree/>
         </hashTree>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips 2" enabled="true">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="Command server_ips 2" enabled="true">
           <stringProp name="command">sudo grep no_proxy /home/stack/overcloudrc</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
           <stringProp name="hostname">${ospd.host}</stringProp>
@@ -264,38 +269,10 @@ ${__setProperty(server_ip, ${ssh_server_ip})};</stringProp>
           <boolProp name="BeanShellSampler.resetInterpreter">true</boolProp>
         </BeanShellSampler>
         <hashTree/>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH.YUM.RPM.On.UC" enabled="false">
-          <stringProp name="command">sudo yum localinstall -y http://download.lab.bos.redhat.com/rcm-guest/puddles/OpenStack/rhos-release/rhos-release-latest.noarch.rpm</stringProp>
-          <intProp name="connectionTimeout">5000</intProp>
-          <stringProp name="hostname">${ospd.host}</stringProp>
-          <stringProp name="passphrase"></stringProp>
-          <stringProp name="password">${ospd.pass}</stringProp>
-          <intProp name="port">22</intProp>
-          <boolProp name="printStdErr">true</boolProp>
-          <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-          <boolProp name="useReturnCode">true</boolProp>
-          <boolProp name="useTty">false</boolProp>
-          <stringProp name="username">${ospd.user}</stringProp>
-        </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-        <hashTree/>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH.YUM.REPO.On.UC" enabled="false">
-          <stringProp name="command">sudo rhos-release -P 12-director</stringProp>
-          <intProp name="connectionTimeout">5000</intProp>
-          <stringProp name="hostname">${ospd.host}</stringProp>
-          <stringProp name="passphrase"></stringProp>
-          <stringProp name="password">${ospd.pass}</stringProp>
-          <intProp name="port">22</intProp>
-          <boolProp name="printStdErr">true</boolProp>
-          <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-          <boolProp name="useReturnCode">true</boolProp>
-          <boolProp name="useTty">false</boolProp>
-          <stringProp name="username">${ospd.user}</stringProp>
-        </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-        <hashTree/>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="34.SSH.RPM.EPEL.On.Instance" enabled="true">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="RPM.EPEL.On.IPERF.SRV" enabled="true">
           <stringProp name="command">sudo rpm -ivh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
-          <stringProp name="hostname">${ospd.host}</stringProp>
+          <stringProp name="hostname">${iperf.host}</stringProp>
           <stringProp name="passphrase"></stringProp>
           <stringProp name="password">${ospd.pass}</stringProp>
           <intProp name="port">22</intProp>
@@ -306,10 +283,10 @@ ${__setProperty(server_ip, ${ssh_server_ip})};</stringProp>
           <stringProp name="username">${ospd.user}</stringProp>
         </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
         <hashTree/>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH.YUM.IPERF.On.UC" enabled="true">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="YUM.IPERF.On.IPERF.SRV" enabled="true">
           <stringProp name="command">sudo yum install -y iperf3.x86_64</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
-          <stringProp name="hostname">${ospd.host}</stringProp>
+          <stringProp name="hostname">${iperf.host}</stringProp>
           <stringProp name="passphrase"></stringProp>
           <stringProp name="password">${ospd.pass}</stringProp>
           <intProp name="port">22</intProp>
@@ -2375,10 +2352,10 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
             <stringProp name="username">${ospd.user}</stringProp>
           </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
           <hashTree/>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="28.SSH.UPDATE.IPTABLES.On.UC" enabled="true">
+          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="UPDATE.IPTABLES.On.IPERF.SRV" enabled="true">
             <stringProp name="command">sudo iptables -I INPUT -p tcp -m tcp --dport ${uc_port} -j ACCEPT</stringProp>
             <intProp name="connectionTimeout">5000</intProp>
-            <stringProp name="hostname">${ospd.host}</stringProp>
+            <stringProp name="hostname">${iperf.host}</stringProp>
             <stringProp name="passphrase"></stringProp>
             <stringProp name="password">${ospd.pass}</stringProp>
             <intProp name="port">22</intProp>
@@ -2402,10 +2379,10 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
             </UserParameters>
             <hashTree/>
           </hashTree>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="29.SSH.UPDATE.IPTABLES.On.UC" enabled="true">
+          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="UPDATE.IPTABLES.On.IPERF.SRV" enabled="true">
             <stringProp name="command">sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport ${uc_port} -j ACCEPT</stringProp>
             <intProp name="connectionTimeout">5000</intProp>
-            <stringProp name="hostname">${ospd.host}</stringProp>
+            <stringProp name="hostname">${iperf.host}</stringProp>
             <stringProp name="passphrase"></stringProp>
             <stringProp name="password">${ospd.pass}</stringProp>
             <intProp name="port">22</intProp>
@@ -2429,7 +2406,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
             </UserParameters>
             <hashTree/>
           </hashTree>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="30.SSH.START.IPERF.SRV.On.UC" enabled="true">
+          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="START.IPERF.SRV" enabled="true">
             <stringProp name="command">sudo iperf3 --server --daemon --port ${uc_port}</stringProp>
             <intProp name="connectionTimeout">5000</intProp>
             <stringProp name="hostname">${ospd.host}</stringProp>
@@ -2456,7 +2433,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
             </UserParameters>
             <hashTree/>
           </hashTree>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="31.SSH.Create.Repo.On.Instance" enabled="true">
+          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="Create.Repo.On.Instance" enabled="true">
             <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo echo $&apos;[rhel-server] \nName=RHEL server \nenabled=1 \nbaseurl=http://download.eng.tlv.redhat.com/pub/rhel/rel-eng/latest-RHEL-7/compose/Server/x86_64/os/  \ngpgcheck=0 \n&apos;  &gt; /tmp/rhel-osp-jmeter.repo&quot;</stringProp>
             <intProp name="connectionTimeout">5000</intProp>
             <stringProp name="hostname">${ospd.host}</stringProp>
@@ -2470,7 +2447,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
             <stringProp name="username">${ospd.user}</stringProp>
           </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
           <hashTree/>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="31.SSH.Copy.Repo.On.Instance" enabled="true">
+          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="Copy.Repo.On.Instance" enabled="true">
             <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo cp /tmp/rhel-osp-jmeter.repo /etc/yum.repos.d/&quot;</stringProp>
             <intProp name="connectionTimeout">5000</intProp>
             <stringProp name="hostname">${ospd.host}</stringProp>
@@ -2484,35 +2461,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
             <stringProp name="username">${ospd.user}</stringProp>
           </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
           <hashTree/>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="31.SSH.YUM.RPM.On.Instance" enabled="false">
-            <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo yum localinstall -y http://download.lab.bos.redhat.com/rcm-guest/puddles/OpenStack/rhos-release/rhos-release-latest.noarch.rpm&quot;</stringProp>
-            <intProp name="connectionTimeout">5000</intProp>
-            <stringProp name="hostname">${ospd.host}</stringProp>
-            <stringProp name="passphrase"></stringProp>
-            <stringProp name="password">${ospd.pass}</stringProp>
-            <intProp name="port">22</intProp>
-            <boolProp name="printStdErr">true</boolProp>
-            <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-            <boolProp name="useReturnCode">true</boolProp>
-            <boolProp name="useTty">false</boolProp>
-            <stringProp name="username">${ospd.user}</stringProp>
-          </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-          <hashTree/>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="32.SSH.YUM.REPO.On.Instance" enabled="false">
-            <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo rhos-release -P 12-director&quot;</stringProp>
-            <intProp name="connectionTimeout">5000</intProp>
-            <stringProp name="hostname">${ospd.host}</stringProp>
-            <stringProp name="passphrase"></stringProp>
-            <stringProp name="password">${ospd.pass}</stringProp>
-            <intProp name="port">22</intProp>
-            <boolProp name="printStdErr">true</boolProp>
-            <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-            <boolProp name="useReturnCode">true</boolProp>
-            <boolProp name="useTty">false</boolProp>
-            <stringProp name="username">${ospd.user}</stringProp>
-          </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-          <hashTree/>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="34.SSH.RPM.EPEL.On.Instance" enabled="true">
+          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="RPM.EPEL.On.Instance" enabled="true">
             <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm&quot;</stringProp>
             <intProp name="connectionTimeout">5000</intProp>
             <stringProp name="hostname">${ospd.host}</stringProp>
@@ -2526,7 +2475,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
             <stringProp name="username">${ospd.user}</stringProp>
           </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
           <hashTree/>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="33.SSH.YUM.IPERF.On.Instance" enabled="true">
+          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="YUM.IPERF.On.Instance" enabled="true">
             <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo yum install -y iperf3.x86_64&quot;</stringProp>
             <intProp name="connectionTimeout">5000</intProp>
             <stringProp name="hostname">${ospd.host}</stringProp>
@@ -2540,7 +2489,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
             <stringProp name="username">${ospd.user}</stringProp>
           </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
           <hashTree/>
-          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="35.SSH.YUM.STRESS-NG.On.Instance" enabled="true">
+          <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="YUM.STRESS-NG.On.Instance" enabled="true">
             <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo yum install -y stress-ng.x86_64&quot;</stringProp>
             <intProp name="connectionTimeout">5000</intProp>
             <stringProp name="hostname">${ospd.host}</stringProp>
@@ -3655,10 +3604,10 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
           </HeaderManager>
           <hashTree/>
         </hashTree>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="49.SSH.GET.IPERF.PID.On.UC" enabled="true">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="GET.IPERF.PID.On.IPERF.SRV" enabled="true">
           <stringProp name="command">sudo ps -ef | grep iperf3 |grep ${uc_port} |awk &apos;NR==1 {print $1$2$8}&apos;</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
-          <stringProp name="hostname">${ospd.host}</stringProp>
+          <stringProp name="hostname">${iperf.host}</stringProp>
           <stringProp name="passphrase"></stringProp>
           <stringProp name="password">${ospd.pass}</stringProp>
           <intProp name="port">22</intProp>
@@ -3692,7 +3641,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
           </UserParameters>
           <hashTree/>
         </hashTree>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="50.SSH.KILL.IPERF.On.UC" enabled="true">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="KILL.IPERF.On.IPERF.SRV" enabled="true">
           <stringProp name="command">sudo kill -9 ${iperf_pid}</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
           <stringProp name="hostname">${ospd.host}</stringProp>
