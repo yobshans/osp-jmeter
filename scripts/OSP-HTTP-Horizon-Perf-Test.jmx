@@ -304,7 +304,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract region.url" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
               <stringProp name="RegexExtractor.refname">region.url</stringProp>
-              <stringProp name="RegexExtractor.regex">&lt;input id=&quot;id_region&quot; name=&quot;region&quot; type=&quot;hidden&quot; value=&quot;(.+?)&quot; /&gt;</stringProp>
+              <stringProp name="RegexExtractor.regex">name=&quot;region&quot; value=&quot;(.+?)&quot;</stringProp>
               <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.default">None</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
@@ -1334,7 +1334,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract role_id" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
               <stringProp name="RegexExtractor.refname">role_id</stringProp>
-              <stringProp name="RegexExtractor.regex">/roles/(.+?)&quot;}, &quot;name&quot;: &quot;admin&quot;}</stringProp>
+              <stringProp name="RegexExtractor.regex">/roles/([^&quot;]+)&quot;}, &quot;name&quot;: &quot;admin&quot;}</stringProp>
               <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.default">None</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
