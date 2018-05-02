@@ -304,7 +304,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract region.url" enabled="true">
               <stringProp name="RegexExtractor.useHeaders">false</stringProp>
               <stringProp name="RegexExtractor.refname">region.url</stringProp>
-              <stringProp name="RegexExtractor.regex">name=&quot;region&quot; value=&quot;(.+?)&quot;</stringProp>
+              <stringProp name="RegexExtractor.regex">(?s)name=&quot;region&quot;.+?value=&quot;(.+?)&quot;</stringProp>
               <stringProp name="RegexExtractor.template">$1$</stringProp>
               <stringProp name="RegexExtractor.default">None</stringProp>
               <stringProp name="RegexExtractor.match_number">1</stringProp>
