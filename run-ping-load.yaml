@@ -38,7 +38,11 @@
   - name: Undercloud IP
     shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
     register: uc_node_ip
-  
+
+  - set_fact:
+      iperf_host: "{{ uc_node_ip.stdout }}"
+    when: iperf_host == "127.0.0.1"
+     
   - name: System-OS
     shell: "sudo cat /etc/system-release"
     register: system_os
