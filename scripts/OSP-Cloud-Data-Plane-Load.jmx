@@ -302,7 +302,7 @@ ${__setProperty(server_ip, ${ssh_server_ip})};</stringProp>
         </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - Actions" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group - Data plane load" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -1126,33 +1126,6 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <stringProp name="username">${ospd.user}</stringProp>
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree/>
-              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="07.SSH.RUN.STRESS-NG.On.Instance" enabled="true">
-                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo nohup stress-ng --cpu ${cpu.workers} --cpu-load ${cpu.percent} --vm ${vm.workers} --vm-bytes ${vm.mbytes}M --hdd ${hdd.workers} --hdd-bytes ${hdd.gbytes}G --timeout ${stress.time.sec}s  --times --perf --metrics-brief --log-file /tmp/${floating_ip}-${file_date}-stressng.txt 1&gt;/dev/null 2&gt;&amp;1 &amp;&quot;</stringProp>
-                <intProp name="connectionTimeout">5000</intProp>
-                <stringProp name="hostname">${ospd.host}</stringProp>
-                <stringProp name="passphrase"></stringProp>
-                <stringProp name="password">${ospd.pass}</stringProp>
-                <intProp name="port">22</intProp>
-                <boolProp name="printStdErr">true</boolProp>
-                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-                <boolProp name="useReturnCode">true</boolProp>
-                <boolProp name="useTty">false</boolProp>
-                <stringProp name="username">${ospd.user}</stringProp>
-              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-              <hashTree>
-                <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
-                  <collectionProp name="UserParameters.names">
-                    <stringProp name="-1316765551">file_date</stringProp>
-                  </collectionProp>
-                  <collectionProp name="UserParameters.thread_values">
-                    <collectionProp name="615110608">
-                      <stringProp name="-76401987">${__time(yyyy-MM-dd-hhmmss)}</stringProp>
-                    </collectionProp>
-                  </collectionProp>
-                  <boolProp name="UserParameters.per_iteration">false</boolProp>
-                </UserParameters>
-                <hashTree/>
-              </hashTree>
               <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="08.SSH.RUN.IPERF.On.Instance" enabled="true">
                 <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo iperf3 --client ${iperf.host} --port ${uc_port} --time ${stress.time.sec}s &gt;&gt; /tmp/${floating_ip}-${file_date}-iperf.txt &amp;&quot;</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
@@ -1179,6 +1152,74 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                   <boolProp name="UserParameters.per_iteration">false</boolProp>
                 </UserParameters>
                 <hashTree/>
+              </hashTree>
+              <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If stress.time.sec != 0" enabled="true">
+                <stringProp name="IfController.condition">${__javaScript(&quot;${stress.time.sec}&quot; != 0)}</stringProp>
+                <boolProp name="IfController.evaluateAll">false</boolProp>
+                <boolProp name="IfController.useExpression">true</boolProp>
+              </IfController>
+              <hashTree>
+                <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="07.SSH.RUN.STRESS-NG.On.Instance" enabled="true">
+                  <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo nohup stress-ng --cpu ${cpu.workers} --cpu-load ${cpu.percent} --vm ${vm.workers} --vm-bytes ${vm.mbytes}M --hdd ${hdd.workers} --hdd-bytes ${hdd.gbytes}G --timeout ${stress.time.sec}s --times --perf --metrics-brief --log-file /tmp/${floating_ip}-${file_date}-stressng.txt 1&gt;/dev/null 2&gt;&amp;1 &amp;&quot;</stringProp>
+                  <intProp name="connectionTimeout">5000</intProp>
+                  <stringProp name="hostname">${ospd.host}</stringProp>
+                  <stringProp name="passphrase"></stringProp>
+                  <stringProp name="password">${ospd.pass}</stringProp>
+                  <intProp name="port">22</intProp>
+                  <boolProp name="printStdErr">true</boolProp>
+                  <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                  <boolProp name="useReturnCode">true</boolProp>
+                  <boolProp name="useTty">false</boolProp>
+                  <stringProp name="username">${ospd.user}</stringProp>
+                </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+                <hashTree>
+                  <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+                    <collectionProp name="UserParameters.names">
+                      <stringProp name="-1316765551">file_date</stringProp>
+                    </collectionProp>
+                    <collectionProp name="UserParameters.thread_values">
+                      <collectionProp name="615110608">
+                        <stringProp name="-76401987">${__time(yyyy-MM-dd-hhmmss)}</stringProp>
+                      </collectionProp>
+                    </collectionProp>
+                    <boolProp name="UserParameters.per_iteration">false</boolProp>
+                  </UserParameters>
+                  <hashTree/>
+                </hashTree>
+              </hashTree>
+              <IfController guiclass="IfControllerPanel" testclass="IfController" testname="If stress.time.sec == 0" enabled="true">
+                <stringProp name="IfController.condition">${__javaScript(&quot;${stress.time.sec}&quot; == 0)}</stringProp>
+                <boolProp name="IfController.evaluateAll">false</boolProp>
+                <boolProp name="IfController.useExpression">true</boolProp>
+              </IfController>
+              <hashTree>
+                <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="07.SSH.RUN.STRESS-NG.On.Instance" enabled="true">
+                  <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo nohup stress-ng --cpu ${cpu.workers} --cpu-load ${cpu.percent} --vm ${vm.workers} --vm-bytes ${vm.mbytes}M --hdd ${hdd.workers} --hdd-bytes ${hdd.gbytes}G --timeout 0 --times --perf --metrics-brief --verbose --log-file /tmp/${floating_ip}-${file_date}-stressng.txt 1&gt;/dev/null 2&gt;&amp;1 &amp;&quot;</stringProp>
+                  <intProp name="connectionTimeout">5000</intProp>
+                  <stringProp name="hostname">${ospd.host}</stringProp>
+                  <stringProp name="passphrase"></stringProp>
+                  <stringProp name="password">${ospd.pass}</stringProp>
+                  <intProp name="port">22</intProp>
+                  <boolProp name="printStdErr">true</boolProp>
+                  <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                  <boolProp name="useReturnCode">true</boolProp>
+                  <boolProp name="useTty">false</boolProp>
+                  <stringProp name="username">${ospd.user}</stringProp>
+                </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+                <hashTree>
+                  <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+                    <collectionProp name="UserParameters.names">
+                      <stringProp name="-1316765551">file_date</stringProp>
+                    </collectionProp>
+                    <collectionProp name="UserParameters.thread_values">
+                      <collectionProp name="615110608">
+                        <stringProp name="-76401987">${__time(yyyy-MM-dd-hhmmss)}</stringProp>
+                      </collectionProp>
+                    </collectionProp>
+                    <boolProp name="UserParameters.per_iteration">false</boolProp>
+                  </UserParameters>
+                  <hashTree/>
+                </hashTree>
               </hashTree>
             </hashTree>
             <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="SCRIPT Increment Counter Servers" enabled="true">

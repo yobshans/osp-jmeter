@@ -885,6 +885,20 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <stringProp name="username">${ospd.user}</stringProp>
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree/>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SCP.STRESS.STAT" enabled="true">
+                <stringProp name="command">sudo scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no &apos;cloud-user@${floating_ip}:/tmp/${floating_ip}-*-stressng.txt&apos; /tmp/${run.name}</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${ospd.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree/>
               <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="GET.IPERF.GPID" enabled="true">
                 <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo ps -o pgid,cmd -U root |grep iperf3&quot; | grep -v grep | /bin/awk &apos;NR == 1  {print \$2\$1\$3}&apos;</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
@@ -911,6 +925,34 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
               </hashTree>
               <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="PKILL.IPERF" enabled="true">
                 <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo pkill -9 -g ${iperf_gpid}&quot;</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${ospd.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree/>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SCP.IPERF.STAT" enabled="true">
+                <stringProp name="command">sudo scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no &apos;cloud-user@${floating_ip}:/tmp/${floating_ip}-*-iperf.txt&apos;  /tmp/${run.name}</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${ospd.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${ospd.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${ospd.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree/>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="REMOVE.EPEL.On.Instance" enabled="true">
+                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo rpm -e epel-release-7-11.noarch&quot;</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${ospd.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
@@ -1017,7 +1059,7 @@ vars.put(&quot;vm_count&quot;, String.valueOf(c_vm));</stringProp>
             <boolProp name="BeanShellSampler.resetInterpreter">true</boolProp>
           </BeanShellSampler>
           <hashTree/>
-          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop ${vm_amount}" enabled="true">
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop ${vm_amount}" enabled="false">
             <boolProp name="LoopController.continue_forever">true</boolProp>
             <stringProp name="LoopController.loops">${vm_amount}</stringProp>
           </LoopController>
@@ -1148,48 +1190,6 @@ vars.put(&quot;vm_count&quot;, String.valueOf(c_vm));</stringProp>
                 </RegexExtractor>
                 <hashTree/>
               </hashTree>
-              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SCP.STRESS.STAT" enabled="true">
-                <stringProp name="command">sudo scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no &apos;cloud-user@${floating_ip}:/tmp/${floating_ip}-*-stressng.txt&apos; /tmp/${run.name}</stringProp>
-                <intProp name="connectionTimeout">5000</intProp>
-                <stringProp name="hostname">${ospd.host}</stringProp>
-                <stringProp name="passphrase"></stringProp>
-                <stringProp name="password">${ospd.pass}</stringProp>
-                <intProp name="port">22</intProp>
-                <boolProp name="printStdErr">true</boolProp>
-                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-                <boolProp name="useReturnCode">true</boolProp>
-                <boolProp name="useTty">false</boolProp>
-                <stringProp name="username">${ospd.user}</stringProp>
-              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-              <hashTree/>
-              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SCP.IPERF.STAT" enabled="true">
-                <stringProp name="command">sudo scp -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no &apos;cloud-user@${floating_ip}:/tmp/${floating_ip}-*-iperf.txt&apos;  /tmp/${run.name}</stringProp>
-                <intProp name="connectionTimeout">5000</intProp>
-                <stringProp name="hostname">${ospd.host}</stringProp>
-                <stringProp name="passphrase"></stringProp>
-                <stringProp name="password">${ospd.pass}</stringProp>
-                <intProp name="port">22</intProp>
-                <boolProp name="printStdErr">true</boolProp>
-                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-                <boolProp name="useReturnCode">true</boolProp>
-                <boolProp name="useTty">false</boolProp>
-                <stringProp name="username">${ospd.user}</stringProp>
-              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-              <hashTree/>
-              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="REMOVE.EPEL.On.Instance" enabled="true">
-                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo rpm -e epel-release-7-11.noarch&quot;</stringProp>
-                <intProp name="connectionTimeout">5000</intProp>
-                <stringProp name="hostname">${ospd.host}</stringProp>
-                <stringProp name="passphrase"></stringProp>
-                <stringProp name="password">${ospd.pass}</stringProp>
-                <intProp name="port">22</intProp>
-                <boolProp name="printStdErr">true</boolProp>
-                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
-                <boolProp name="useReturnCode">true</boolProp>
-                <boolProp name="useTty">false</boolProp>
-                <stringProp name="username">${ospd.user}</stringProp>
-              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
-              <hashTree/>
             </hashTree>
             <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="SCRIPT Increment Counter Servers" enabled="true">
               <stringProp name="BeanShellSampler.query">int c_vm = ${vm_count};
