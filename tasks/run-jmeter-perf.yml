@@ -38,7 +38,7 @@
     shell: "date +'%F %T'"
     register: start_date
 
-  - name: JMeter - Run REST API Performance Test
+  - name: JMeter - Run Performance Test
     shell: >
       $JMETER_HOME/bin/jmeter -n 
       -t /opt/osp-jmeter/scripts/{{ jmeter_test }} 
