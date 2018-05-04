@@ -926,6 +926,15 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                   </collectionProp>
                 </HeaderManager>
                 <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract floating_ip" enabled="false">
+                  <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                  <stringProp name="RegexExtractor.refname">floating_ip</stringProp>
+                  <stringProp name="RegexExtractor.regex">&quot;addr&quot;: &quot;(.+?)&quot;</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">None</stringProp>
+                  <stringProp name="RegexExtractor.match_number">1</stringProp>
+                </RegexExtractor>
+                <hashTree/>
                 <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract floating_ip" enabled="true">
                   <stringProp name="RegexExtractor.useHeaders">false</stringProp>
                   <stringProp name="RegexExtractor.refname">floating_ip</stringProp>
@@ -1369,6 +1378,15 @@ vars.put(&quot;stress.time.msec&quot;, String.valueOf(t_sec));</stringProp>
                     </elementProp>
                   </collectionProp>
                 </HeaderManager>
+                <hashTree/>
+                <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract floating_ip" enabled="false">
+                  <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                  <stringProp name="RegexExtractor.refname">floating_ip</stringProp>
+                  <stringProp name="RegexExtractor.regex">&quot;addr&quot;: &quot;(.+?)&quot;</stringProp>
+                  <stringProp name="RegexExtractor.template">$1$</stringProp>
+                  <stringProp name="RegexExtractor.default">None</stringProp>
+                  <stringProp name="RegexExtractor.match_number">1</stringProp>
+                </RegexExtractor>
                 <hashTree/>
                 <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract floating_ip" enabled="true">
                   <stringProp name="RegexExtractor.useHeaders">false</stringProp>

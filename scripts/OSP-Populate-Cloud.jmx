@@ -1222,7 +1222,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
           <stringProp name="HTTPSampler.port">${neutron_port}</stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-          <stringProp name="HTTPSampler.path">/v2.0/networks?name=nova</stringProp>
+          <stringProp name="HTTPSampler.path">/v2.0/networks?router:external=true</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
@@ -1254,7 +1254,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
           <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract ext_net_id" enabled="true">
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">ext_net_id</stringProp>
-            <stringProp name="RegexExtractor.regex">&quot;id&quot;:\s*&quot;(.+?)&quot;,&quot;router:external&quot;:true</stringProp>
+            <stringProp name="RegexExtractor.regex">&quot;id&quot;:\s*&quot;(.+?)&quot;,\s*&quot;router:external&quot;:\s*true,</stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.default">None</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>

@@ -2148,7 +2148,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);</stringProp>
           <boolProp name="BeanShellSampler.resetInterpreter">true</boolProp>
         </BeanShellSampler>
         <hashTree/>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop ${vm_amount}" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
           <stringProp name="LoopController.loops">${vm_amount}</stringProp>
         </LoopController>
@@ -2656,6 +2656,15 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);</stringProp>
                   </elementProp>
                 </collectionProp>
               </HeaderManager>
+              <hashTree/>
+              <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract ping_floating_ip" enabled="false">
+                <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+                <stringProp name="RegexExtractor.refname">ping_floating_ip</stringProp>
+                <stringProp name="RegexExtractor.regex">&quot;addr&quot;: &quot;(.+?)&quot;</stringProp>
+                <stringProp name="RegexExtractor.template">$1$</stringProp>
+                <stringProp name="RegexExtractor.default">None</stringProp>
+                <stringProp name="RegexExtractor.match_number">1</stringProp>
+              </RegexExtractor>
               <hashTree/>
               <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract ping_floating_ip" enabled="true">
                 <stringProp name="RegexExtractor.useHeaders">false</stringProp>
