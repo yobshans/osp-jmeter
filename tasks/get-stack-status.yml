@@ -7,26 +7,26 @@
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"touch /tmp/{{ status_file_name }}\""
 
   - name: Get Contr Node list
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name controller -f value -c Networks|awk -F =  '{print $2}'\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name controller -f value -c Networks|awk -F =  '{print \\$2}'\""
     register: contr_nodes
 
   - name: Get Compute Node list
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name compute -f value -c Networks|awk -F =  '{print $2}'\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name compute -f value -c Networks|awk -F =  '{print \\$2}'\""
     register: comp_nodes
 
   - name: Get Ceph Node list
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name ceph -f value -c Networks|awk -F =  '{print $2}'\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name ceph -f value -c Networks|awk -F =  '{print \\$2}'\""
     register: ceph_nodes
     
   - name: Get Node list
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list -f value -c Networks|awk -F =  '{print $2}'\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list -f value -c Networks|awk -F =  '{print \\$2}'\""
     register: oc_nodes
     
   - name: Stack status title
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo $(date) '\n-----------------------------------------------------\nOvercloud Stack status:\n-----------------------------------------------------' > /tmp/{{ status_file_name }}\""
 
   - name: Overcloud Stack status
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo $(sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack stack list |grep overcloud |awk '{print $8\" \"$10}') >> /tmp/{{ status_file_name }}\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack stack list |grep overcloud |awk '{print \\$8\" \"\\$10}' >> /tmp/{{ status_file_name }}\""
 
   - name: HAProxy status title
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nHAProxy status:\n-----------------------------------------------------' >> /tmp/{{ status_file_name }}\""
@@ -49,43 +49,54 @@
   - name: Cluster status
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '{{ item }}' >> /tmp/{{ status_file_name }}\""
     with_items: "{{ cluster_status.stdout_lines }}"
-    
+
   - name: Overcloud nodes status title
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nOvercloud Nodes status:\n-----------------------------------------------------' >> /tmp/{{ status_file_name }}\""
 
   - name: Overcloud nodes status
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo {{ item }}, $(sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list -f value -c Name -c Status --ip {{ item }}) >> /tmp/{{ status_file_name }}\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo -n \"{{ item }} :\" >> /tmp/{{ status_file_name }} && sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list -f value -c Name -c Status --ip {{ item }} >> /tmp/{{ status_file_name }}\""
     with_items: "{{ oc_nodes.stdout_lines }}"
 
+  - name: Check Docker on UC title
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nDocker service on Undercloud node status:\n-----------------------------------------------------' >> /tmp/{{ status_file_name }}\""
 
-  - name: Stack status title
+  - name: Check Docker on UC
+    shell: "ssh -t -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo -n \"{{ uc_node_ip.stdout }} :\">> /tmp/{{ status_file_name }} && sudo systemctl is-active docker >> /tmp/{{ status_file_name }}\""
+
+  - name: Check Docker containers on nodes title
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nDocker service on Overcloud nodes status:\n-----------------------------------------------------' >> /tmp/{{ status_file_name }}\""
-    
-  - name: check Docker on nodes
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo {{ item }}, $(ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ item }} \"sudo systemctl is-active docker\"), >> /tmp/{{ status_file_name }}\""
+
+  - name: Check Docker containers on nodes
+    shell: "ssh -t -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo -n \"{{ item }} :\">> /tmp/{{ status_file_name }} && sudo -u stack ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ item }} \"sudo systemctl is-active docker\" >> /tmp/{{ status_file_name }}\""
     with_items: "{{ oc_nodes.stdout_lines }}"
       
+  - name: Containers on UC nodes status title
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nUp and Running Containers on Undercloud node:\n-----------------------------------------------------' >> /tmp/{{ status_file_name }}\""
+
+  - name: Up and Running Containers on UC
+    shell: "ssh -t -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo \"{{ uc_node_ip.stdout }} :\">> /tmp/{{ status_file_name }} && sudo docker ps >> /tmp/{{ status_file_name }}\""
+    
   - name: Containers on Controller nodes status title
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nUp and Running Containers on Controller nodes:\n-----------------------------------------------------' >> /tmp/{{ status_file_name }}\""
 
   - name: Up and Running Containers on Controller nodes
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo {{ item }}, $(ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ item }} \"sudo docker ps --format 'table {% raw %}{{.Names}}{% endraw %}'\") >> /tmp/{{ status_file_name }}\""
+    shell: "ssh -t -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo \"{{ item }} :\">> /tmp/{{ status_file_name }} && sudo -u stack ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ item }} \"sudo docker ps\" >> /tmp/{{ status_file_name }}\""
     with_items: "{{ contr_nodes.stdout_lines }}"
-      
+
   - name: Containers on Compute nodes status title
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nUp and Running Containers on Compute nodes:\n-----------------------------------------------------' >> /tmp/{{ status_file_name }}\""
 
   - name: Up and Running Containers on Compute nodes
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo {{ item }}, $(ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ item }} \"sudo docker ps --format 'table {% raw %}{{.Names}}{% endraw %}'\") >> /tmp/{{ status_file_name }}\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo \"{{ item }} :\">> /tmp/{{ status_file_name }} && sudo -u stack ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ item }} \"sudo docker ps\" >> /tmp/{{ status_file_name }}\""
     with_items: "{{ comp_nodes.stdout_lines }}"
-
+    
   - name: Containers on Ceph nodes status title
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nUp and Running Containers on Ceph nodes:\n-----------------------------------------------------' >> /tmp/{{ status_file_name }}\""
 
   - name: Up and Running Containers on Ceph nodes
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo {{ item }}, $(ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ item }} \"sudo docker ps --format 'table {% raw %}{{.Names}}{% endraw %}'\") >> /tmp/{{ status_file_name }}\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo \"{{ item }} :\">> /tmp/{{ status_file_name }} && sudo -u stack ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ item }} \"sudo docker ps\" >> /tmp/{{ status_file_name }}\""
     with_items: "{{ ceph_nodes.stdout_lines }}"
-
+    
   - name:  Copy custer status file 
     shell: "scp -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }}:/tmp/{{ status_file_name }} /opt/osp-jmeter/results/{{ test_run_name }}/log/{{ status_file_name }}"
     
