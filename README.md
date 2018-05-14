@@ -1,7 +1,7 @@
 # osp-jmeter
 
 "osp-jmeter" is the simple and fast way to run various workloads on Openstack delpoyment.
-Basically, it a collection of Ansible playbooks, JMeter scripts and xsl templates which 
+Basically, it is a collection of Ansible playbooks, JMeter scripts and xsl templates which 
 - generate workload on Openstack deployment using REST APIs calls or Web HTTP requests to Horizon Dashboard
 - stress a Openstack instances in various selectable ways using stress-ng and iperf tools
 - execute specific test cases under Control and Data plane load
