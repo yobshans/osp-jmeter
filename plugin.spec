@@ -18,6 +18,11 @@ subparsers:
                       help: |
                           Create Images, Flavors and update Default Quotas in Openstack Overcloud
                       default: false
+                  config-osp-monitor:
+                      type: Bool
+                      help: |
+                          Install cAdvisor, Node-exporter and Blackbox containers on Openstack Overcloud nodes and instances. Install Prometheus and Grafana on Hypervisor machine.
+                      default: false
             - title: General agruments for test execution
               options:
                   run-name:

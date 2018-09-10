@@ -19,8 +19,8 @@
   remote_user: root
   gather_facts: no
   vars:
-   rhel_image_url: http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/7.5/121/images/
-   rhel_image: rhel-guest-image-7.5-121.x86_64.qcow2
+   rhel_image_url: http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/7.5/193/images/
+   rhel_image: rhel-guest-image-7.5-193.x86_64.qcow2
    cirros_image_url: http://download.cirros-cloud.net/0.3.4/
    cirros_image: cirros-0.3.4-x86_64-disk.img
    centos_image_url: http://cloud.centos.org/centos/7/images/
@@ -28,10 +28,10 @@
   
   tasks: 
 
-  - name: Indetify UC IP
+  - name: Indetify UC IP on virt
     shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
     register: uc_node_ip
-  
+
   - name: Upload images to Overcloud 
     include_tasks: tasks/osp-upload-images.yml
   

@@ -69,7 +69,7 @@
   - name: Indetify UC IP
     shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
     register: uc_node_ip
-  
+
   - name: Install JMeter
     include_tasks: tasks/install-jmeter.yml
 

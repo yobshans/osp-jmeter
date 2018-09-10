@@ -1,0 +1,74 @@
+---
+- name: Verification where is running - InfraRed or Standalone
+  hosts: localhost
+  gather_facts: no
+  any_errors_fatal: true
+  vars:
+      hypervisor_name: 127.0.0.1
+  
+  tasks:
+
+  - name: Add Hypervisor hosts to host list when run standalone
+    add_host:
+        name: "{{ hypervisor_name }}"
+        groups: hypervisor
+    when:  "'hypervisor' not in groups"
+    
+- name: Run Data Plane Load Test
+  hosts: hypervisor
+  remote_user: root
+  gather_facts: no
+  vars:
+   prometheus_conf_dir: /etc/prometheus/
+   prometheus_conf_file: prometheus.yml
+   cadvisor_port: 9192 # 9191 - osp 10 bind this port, need to change 
+
+  tasks: 
+
+  - name: Undercloud IP
+    shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
+    register: uc_node_ip
+  
+  - name: System-OS
+    shell: "sudo cat /etc/system-release"
+    register: system_os
+
+  - name: Gathering Stack env information
+    include_tasks: tasks/get-stack-info-monitor.yml
+
+  - name: Install cAdvisor, Node Exporter and Blackbox Exporter on Undercloud node
+    include_tasks: tasks/install-node-exporter-cadvisor-uc.yml
+
+  - name: Install cAdvisor and Node Exporter on Controller nodes 
+    include_tasks: tasks/install-node-exporter-cadvisor.yml
+    vars: 
+      node_target: "{{ item }}"
+    with_items: "{{ contr_nodes.stdout_lines }}"
+
+  - name: Install cAdvisor and Node Exporter on Compute nodes 
+    include_tasks: tasks/install-node-exporter-cadvisor.yml
+    vars: 
+      node_target: "{{ item }}"
+    with_items: "{{ comp_nodes.stdout_lines }}"
+
+  - name: Install cAdvisor and Node Exporter on Ceph nodes 
+    include_tasks: tasks/install-node-exporter-cadvisor.yml
+    vars: 
+      node_target: "{{ item }}"
+    with_items: "{{ ceph_nodes.stdout_lines }}"
+    when: ceph_count.stdout != "0"
+
+  - name: Install Node Exporter on Instances VMs 
+    include_tasks: tasks/install-node-exporter-cadvisor-vm.yml
+    vars: 
+      node_target: "{{ item }}"
+    with_items: "{{ vm_nodes.stdout_lines }}"
+    when: vm_count.stdout != "0"
+
+  - name: Install Prometheus and Grafana 
+    include_tasks: tasks/install-prometheus-grafana.yml
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

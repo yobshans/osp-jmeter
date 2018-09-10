@@ -9,6 +9,10 @@
     when: 
       test.config.osp.cloud|bool 
 
+  - import_playbook: config-osp-monitor.yaml
+    when: 
+      test.config.osp.monitor|bool 
+
   - import_playbook: |
       run-restapi-functional-test.yaml -e 
       test_run_name="{{ test.run.name }}"
