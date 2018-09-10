@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="3.1" jmeter="3.1 r1770033">
+<jmeterTestPlan version="1.2" properties="4.0" jmeter="4.0 r1823414">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -141,7 +141,7 @@
           </RegexExtractor>
           <hashTree/>
         </hashTree>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips" enabled="true">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips" enabled="false">
           <stringProp name="command">sudo grep no_proxy /home/stack/overcloudrc</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
           <stringProp name="hostname">${ospd.host}</stringProp>
@@ -176,6 +176,41 @@
           </RegexExtractor>
           <hashTree/>
         </hashTree>
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips" enabled="true">
+          <stringProp name="command">sudo grep OS_AUTH_URL /home/stack/overcloudrc</stringProp>
+          <intProp name="connectionTimeout">5000</intProp>
+          <stringProp name="hostname">${ospd.host}</stringProp>
+          <stringProp name="passphrase"></stringProp>
+          <stringProp name="password">${ospd.pass}</stringProp>
+          <intProp name="port">22</intProp>
+          <boolProp name="printStdErr">true</boolProp>
+          <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+          <boolProp name="useReturnCode">true</boolProp>
+          <boolProp name="useTty">false</boolProp>
+          <stringProp name="username">${ospd.user}</stringProp>
+        </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+        <hashTree>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="server_ip" enabled="true">
+            <stringProp name="TestPlan.comments">server_ip</stringProp>
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ssh_server_ip</stringProp>
+            <stringProp name="RegexExtractor.regex">export OS_AUTH_URL=http://(.+?):5000//v3</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">None</stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="nova_api_server_ip" enabled="true">
+            <stringProp name="TestPlan.comments">nova_api_server_ip</stringProp>
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ssh_nova_api_server_ip</stringProp>
+            <stringProp name="RegexExtractor.regex">export OS_AUTH_URL=http://(.+?):5000//v3</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">None</stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+        </hashTree>
         <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips 2" enabled="true">
           <stringProp name="command">sudo grep no_proxy /home/stack/overcloudrc</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
@@ -190,11 +225,21 @@
           <stringProp name="username">${ospd.user}</stringProp>
         </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
         <hashTree>
-          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="keystone_server_ip" enabled="true">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="keystone_server_ip" enabled="false">
             <stringProp name="TestPlan.comments">keystone_server_ip</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">ssh_keystone_server_ip</stringProp>
             <stringProp name="RegexExtractor.regex">export no_proxy=,${ssh_server_ip},(.+?)\n</stringProp>
+            <stringProp name="RegexExtractor.template">$1$</stringProp>
+            <stringProp name="RegexExtractor.default">None</stringProp>
+            <stringProp name="RegexExtractor.match_number">1</stringProp>
+          </RegexExtractor>
+          <hashTree/>
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="keystone_server_ip" enabled="true">
+            <stringProp name="TestPlan.comments">keystone_server_ip</stringProp>
+            <stringProp name="RegexExtractor.useHeaders">false</stringProp>
+            <stringProp name="RegexExtractor.refname">ssh_keystone_server_ip</stringProp>
+            <stringProp name="RegexExtractor.regex">export no_proxy=,${ssh_server_ip},(.+?),</stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.default">None</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
@@ -318,8 +363,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_service_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/auth/tokens</stringProp>
@@ -328,9 +371,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">01.KEYSTONE.POST.Admin.Token</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -394,8 +437,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_service_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">v2.0/tokens</stringProp>
@@ -404,9 +445,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">01.KEYSTONE.POST.Admin.Token</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -462,8 +503,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(keystone_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_admin_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/projects?name=admin</stringProp>
@@ -472,9 +511,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">02.KEYSTONE.GET.Admin.Tenant</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -518,8 +557,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(keystone_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_admin_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/projects</stringProp>
@@ -528,9 +565,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">03.KEYSTONE.GET.List.Tenant</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -570,8 +607,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(keystone_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_admin_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/projects</stringProp>
@@ -580,9 +615,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">04.KEYSTONE.POST.Create.Tenant</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -638,8 +673,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(keystone_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_admin_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/users</stringProp>
@@ -648,9 +681,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">05.KEYSTONE.GET.List.User</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -692,8 +725,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(keystone_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_admin_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/users</stringProp>
@@ -702,9 +733,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">06.KEYSTONE.POST.Create.User</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -762,8 +793,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(keystone_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_admin_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/roles?name=admin</stringProp>
@@ -772,9 +801,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">07.KEYSTONE.GET.Search.Admin.Role</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -818,8 +847,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(keystone_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_admin_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/projects/${tenant_id}/users/${user_id}/roles/${admin_role_id}</stringProp>
@@ -828,9 +855,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">08.KEYSTONE.PUT.Grant.Admin.Role</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -900,8 +927,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_service_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/auth/tokens</stringProp>
@@ -910,9 +935,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">09.KEYSTONE.POST.Tenant.Token</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -990,8 +1015,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_service_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.0/tokens</stringProp>
@@ -1000,9 +1023,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">09.KEYSTONE.POST.Tenant.Token</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1081,8 +1104,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/images?name=${image.name}</stringProp>
@@ -1091,9 +1112,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">10.NOVA.GET.Search.Image</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1137,8 +1158,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/flavors?name=${flavor_name}</stringProp>
@@ -1147,9 +1166,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">11.NOVA.GET.Search.Flavor</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1193,8 +1212,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes</stringProp>
@@ -1203,9 +1220,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">12.CINDER.GET.List.Volume</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1251,8 +1268,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes</stringProp>
@@ -1261,9 +1276,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">13.CINDER.POST.Create.Volume</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -1319,8 +1334,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}</stringProp>
@@ -1329,9 +1342,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">14.CINDER.GET.Volume.Details</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -1386,8 +1399,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}</stringProp>
@@ -1396,9 +1407,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">14.CINDER.GET.Volume.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -1443,8 +1454,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}</stringProp>
@@ -1453,9 +1462,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">14.CINDER.GET.Volume.Details</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -1492,6 +1501,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
               <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
@@ -1509,8 +1519,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${neutron_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.0/networks</stringProp>
@@ -1519,9 +1527,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">15.NEUTRON.Get.List.Network</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1562,8 +1570,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${neutron_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.0/networks</stringProp>
@@ -1572,9 +1578,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">16.NEUTRON.POST.Create.Network RHOS 9/10/11</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1630,8 +1636,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${neutron_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.0/subnets</stringProp>
@@ -1640,9 +1644,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">17.NEUTRON.Get.List.Subnet</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1692,8 +1696,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${neutron_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.0/subnets</stringProp>
@@ -1702,9 +1704,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">RHOS 9/10/11</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1768,8 +1770,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers</stringProp>
@@ -1778,9 +1778,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">19.NOVA.GET.List.Server</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1832,8 +1832,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers</stringProp>
@@ -1842,9 +1840,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">20.NOVA.POST.Boot.Server</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -1900,8 +1898,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -1910,9 +1906,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -1960,8 +1956,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -1970,9 +1964,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2017,8 +2011,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -2027,9 +2019,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -2066,6 +2058,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
               <boolProp name="Assertion.assume_success">false</boolProp>
               <intProp name="Assertion.test_type">2</intProp>
+              <stringProp name="Assertion.custom_message"></stringProp>
             </ResponseAssertion>
             <hashTree/>
           </hashTree>
@@ -2101,8 +2094,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}/action</stringProp>
@@ -2111,9 +2102,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">22.CINDER.POST.Attach.Volume</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -2148,8 +2139,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}</stringProp>
@@ -2158,9 +2147,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">14.CINDER.GET.Volume.Details</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -2215,8 +2204,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}</stringProp>
@@ -2225,9 +2212,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">14.CINDER.GET.Volume.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2277,8 +2264,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -2287,9 +2272,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">23.NOVA.PUT.Update.Server</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -2337,8 +2322,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}/action</stringProp>
@@ -2347,9 +2330,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">24.NOVA.POST.Pause.Server</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2384,8 +2367,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -2394,9 +2375,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2451,8 +2432,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
                 <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -2461,9 +2440,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-                <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
               </HTTPSamplerProxy>
               <hashTree>
@@ -2518,8 +2497,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}/action</stringProp>
@@ -2528,9 +2505,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">25.NOVA.POST.Unpause.Server</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2565,8 +2542,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -2575,9 +2550,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2632,8 +2607,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
                 <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -2642,9 +2615,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-                <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
               </HTTPSamplerProxy>
               <hashTree>
@@ -2698,8 +2671,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}/action</stringProp>
@@ -2708,9 +2679,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">26.NOVA.POST.Suspend.Server</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2745,8 +2716,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -2755,9 +2724,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2812,8 +2781,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
                 <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -2822,9 +2789,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-                <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
               </HTTPSamplerProxy>
               <hashTree>
@@ -2878,8 +2845,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}/action</stringProp>
@@ -2888,9 +2853,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">27.NOVA.POST.Resume.Server</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2925,8 +2890,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -2935,9 +2898,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -2992,8 +2955,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
                 <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3002,9 +2963,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-                <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
               </HTTPSamplerProxy>
               <hashTree>
@@ -3060,8 +3021,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}/action</stringProp>
@@ -3070,9 +3029,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">28.NOVA.POST.Soft.Reboot.Server</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3107,8 +3066,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3117,9 +3074,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3174,8 +3131,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
                 <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3184,9 +3139,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-                <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
               </HTTPSamplerProxy>
               <hashTree>
@@ -3242,8 +3197,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}/action</stringProp>
@@ -3252,9 +3205,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">29.NOVA.POST.Hard.Reboot.Server</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3289,8 +3242,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3299,9 +3250,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3356,8 +3307,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
                 <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3366,9 +3315,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-                <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
               </HTTPSamplerProxy>
               <hashTree>
@@ -3422,8 +3371,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}/action</stringProp>
@@ -3432,9 +3379,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">30.NOVA.POST.Stop.Server</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3469,8 +3416,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3479,9 +3424,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3536,8 +3481,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
                 <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3546,9 +3489,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-                <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
               </HTTPSamplerProxy>
               <hashTree>
@@ -3602,8 +3545,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}/action</stringProp>
@@ -3612,9 +3553,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">31.NOVA.POST.Start.Server</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3649,8 +3590,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3659,9 +3598,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3716,8 +3655,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
                 <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3726,9 +3663,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-                <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
               </HTTPSamplerProxy>
               <hashTree>
@@ -3784,8 +3721,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}/action</stringProp>
@@ -3794,9 +3729,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">32.NOVA.POST.Create.Snapshot</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3843,8 +3778,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3853,9 +3786,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -3910,8 +3843,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 </elementProp>
                 <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
                 <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
                 <stringProp name="HTTPSampler.contentEncoding"></stringProp>
                 <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -3920,9 +3851,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
                 <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
                 <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
                 <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-                <boolProp name="HTTPSampler.monitor">false</boolProp>
                 <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
                 <stringProp name="TestPlan.comments">21.NOVA.GET.Server.Details</stringProp>
               </HTTPSamplerProxy>
               <hashTree>
@@ -3968,8 +3899,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/images?name=${snapshot_name}</stringProp>
@@ -3978,9 +3907,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">33.NOVA.GET.Search.Snapshot</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -4036,8 +3965,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/images/${snapshot_id}</stringProp>
@@ -4046,9 +3973,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">34.NOVA.DELETE.Snapshot</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -4084,8 +4011,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${glance_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2/images</stringProp>
@@ -4094,9 +4019,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">35.GLANCE.GET.List.Image</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -4136,8 +4061,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${glance_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2/images</stringProp>
@@ -4146,9 +4069,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">36.GLANCE.POST.Create.Image</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -4210,8 +4133,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${glance_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2/images/${image_id}</stringProp>
@@ -4220,9 +4141,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">37.GLANCE.PATCH.Update.Image</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -4278,8 +4199,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${glance_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2/images/${image_id}</stringProp>
@@ -4288,9 +4207,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">38.GLANCE.GET.Image.Details</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -4325,8 +4244,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${glance_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2/images/${image_id}</stringProp>
@@ -4335,9 +4252,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">39.GLANCE.DELETE.Image</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -4372,8 +4289,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes?name=${vol_name}</stringProp>
@@ -4382,9 +4297,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">40.CINDER.GET.Search.Volume</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -4458,8 +4373,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}/action</stringProp>
@@ -4468,9 +4381,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">41.CINDER.POST.Dettach.Volume</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -4505,8 +4418,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}</stringProp>
@@ -4515,9 +4426,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">14.CINDER.GET.Volume.Details</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -4572,8 +4483,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}</stringProp>
@@ -4582,9 +4491,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">14.CINDER.GET.Volume.Details</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -4630,8 +4539,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${cinder_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/${tenant_id}/volumes/${vol_id}</stringProp>
@@ -4640,9 +4547,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">42.CINDER.DELETE.Volume</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -4683,8 +4590,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers/${server_id}</stringProp>
@@ -4693,9 +4598,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">43.NOVA.DELETE.Server</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -4742,8 +4647,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             </elementProp>
             <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
             <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
             <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers?name=${srv_name}</stringProp>
@@ -4752,9 +4655,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
             <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
             <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
             <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
             <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
             <stringProp name="TestPlan.comments">44.NOVA.GET.Search.Server</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -4809,8 +4712,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               </elementProp>
               <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
               <stringProp name="HTTPSampler.port">${nova_api_port}</stringProp>
-              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
               <stringProp name="HTTPSampler.contentEncoding"></stringProp>
               <stringProp name="HTTPSampler.path">/v2.1/${tenant_id}/servers?name=${srv_name}</stringProp>
@@ -4819,9 +4720,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
               <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
               <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
               <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-              <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-              <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
               <stringProp name="TestPlan.comments">44.NOVA.GET.Search.Server</stringProp>
             </HTTPSamplerProxy>
             <hashTree>
@@ -4867,8 +4768,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${neutron_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.0/subnets?name=${subnet_name}</stringProp>
@@ -4877,9 +4776,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">RHOS 9/10/11</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -4943,8 +4842,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${neutron_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.0/subnets/${subnet_id}</stringProp>
@@ -4953,9 +4850,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">45.NEUTRON.DELETE.Subnet</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -4990,8 +4887,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${neutron_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.0/networks?name=${net_name}</stringProp>
@@ -5000,9 +4895,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">47.NEUTRON.GET.Search.Network RHOS 9/10/11</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -5058,8 +4953,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(nova_api_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${neutron_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">${protocol}</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v2.0/networks/${net_id}</stringProp>
@@ -5068,9 +4961,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">48.NEUTRON.DELETE.Network</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -5105,8 +4998,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(keystone_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_admin_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/projects/${tenant_id}</stringProp>
@@ -5115,9 +5006,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">49.KEYSTONE.DELETE.Tenant</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -5152,8 +5043,6 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           </elementProp>
           <stringProp name="HTTPSampler.domain">${__P(keystone_server_ip)}</stringProp>
           <stringProp name="HTTPSampler.port">${keystone_admin_port}</stringProp>
-          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol">http</stringProp>
           <stringProp name="HTTPSampler.contentEncoding"></stringProp>
           <stringProp name="HTTPSampler.path">/v3/users/${user_id}</stringProp>
@@ -5162,9 +5051,9 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));</stringProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-          <stringProp name="HTTPSampler.implementation">HttpClient3.1</stringProp>
-          <boolProp name="HTTPSampler.monitor">false</boolProp>
           <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="TestPlan.comments">50.KEYSTONE.DELETE.User</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
