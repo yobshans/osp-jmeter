@@ -1,6 +1,6 @@
 [rhel-server]
 Name=RHEL server
 enabled=1
-baseurl=http://download.eng.tlv.redhat.com/pub/rhel/rel-eng/latest-RHEL-7/compose/Server/x86_64/os/ 
+baseurl=http://download.eng.tlv.redhat.com/pub/rhel/released/RHEL-7/7.5/Server/x86_64/os/
 gpgcheck=0
 
