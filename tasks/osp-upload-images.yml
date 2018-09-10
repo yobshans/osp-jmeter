@@ -16,8 +16,8 @@
   - name: Undercloud - Download Cirros image
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack wget {{ cirros_image_url }}{{ cirros_image }} -P /home/stack/images\""
 
-  - name: Undercloud - Download CentOS image
-    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack wget {{ centos_image_url }}{{ centos_image }} -P /home/stack/images\""
+#   - name: Undercloud - Download CentOS image
+#     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack wget {{ centos_image_url }}{{ centos_image }} -P /home/stack/images\""
     
   - name: Overcloud - Create RHEL image
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && openstack image create --disk-format qcow2 --container-format bare --public --file /home/stack/images/{{ rhel_image }} rhel\""
@@ -25,7 +25,7 @@
   - name: Overcloud - Create Cirros image
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && openstack image create --disk-format qcow2 --container-format bare --public --file /home/stack/images/{{ cirros_image }} cirros\""
 
-  - name: Overcloud - Create CentOS image
-    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && openstack image create --disk-format qcow2 --container-format bare --public --file /home/stack/images/{{ centos_image }} centos\""
+#   - name: Overcloud - Create CentOS image
+#     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && openstack image create --disk-format qcow2 --container-format bare --public --file /home/stack/images/{{ centos_image }} centos\""
     
 # ------------------------------------------------------------------------------

@@ -22,12 +22,22 @@
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name controller-1 -f value -c Networks|awk -F = '{print \\$2}'\""
     register: contr_1_node
     
+  - name: Get Contr-2 Node 
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name controller-2 -f value -c Networks|awk -F = '{print \\$2}'\""
+    ignore_errors: yes
+    register: contr_2_node
+    
   - name: Get Comp-0 Node 
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name compute-0 -f value -c Networks|awk -F = '{print \\$2}'\""
     register: comp_0_node
 
+  - name: Get Comp-1 Node 
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name compute-1 -f value -c Networks|awk -F = '{print \\$2}'\""
+    ignore_errors: yes
+    register: comp_1_node
+    
   - name: Get Ceph-0 Node 
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name ceph-0 -f value -c Networks|awk -F = '{print \\$2}'\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name ceph.*-0 -f value -c Networks|awk -F = '{print \\$2}'\""
     register: ceph_0_node
 #    when: ceph_count.stdout != "0"
     
@@ -78,26 +88,44 @@
     
   - name: Vendor name Controller
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"cat /sys/devices/virtual/dmi/id/sys_vendor\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: contr_vendor
 
   - name: Product name Controller
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"cat /sys/devices/virtual/dmi/id/product_name\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: contr_product
 
   - name: OS name Controller
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"cat /etc/redhat-release\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: contr_os
 
   - name: CPU Count Controller
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"cat /proc/cpuinfo |  grep processor | wc -l\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: contr_cpu_count
 
   - name: CPU Model Controller
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"grep -m 1 'model name' /proc/cpuinfo |awk '{print \\$4,\\$5,\\$6,\\$7,\\$8,\\$9,\\$10}'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: contr_cpu_model
     
   - name: Memory Controller
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"cat /proc/meminfo |grep MemTotal: | awk '{print \\$2,\\$3}'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: contr_mem
 
 # --------------------------------------------------------------------------------------------------------------------------------------
@@ -106,26 +134,44 @@
     
   - name: Vendor name Compute
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"cat /sys/devices/virtual/dmi/id/sys_vendor\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: comp_vendor
 
   - name: Product name Compute
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"cat /sys/devices/virtual/dmi/id/product_name\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: comp_product
 
   - name: OS name Compute
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"cat /etc/redhat-release\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: comp_os
 
   - name: CPU Count Compute
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"cat /proc/cpuinfo |  grep processor | wc -l\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: comp_cpu_count
 
   - name: CPU Model Compute
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"grep -m 1 'model name' /proc/cpuinfo |awk '{print \\$4,\\$5,\\$6,\\$7,\\$8,\\$9,\\$10}'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: comp_cpu_model
     
   - name: Memory Compute
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"cat /proc/meminfo |grep MemTotal: | awk '{print \\$2,\\$3}'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: comp_mem
 
 # --------------------------------------------------------------------------------------------------------------------------------------
@@ -135,30 +181,48 @@
   - name: Vendor name Ceph
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"cat /sys/devices/virtual/dmi/id/sys_vendor\""
     register: ceph_vendor
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     when: ceph_count.stdout != "0"
 
   - name: Product name Ceph
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"cat /sys/devices/virtual/dmi/id/product_name\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: ceph_product
     when: ceph_count.stdout != "0"
 
   - name: OS name Ceph
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"cat /etc/redhat-release\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: ceph_os
     when: ceph_count.stdout != "0"
 
   - name: CPU Count Ceph
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"cat /proc/cpuinfo |  grep processor | wc -l\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: ceph_cpu_count
     when: ceph_count.stdout != "0"
 
   - name: CPU Model Ceph
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"grep -m 1 'model name' /proc/cpuinfo |awk '{print \\$4,\\$5,\\$6,\\$7,\\$8,\\$9,\\$10}'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: ceph_cpu_model
     when: ceph_count.stdout != "0"
     
   - name: Memory Ceph
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ ceph_0_node.stdout }} \"cat /proc/meminfo |grep MemTotal: | awk '{print \\$2,\\$3}'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: ceph_mem
     when: ceph_count.stdout != "0"
     

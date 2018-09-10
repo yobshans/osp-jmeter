@@ -1,0 +1,136 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+  - name: Create tmp file
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"touch /tmp/disruptive-test-result.txt\""
+
+  - name: Stack status title
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo echo $(date) '\n-----------------------------------------------------\nDisruptive Test results:\n-----------------------------------------------------' > /tmp/disruptive-test-result.txt\""
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Controller-0 node
+# --------------------------------------------------------------------------------------------------------------------------------------
+    
+  - name: Title
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nController-0 Node:\n-----------------------------------------------------' >> /tmp/disruptive-test-result.txt\""
+    
+  - name: Controller-0 - Docker list
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo docker ps --format \'{% raw %}{{ .Names }}{% endraw %}\'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: docker_containers
+
+  - include: reboot_containers.yml container_name='{{ item }}' node_name='{{ contr_0_node.stdout }}'
+    with_items: '{{ docker_containers.stdout_lines }}'
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Controller-1 node
+# --------------------------------------------------------------------------------------------------------------------------------------
+    
+  - name: Title
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nController-1 Node:\n-----------------------------------------------------' >> /tmp/disruptive-test-result.txt\""
+    
+  - name: Controller-1 - Docker list
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_1_node.stdout }} \"sudo docker ps --format \'{% raw %}{{ .Names }}{% endraw %}\'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: docker_containers_1
+
+  - include: reboot_containers.yml container_name='{{ item }}' node_name='{{ contr_1_node.stdout }}'
+    with_items: '{{ docker_containers_1.stdout_lines }}'
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Controller-2 node
+# --------------------------------------------------------------------------------------------------------------------------------------
+    
+  - name: Title
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nController-2 Node:\n-----------------------------------------------------' >> /tmp/disruptive-test-result.txt\""
+    
+  - name: Controller-2 - Docker list
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_2_node.stdout }} \"sudo docker ps --format \'{% raw %}{{ .Names }}{% endraw %}\'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: docker_containers_2
+
+  - include: reboot_containers.yml container_name='{{ item }}' node_name='{{ contr_2_node.stdout }}'
+    with_items: '{{ docker_containers_2.stdout_lines }}'
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Compute-0 node
+# --------------------------------------------------------------------------------------------------------------------------------------
+    
+  - name: Title
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nCompute-0 Node:\n-----------------------------------------------------' >> /tmp/disruptive-test-result.txt\""
+    
+  - name: Compute-0 - Docker list
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_0_node.stdout }} \"sudo docker ps --format \'{% raw %}{{ .Names }}{% endraw %}\'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: docker_containers_3
+
+  - include: reboot_containers.yml container_name='{{ item }}' node_name='{{ comp_0_node.stdout }}'
+    with_items: '{{ docker_containers_3.stdout_lines }}'
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Compute-1 node
+# --------------------------------------------------------------------------------------------------------------------------------------
+    
+  - name: Title
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"echo '-----------------------------------------------------\nCompute-1 Node:\n-----------------------------------------------------' >> /tmp/disruptive-test-result.txt\""
+    
+  - name: Compute-1 - Docker list
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ comp_1_node.stdout }} \"sudo docker ps --format \'{% raw %}{{ .Names }}{% endraw %}\'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: docker_containers_4
+
+  - include: reboot_containers.yml container_name='{{ item }}' node_name='{{ comp_1_node.stdout }}'
+    with_items: '{{ docker_containers_4.stdout_lines }}'
+
+#   - name: Controller-0 - Docker restart neutron_ovs_agent 
+#     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo docker restart neutron_ovs_agent\""
+#     become: true
+#     become_user: stack
+#     delegate_to: '{{ uc_node_ip.stdout }}'
+# 
+#   - name: Controller-0 - Waiting for Docker Status neutron_ovs_agent is Up
+#     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo docker ps -f name=neutron_ovs_agent\""
+#     become: true
+#     become_user: stack
+#     delegate_to: '{{ uc_node_ip.stdout }}'
+#     register: neutron_ovs_agent_status
+#     until: ("Up" in neutron_ovs_agent_status.stdout) or ("Restarting" in  neutron_ovs_agent_status.stdout)
+#     retries: 10
+#     delay: 3
+#   - debug: var=neutron_ovs_agent_status.stdout_lines
+
+#   - name: Date and Time
+#     shell: "date +'%Y-%m-%d-%I-%M-%S'"
+#     register: datestr
+# 
+#   - pause:
+#       minutes: 1
+#       prompt: "{{ datestr.stdout }}"
+
+#   - name: Controller-1 - reboot server
+#     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_1_node.stdout }} \"sudo reboot\""
+#     become: true
+#     become_user: stack
+#     delegate_to: '{{ uc_node_ip.stdout }}'
+#     ignore_errors: yes
+# 
+#   - name: Controller-0 - Waiting for Server is Up
+#     wait_for:
+#       host: '{{ contr_1_node.stdout }}'
+#       port: 22
+#       delay: 1000
+#       timeout: 2400
+#       state: started
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

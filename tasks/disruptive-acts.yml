@@ -1,0 +1,33 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name: Date and Time
+    shell: "date +'%Y-%m-%d-%I-%M-%S'"
+    register: datestr
+      
+  - name: Overcloud Stack status
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo echo '{{ datestr.stdout }}' - Restarted container  - '{{ container_name }}' >> /tmp/disruptive-test-result.txt\""
+      
+  - name: Controller-0 - Docker reboot container
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo docker restart '{{ container_name }}'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+      
+  - name: Controller-0 - Waiting for Docker container is Up
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"sudo docker ps -f name='{{ container_name }}'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: container_status
+    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    retries: 10
+    delay: 3
+  - debug: var=container_status.stdout_lines
+
+  - pause:
+      minutes: 1
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

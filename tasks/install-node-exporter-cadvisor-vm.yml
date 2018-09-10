@@ -1,0 +1,150 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name: Date and Time
+    shell: "date +'%Y-%m-%d-%I-%M-%S'"
+    register: datestr
+
+  - name: Instance VM - OS
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: vm_system_os
+
+  - name: Instance VM - Install rhos-release-latest.noarch.rpm
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo yum localinstall -y http://download.lab.bos.redhat.com/rcm-guest/puddles/OpenStack/rhos-release/rhos-release-latest.noarch.rpm\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: vm_system_os.stdout.find("Atomic Host") == -1
+
+  - name: Instance VM - Install rhos-release director
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo rhos-release -P 13-director\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: vm_system_os.stdout.find("Atomic Host") == -1
+
+  - name: Instance VM - Install EPEL
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: vm_system_os.stdout.find("Atomic Host") == -1
+    ignore_errors: yes
+
+  - name: Instance VM - Install Docker
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo yum -y install docker\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: vm_system_os.stdout.find("Atomic Host") == -1
+
+  - name: Instance VM - Install Docker Compose
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo yum -y install docker-compose\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: vm_system_os.stdout.find("Atomic Host") == -1
+
+  - name: Instance VM - Start Docker
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo systemctl start docker\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: vm_system_os.stdout.find("Atomic Host") == -1
+
+  - name: Instance VM - Enable Docker
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo systemctl enable docker\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: vm_system_os.stdout.find("Atomic Host") == -1
+
+  - name: Instance VM - Check cAdvisor container is installed
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo docker ps -f name='cadvisor'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: cadvisor_status
+    ignore_errors: yes
+
+  - name: Instance VM - Remove old cAdvisor container
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo docker rm -f cadvisor\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    ignore_errors: yes
+    when: cadvisor_status.stdout.find("cadvisor") == 1
+
+  - name: Instance VM - Update mount
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo mount -o remount,rw '/sys/fs/cgroup'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    ignore_errors: yes
+    when: cadvisor_status.stdout.find("cadvisor") == -1
+
+  - name: Instance VM - Update links
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo ln -s /sys/fs/cgroup/cpu,cpuacct /sys/fs/cgroup/cpuacct,cpu\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    ignore_errors: yes
+    when: cadvisor_status.stdout.find("cadvisor") == -1
+
+  - name: Instance VM - Docker run cAdvisor
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=9191:9191 --detach=true --name=cadvisor --privileged=true google/cadvisor:latest --port=9191\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: cadvisor_status.stdout.find("cadvisor") == -1
+
+  - name: Instance VM - Waiting for cAdvisor container is Up
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo docker ps -f name='cadvisor'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: container_status
+    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    retries: 10
+    delay: 3
+  - debug: var=container_status.stdout_lines
+
+  - name: Instance VM - Check Node-exporter container is installed
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo docker ps -f name='node-exporter'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: node_exporter_status
+    ignore_errors: yes
+
+  - name: Instance VM - Remove old Node-exporter
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo docker rm -f node-exporter\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: node_exporter_status.stdout.find("node-exporter") == 1
+
+  - name: Instance VM - Docker run Node-exporter
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo docker run -d --publish=9100:9100 --cap-add=SYS_TIME --volume=/proc:/host/proc --volume=/sys:/host/sys --volume=/:/rootfs --net=host --name=node-exporter prom/node-exporter --path.procfs=/host/proc --path.sysfs=/host/sys --collector.filesystem.ignored-mount-points='^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)' --no-collector.hwmon\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: node_exporter_status.stdout.find("node-exporter") == -1
+
+  - name: Instance VM - Waiting for Node-exporter container is Up
+    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo docker ps -f name='node-exporter'\""
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: container_status
+    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    retries: 10
+    delay: 3
+  - debug: var=container_status.stdout_lines
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+
