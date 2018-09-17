@@ -1,0 +1,240 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name: Date and Time
+    shell: "date +'%Y-%m-%d-%I-%M-%S'"
+    register: datestr
+
+  - name: Undercloud - Check Docker is installed
+    shell: "sudo docker -v"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: docker_result
+    ignore_errors: yes
+
+  - name: Undercloud - Install rhos-release-latest.noarch.rpm
+    shell: "sudo yum localinstall -y http://download.lab.bos.redhat.com/rcm-guest/puddles/OpenStack/rhos-release/rhos-release-latest.noarch.rpm"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: docker_result is failed
+
+  - name: Undercloud - Install rhos-release director
+    shell: "sudo rhos-release -P 13-director"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: docker_result is failed
+
+  - name: Undercloud - Install EPEL
+    shell: "sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: docker_result is failed
+    ignore_errors: yes
+
+  - name: Undercloud - Install Docker
+    shell: "sudo yum -y install docker"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: docker_result is failed
+
+  - name: Undercloud - Install Docker Compose
+    shell: "sudo yum -y install docker-compose"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: docker_result is failed
+
+  - name: Undercloud - Start Docker
+    shell: "sudo systemctl start docker"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: docker_result is failed
+
+  - name: Undercloud - Enable Docker
+    shell: "sudo systemctl enable docker"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: docker_result is failed
+
+  - name: Undercloud - Check cAdvisor container is installed
+    shell: "sudo docker ps --all -f name='cadvisor'"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: cadvisor_status
+    ignore_errors: yes
+
+  - name: Undercloud - Remove old cAdvisor container
+    shell: "sudo docker rm -f cadvisor"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    ignore_errors: yes
+    when: cadvisor_status.stdout.find("cadvisor") == 1
+
+  - name: Undercloud - Update mount
+    shell: "sudo mount -o remount,rw '/sys/fs/cgroup'"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    ignore_errors: yes
+    when: cadvisor_status.stdout.find("cadvisor") == -1
+
+  - name: Undercloud - Update links
+    shell: "sudo ln -s /sys/fs/cgroup/cpu,cpuacct /sys/fs/cgroup/cpuacct,cpu"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    ignore_errors: yes
+    when: cadvisor_status.stdout.find("cadvisor") == -1
+
+  - name: Undercloud - Docker run cAdvisor
+    shell: "sudo docker run --volume=/cgroup:/cgroup:ro --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish={{ cadvisor_port }}:{{ cadvisor_port }} --detach=true --name=cadvisor --privileged=true google/cadvisor:latest --port={{ cadvisor_port }}"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: cadvisor_status.stdout.find("cadvisor") == -1
+
+  - name: Undercloud - Waiting for cAdvisor container is Up
+    shell: "sudo docker ps -f name='cadvisor'"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: container_status
+    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    retries: 10
+    delay: 3
+  - debug: var=container_status.stdout_lines
+
+  - name: Undercloud - Update iptables filtering
+    shell: "sudo iptables -I INPUT -p tcp -m tcp --dport {{ cadvisor_port }} -j ACCEPT"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: cadvisor_status.stdout.find("cadvisor") == -1
+
+  - name: Undercloud - Update iptables filtering
+    shell: "sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport {{ cadvisor_port }} -j ACCEPT"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: cadvisor_status.stdout.find("cadvisor") == -1
+
+  - name: Node - Check Node-exporter container is installed
+    shell: "sudo docker ps -f name='node-exporter'"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: node_exporter_status
+    ignore_errors: yes
+
+  - name: Undercloud - Remove old Node-exporter container
+    shell: "sudo docker rm -f node-exporter"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: node_exporter_status.stdout.find("node-exporter") == 1
+
+  - name: Undercloud - Docker run Node-exporter
+    shell: "sudo docker run -d --publish=9100:9100 --cap-add=SYS_TIME --volume=/proc:/host/proc --volume=/sys:/host/sys --volume=/:/rootfs --net=host --name=node-exporter prom/node-exporter --path.procfs=/host/proc --path.sysfs=/host/sys --collector.filesystem.ignored-mount-points='^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)'"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: node_exporter_status.stdout.find("node-exporter") == -1
+
+  - name: Undercloud - Waiting for Node-exporter container is Up
+    shell: "sudo docker ps -f name='node-exporter'"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: container_status
+    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    retries: 10
+    delay: 3
+  - debug: var=container_status.stdout_lines
+
+  - name: Undercloud - Update iptables filtering
+    shell: "sudo iptables -I INPUT -p tcp -m tcp --dport 9100 -j ACCEPT"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: node_exporter_status.stdout.find("node-exporter") == -1
+
+  - name: Undercloud - Update iptables filtering
+    shell: "sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9100 -j ACCEPT"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: node_exporter_status.stdout.find("node-exporter") == -1
+
+  - name: Undercloud - Save iptables filtering
+    shell: "sudo /sbin/service iptables save"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: node_exporter_status.stdout.find("node-exporter") == -1
+
+  - name: Node - Check Blackbox-exporter container is installed
+    shell: "sudo docker ps -f name='blackbox-exporter'"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: blackbox_exporter_status
+    ignore_errors: yes
+
+  - name: Undercloud - Remove old Blackbox-exporter container
+    shell: "sudo docker rm -f blackbox-exporter"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == 1
+
+  - name: Undercloud - Docker run Blackbox-exporter
+    shell: "sudo docker run -d -p 9115:9115 --name blackbox-exporter prom/blackbox-exporter"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+  - name: Undercloud - Waiting for Blackbox-exporter container is Up
+    shell: "sudo docker ps -f name='blackbox-exporter'"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    register: container_status
+    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    retries: 10
+    delay: 3
+  - debug: var=container_status.stdout_lines
+
+  - name: Undercloud - Update iptables filtering
+    shell: "sudo iptables -I INPUT -p tcp -m tcp --dport 9115 -j ACCEPT"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+  - name: Undercloud - Update iptables filtering
+    shell: "sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9115 -j ACCEPT"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+  - name: Undercloud - Save iptables filtering
+    shell: "sudo /sbin/service iptables save"
+    become: true
+    become_user: stack
+    delegate_to: '{{ uc_node_ip.stdout }}'
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+
