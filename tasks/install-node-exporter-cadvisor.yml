@@ -6,10 +6,10 @@
 
   - name: Node - Check Docker installation
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo docker -v\""
-    become: true
+#     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-#     register: docker_result
+    register: docker_result
     ignore_errors: True
 
   - name: Node - Install rhos-release-latest.noarch.rpm

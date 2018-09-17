@@ -4,65 +4,65 @@
     shell: "date +'%Y-%m-%d-%I-%M-%S'"
     register: datestr
 
-  - name: Node - Check Docker installation
+  - name: UC - Check Docker installation
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker -v\""
     register: docker_result
     ignore_errors: True
 
-  - name: Node - Install rhos-release-latest.noarch.rpm
+  - name: UC - Install rhos-release-latest.noarch.rpm
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo yum localinstall -y http://download.lab.bos.redhat.com/rcm-guest/puddles/OpenStack/rhos-release/rhos-release-latest.noarch.rpm\""
     when: docker_result is failed
 
-  - name: Node - Install rhos-release director
+  - name: UC - Install rhos-release director
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo rhos-release -P 13-director\""
     when: docker_result is failed
 
-  - name: Node - Install EPEL
+  - name: UC - Install EPEL
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo rpm -ivh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm\""
     when: docker_result is failed
     ignore_errors: yes
 
-  - name: Node - Install Docker
+  - name: UC - Install Docker
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo yum -y install docker\""
     when: docker_result is failed
 
-  - name: Node - Install Docker Compose
+  - name: UC - Install Docker Compose
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo yum -y install docker-compose\""
     when: docker_result is failed
 
-  - name: Node - Start Docker
+  - name: UC - Start Docker
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo systemctl start docker\""
     when: docker_result is failed
 
-  - name: Node - Enable Docker
+  - name: UC - Enable Docker
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo systemctl enable docker\""
     when: docker_result is failed
 
-  - name: Node - Check cAdvisor container is installed
+  - name: UC - Check cAdvisor container is installed
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='cadvisor'\""
     register: cadvisor_status
     ignore_errors: yes
 
-  - name: Node - Remove old cAdvisor container
+  - name: UC - Remove old cAdvisor container
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f cadvisor\""
     ignore_errors: yes
     when: cadvisor_status.stdout.find("cadvisor") == 1
 
-  - name: Node - Update mount
+  - name: UC - Update mount
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo mount -o remount,rw '/sys/fs/cgroup'\""
     ignore_errors: yes
     when: cadvisor_status.stdout.find("cadvisor") == -1
 
-  - name: Node - Update links
+  - name: UC - Update links
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo ln -s /sys/fs/cgroup/cpu,cpuacct /sys/fs/cgroup/cpuacct,cpu\""
     ignore_errors: yes
     when: cadvisor_status.stdout.find("cadvisor") == -1
 
-  - name: Node - Docker run cAdvisor
+  - name: UC - Docker run cAdvisor
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo sudo docker run --volume=/cgroup:/cgroup:ro --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish={{ cadvisor_port }}:{{ cadvisor_port }} --detach=true --name=cadvisor --privileged=true google/cadvisor:latest --port={{ cadvisor_port }}\""
     when: cadvisor_status.stdout.find("cadvisor") == -1
 
-  - name: Node - Waiting for cAdvisor container is Up
+  - name: UC - Waiting for cAdvisor container is Up
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='cadvisor'\""
     register: container_status
     until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
@@ -70,29 +70,29 @@
     delay: 3
   - debug: var=container_status.stdout_lines
 
-  - name: Node - Update iptables filtering
+  - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport {{ cadvisor_port }} -j ACCEPT\""
     when: cadvisor_status.stdout.find("cadvisor") == -1
 
-  - name: Node - Update iptables filtering
+  - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport {{ cadvisor_port }} -j ACCEPT\""
     when: cadvisor_status.stdout.find("cadvisor") == -1
 
-  - name: Node - Check Node-exporter container is installed
+  - name: UC - Check Node-exporter container is installed
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='node-exporter'\""
     register: node_exporter_status
     ignore_errors: yes
   - debug: var=container_status.stdout_lines
 
-  - name: Node - Remove old Node-exporter container
+  - name: UC - Remove old Node-exporter container
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker rm -f node-exporter\""
     when: node_exporter_status.stdout.find("node-exporter") == 1
 
-  - name: Node - Docker run Node-exporter
+  - name: UC - Docker run Node-exporter
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker run -d --publish=9100:9100 --cap-add=SYS_TIME --volume=/proc:/host/proc --volume=/sys:/host/sys --volume=/:/rootfs --net=host --name=node-exporter prom/node-exporter --path.procfs=/host/proc --path.sysfs=/host/sys --collector.filesystem.ignored-mount-points='^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)'\""
     when: node_exporter_status.stdout.find("node-exporter") == -1
 
-  - name: Node - Waiting for Node-exporter container is Up
+  - name: UC - Waiting for Node-exporter container is Up
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='node-exporter'\""
     register: container_status
     until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
@@ -100,15 +100,15 @@
     delay: 3
   - debug: var=container_status.stdout_lines
 
-  - name: Node - Update iptables filtering
+  - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 9100 -j ACCEPT\""
     when: node_exporter_status.stdout.find("node-exporter") == -1
 
-  - name: Node - Update iptables filtering
+  - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9100 -j ACCEPT\""
     when: node_exporter_status.stdout.find("node-exporter") == -1
 
-  - name: Node - Save iptables filtering
+  - name: UC - Save iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo /sbin/service iptables save\""
     when: node_exporter_status.stdout.find("node-exporter") == -1
 
