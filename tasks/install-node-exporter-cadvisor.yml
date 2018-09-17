@@ -95,7 +95,7 @@
     when: cadvisor_status.stdout.find("cadvisor") == -1
 
   - name: Node - Docker run cAdvisor
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo sudo docker run --volume=/cgroup:/cgroup:ro --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish={{ cadvisor_port }}:{{ cadvisor_port }} --detach=true --name=cadvisor --privileged=true google/cadvisor:latest --port={{ cadvisor_port }}\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo docker run --volume=/cgroup:/cgroup:ro --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish={{ cadvisor_port }}:{{ cadvisor_port }} --detach=true --name=cadvisor --privileged=true google/cadvisor:latest --port={{ cadvisor_port }}\""
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
