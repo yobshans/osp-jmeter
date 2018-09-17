@@ -13,24 +13,25 @@
     shell: "date +'%Y%m%d%m%H%S'"
     register: cur_date_time
 
-  - block:
-      - name: Verify osp-jmeter folder exists on Hypervisor
-        stat:
-          path: "{{ osp_jmeter_dir }}"
-        delegate_to: "{{ hostvars['hypervisor'].ansible_host }}"
-        register: osp_dir
-        
-      - name: Rename old osp-jmeter folder on Hypervisor
-        shell: "sudo mv {{ osp_jmeter_dir }} {{ osp_jmeter_dir }}-{{ cur_date_time.stdout }}"
-        delegate_to: "{{ hostvars['hypervisor'].ansible_host }}"
-        when: osp_dir.stat.exists
-    when:  "'hypervisor' in groups"
+#   - block:
+#       - name: Verify osp-jmeter folder exists on Hypervisor
+#         stat:
+#           path: "{{ osp_jmeter_dir }}"
+#         delegate_to: "{{ hostvars['hypervisor'].ansible_host }}"
+#         register: osp_dir
+#         
+#       - name: Rename old osp-jmeter folder on Hypervisor
+#         shell: "sudo mv {{ osp_jmeter_dir }} {{ osp_jmeter_dir }}-{{ cur_date_time.stdout }}"
+#         delegate_to: "{{ hostvars['hypervisor'].ansible_host }}"
+#         when: osp_dir.stat.exists
+#     when:  "'hypervisor' in groups"
   
   - name: Clone osp-jmeter on Hypervisor when run by Infrared
     shell: "git clone https://github.com/yobshans/osp-jmeter /opt/osp-jmeter"
     delegate_to: "{{ hostvars['hypervisor'].ansible_host }}"
     when:  "'hypervisor' in groups"
-  
+    ignore_errors: yes
+
   - name: Add hypervisor hosts to host list when run standalone
     add_host:
         name: "{{ hypervisor_name }}"
