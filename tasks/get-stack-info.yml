@@ -88,9 +88,9 @@
     
   - name: Vendor name Controller
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ contr_0_node.stdout }} \"cat /sys/devices/virtual/dmi/id/sys_vendor\""
-    become: true
-    become_user: stack
-    delegate_to: '{{ uc_node_ip.stdout }}'
+#    become: true
+#    become_user: stack
+#    delegate_to: '{{ uc_node_ip.stdout }}'
     register: contr_vendor
 
   - name: Product name Controller
