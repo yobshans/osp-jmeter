@@ -21,7 +21,7 @@
         register: osp_dir
         
       - name: Rename old osp-jmeter folder on Hypervisor
-        shell: "mv {{ osp_jmeter_dir }} {{ osp_jmeter_dir }}-{{ cur_date_time.stdout }}"
+        shell: "sudo mv {{ osp_jmeter_dir }} {{ osp_jmeter_dir }}-{{ cur_date_time.stdout }}"
         delegate_to: "{{ hostvars['hypervisor'].ansible_host }}"
         when: osp_dir.stat.exists
     when:  "'hypervisor' in groups"
