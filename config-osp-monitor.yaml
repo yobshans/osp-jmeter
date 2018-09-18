@@ -58,16 +58,37 @@
     with_items: "{{ ceph_nodes.stdout_lines }}"
     when: ceph_count.stdout != "0"
 
+#   - name: Install Node Exporter on Instances VMs 
+#     hosts: '{{ uc_node_ip.stdout }}'
+#     include_tasks: tasks/install-node-exporter-cadvisor-vm.yml
+#     vars: 
+#       node_target: "{{ item }}"
+#     with_items: "{{ vm_nodes.stdout_lines }}"
+#     when: vm_count.stdout != "0"
+# 
+#   - name: Install Prometheus and Grafana 
+#     include_tasks: tasks/install-prometheus-grafana.yml
+
+- name: Instances VMs
+  hosts: '{{ uc_node_ip.stdout }}'
+  remote_user: stack
+  gather_facts: no
+  vars:
+   prometheus_conf_dir: /etc/prometheus/
+   prometheus_conf_file: prometheus.yml
+   cadvisor_port: 9192 # 9191 - osp 10 bind this port, need to change 
+
+  tasks: 
+
+  - name: Gathering Stack env information
+    include_tasks: tasks/get-stack-info-monitor.yml
+
   - name: Install Node Exporter on Instances VMs 
-    hosts: '{{ uc_node_ip.stdout }}'
     include_tasks: tasks/install-node-exporter-cadvisor-vm.yml
     vars: 
       node_target: "{{ item }}"
     with_items: "{{ vm_nodes.stdout_lines }}"
     when: vm_count.stdout != "0"
-
-  - name: Install Prometheus and Grafana 
-    include_tasks: tasks/install-prometheus-grafana.yml
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
