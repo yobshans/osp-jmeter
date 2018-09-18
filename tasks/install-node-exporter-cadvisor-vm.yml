@@ -8,7 +8,7 @@
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
 #     become: true
 #     become_user: stack
-#     delegate_to: '{{ uc_node_ip.stdout }}'
+    delegate_to: '{{ uc_node_ip.stdout }}'
     register: vm_system_os
 
   - name: Instance VM - Install rhos-release-latest.noarch.rpm
