@@ -133,7 +133,7 @@
 #     delegate_to: '{{ uc_node_ip.stdout }}'
     register: node_exporter_status
     ignore_errors: yes
-  - debug: var=container_status.stdout_lines
+  - debug: var=node_exporter_status.stdout_lines
 
   - name: Node - Remove old Node-exporter container
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo docker rm -f node-exporter\""
@@ -154,11 +154,11 @@
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    register: container_status
+    register: node_exporter_status
     until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
     retries: 10
     delay: 3
-  - debug: var=container_status.stdout_lines
+  - debug: var=node_exporter_status.stdout_lines
 
   - name: Node - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 9100 -j ACCEPT\""
