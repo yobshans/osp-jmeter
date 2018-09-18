@@ -59,6 +59,7 @@
     when: ceph_count.stdout != "0"
 
   - name: Install Node Exporter on Instances VMs 
+    hosts: '{{ uc_node_ip.stdout }}'
     include_tasks: tasks/install-node-exporter-cadvisor-vm.yml
     vars: 
       node_target: "{{ item }}"
