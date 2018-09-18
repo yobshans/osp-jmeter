@@ -128,7 +128,7 @@
     when: node_exporter_status.stdout.find("node-exporter") == 1
 
   - name: Instance VM - Docker run Node-exporter
-    shell: "sudo ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo docker run -d --publish=9100:9100 --cap-add=SYS_TIME --volume=/proc:/host/proc --volume=/sys:/host/sys --volume=/:/rootfs --net=host --name=node-exporter prom/node-exporter --path.procfs=/host/proc --path.sysfs=/host/sys --no-collector.hwmon --collector.filesystem.ignored-mount-points='^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)'\""
+    shell: "sudo ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo docker run -d --publish=9100:9100 --cap-add=SYS_TIME --volume=/proc:/host/proc --volume=/sys:/host/sys --volume=/:/rootfs --net=host --name=node-exporter prom/node-exporter --path.procfs=/host/proc --path.sysfs=/host/sys --no-collector.hwmon --collector.filesystem.ignored-mount-points=\"^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)\"\""
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
