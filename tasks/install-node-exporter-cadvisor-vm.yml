@@ -5,7 +5,7 @@
     register: datestr
 
   - name: Instance VM - OS
-    shell: "sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
+    shell: "sudo ssh -t -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
 #     become: true
 #     become_user: stack
     delegate_to: '{{ uc_node_ip.stdout }}'
