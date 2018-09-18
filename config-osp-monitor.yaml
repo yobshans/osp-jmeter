@@ -22,6 +22,7 @@
    prometheus_conf_dir: /etc/prometheus/
    prometheus_conf_file: prometheus.yml
    cadvisor_port: 9192 # 9191 - osp 10 bind this port, need to change 
+   node_exporter_param: "^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)"
 
   tasks: 
 
