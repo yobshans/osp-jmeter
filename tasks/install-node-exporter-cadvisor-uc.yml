@@ -38,6 +38,8 @@
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo systemctl enable docker\""
     when: docker_result is failed
 
+# --------------------------------------------------------------------------------------------------------------------------------------
+
   - name: UC - Check cAdvisor container is installed
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='cadvisor'\""
     register: cadvisor_status
@@ -64,11 +66,11 @@
 
   - name: UC - Waiting for cAdvisor container is Up
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='cadvisor'\""
-    register: container_status
-    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    register: cadvisor_status
+    until: ("Up" in cadvisor_status.stdout) or ("Restarting" in  cadvisor_status.stdout)
     retries: 10
     delay: 3
-  - debug: var=container_status.stdout_lines
+  - debug: var=cadvisor_status.stdout_lines
 
   - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport {{ cadvisor_port }} -j ACCEPT\""
@@ -78,11 +80,13 @@
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport {{ cadvisor_port }} -j ACCEPT\""
     when: cadvisor_status.stdout.find("cadvisor") == -1
 
+# --------------------------------------------------------------------------------------------------------------------------------------
+
   - name: UC - Check Node-exporter container is installed
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='node-exporter'\""
     register: node_exporter_status
     ignore_errors: yes
-  - debug: var=container_status.stdout_lines
+  - debug: var=node_exporter_status.stdout_lines
 
   - name: UC - Remove old Node-exporter container
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker rm -f node-exporter\""
@@ -94,11 +98,11 @@
 
   - name: UC - Waiting for Node-exporter container is Up
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='node-exporter'\""
-    register: container_status
-    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    register: node_exporter_status
+    until: ("Up" in node_exporter_status.stdout) or ("Restarting" in  node_exporter_status.stdout)
     retries: 10
     delay: 3
-  - debug: var=container_status.stdout_lines
+  - debug: var=node_exporter_status.stdout_lines
 
   - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 9100 -j ACCEPT\""
@@ -111,6 +115,42 @@
   - name: UC - Save iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo /sbin/service iptables save\""
     when: node_exporter_status.stdout.find("node-exporter") == -1
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name: UC - Check Blackbox-exporter container is installed
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='blackbox-exporter'\""
+    register: blackbox_exporter_status
+    ignore_errors: yes
+  - debug: var=blackbox_exporter_status.stdout_lines
+
+  - name: UC - Remove old Blackbox-exporter container
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker rm -f blackbox-exporter\""
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == 1
+
+  - name: UC - Docker run Blackbox-exporter
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker run -d -p 9115:9115 --name blackbox-exporter prom/blackbox-exporter\""
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+  - name: UC - Waiting for Blackbox-exporter container is Up
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='blackbox-exporter'\""
+    register: blackbox_exporter_status
+    until: ("Up" in blackbox_exporter_status.stdout) or ("Restarting" in  blackbox_exporter_status.stdout)
+    retries: 10
+    delay: 3
+  - debug: var=blackbox_exporter_status.stdout_lines
+
+  - name: UC - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 9115 -j ACCEPT\""
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+  - name: UC - Update iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9115 -j ACCEPT\""
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+  - name: UC - Save iptables filtering
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo /sbin/service iptables save\""
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
