@@ -1052,7 +1052,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <hashTree/>
               </hashTree>
               <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="START.IPERF.SRV" enabled="true">
-                <stringProp name="command">sudo docker run  -d -i --name=iperf3-server --rm --publish ${uc_port}:${uc_port} networkstatic/iperf3 --port ${uc_port} --server</stringProp>
+                <stringProp name="command">sudo docker run  -d -i --name=iperf3-server --rm --publish ${uc_port}:${uc_port} networkstatic/iperf3 --port ${uc_port} --server &amp;</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${iperf.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
@@ -1196,7 +1196,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                   <hashTree/>
                 </hashTree>
                 <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="07.SSH.RUN.STRESS-NG.On.Instance" enabled="true">
-                  <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo docker run -i --name stress-ng --rm polinux/stress-ng  --cpu ${cpu.workers} --cpu-load ${cpu.percent} --vm ${vm.workers} --vm-bytes ${vm.mbytes}M --hdd ${hdd.workers} --hdd-bytes ${hdd.gbytes}G --timeout ${stress.time.sec}s --times --perf --metrics-brief &gt;&gt; /tmp/${floating_ip}-${file_date}-stressng.txt &amp;&quot;</stringProp>
+                  <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo docker run -i --name stress-ng --rm polinux/stress-ng  --cpu ${cpu.workers} --cpu-load ${cpu.percent} --vm ${vm.workers} --vm-bytes ${vm.mbytes}M --hdd ${hdd.workers} --hdd-bytes ${hdd.gbytes}G --timeout ${stress.time.sec}s --times --perf --metrics-brief &amp;&gt; /tmp/${floating_ip}-${file_date}-stressng.txt &amp;&quot;</stringProp>
                   <intProp name="connectionTimeout">5000</intProp>
                   <stringProp name="hostname">${ospd.host}</stringProp>
                   <stringProp name="passphrase"></stringProp>
@@ -1257,7 +1257,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                   <hashTree/>
                 </hashTree>
                 <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="07.SSH.RUN.STRESS-NG.On.Instance" enabled="true">
-                  <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo docker run -i --name stress-ng --rm polinux/stress-ng  --cpu ${cpu.workers} --cpu-load ${cpu.percent} --vm ${vm.workers} --vm-bytes ${vm.mbytes}M --hdd ${hdd.workers} --hdd-bytes ${hdd.gbytes}G --timeout 0 --times --perf --metrics-brief &gt;&gt; /tmp/${floating_ip}-${file_date}-stressng.txt &amp;&quot;</stringProp>
+                  <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo docker run -i --name stress-ng --rm polinux/stress-ng  --cpu ${cpu.workers} --cpu-load ${cpu.percent} --vm ${vm.workers} --vm-bytes ${vm.mbytes}M --hdd ${hdd.workers} --hdd-bytes ${hdd.gbytes}G --timeout 0 --times --perf --metrics-brief &amp;&gt; /tmp/${floating_ip}-${file_date}-stressng.txt &amp;&quot;</stringProp>
                   <intProp name="connectionTimeout">5000</intProp>
                   <stringProp name="hostname">${ospd.host}</stringProp>
                   <stringProp name="passphrase"></stringProp>
@@ -1312,7 +1312,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <hashTree/>
               </hashTree>
               <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="08.SSH.RUN.IPERF.On.Instance" enabled="true">
-                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo docker run -i --name iperf3 --rm networkstatic/iperf3 --client ${iperf.host} --port ${uc_port} --time ${stress.time.sec}s &gt;&gt; /tmp/${floating_ip}-${file_date}-iperf.txt &amp;&quot;</stringProp>
+                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo docker run -i --name iperf3 --rm networkstatic/iperf3 --client ${iperf.host} --port ${uc_port} --time ${stress.time.sec}s &amp;&gt; /tmp/${floating_ip}-${file_date}-iperf.txt &amp;&quot;</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${ospd.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
