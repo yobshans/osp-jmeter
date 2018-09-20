@@ -141,7 +141,7 @@
           </RegexExtractor>
           <hashTree/>
         </hashTree>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips" enabled="false">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips" enabled="true">
           <stringProp name="command">sudo grep no_proxy /home/stack/overcloudrc</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
           <stringProp name="hostname">${ospd.host}</stringProp>
@@ -176,7 +176,7 @@
           </RegexExtractor>
           <hashTree/>
         </hashTree>
-        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips" enabled="true">
+        <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="SSH Command server_ips" enabled="false">
           <stringProp name="command">sudo grep OS_AUTH_URL /home/stack/overcloudrc</stringProp>
           <intProp name="connectionTimeout">5000</intProp>
           <stringProp name="hostname">${ospd.host}</stringProp>
