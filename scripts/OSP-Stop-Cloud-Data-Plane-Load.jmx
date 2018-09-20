@@ -885,7 +885,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <stringProp name="username">${ospd.user}</stringProp>
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree/>
-              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="PKILL.STRESSNG" enabled="true">
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="STOP.STRESSNG" enabled="true">
                 <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo docker stop stress-ng&quot;</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${ospd.host}</stringProp>
@@ -965,7 +965,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <stringProp name="username">${ospd.user}</stringProp>
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree/>
-              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="PKILL.IPERF" enabled="true">
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="STOP.IPERF" enabled="true">
                 <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo docker stop iperf3&quot;</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${ospd.host}</stringProp>
@@ -1083,7 +1083,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
               <stringProp name="username">${ospd.user}</stringProp>
             </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
             <hashTree/>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="KILL.IPERF.On.IPERF.SRV" enabled="true">
+            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="STOP.IPERF.On.IPERF.SRV" enabled="true">
               <stringProp name="command">sudo docker stop iperf3-server</stringProp>
               <intProp name="connectionTimeout">5000</intProp>
               <stringProp name="hostname">${iperf.host}</stringProp>
