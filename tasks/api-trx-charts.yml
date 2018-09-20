@@ -10,6 +10,7 @@
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
       --include-labels {{ item }} --include-label-regex true --auto-scale no
     with_items: "{{ keystone_api_name }}"
+    when: keystone_api_name is defined
     ignore_errors: yes
     
   - name: CMDRunner - create nova api charts
@@ -20,6 +21,7 @@
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
       --include-labels {{ item }} --include-label-regex true --auto-scale no
     with_items: "{{ nova_api_name }}"
+    when: nova_api_name is defined
     ignore_errors: yes
 
   - name: CMDRunner - create neutron api charts
@@ -30,6 +32,7 @@
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
       --include-labels {{ item }} --include-label-regex true --auto-scale no
     with_items: "{{ neutron_api_name }}"
+    when: neutron_api_name is defined
     ignore_errors: yes
 
   - name: CMDRunner - create cinder api charts
@@ -40,6 +43,7 @@
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
       --include-labels {{ item }} --include-label-regex true --auto-scale no
     with_items: "{{ cinder_api_name }}"
+    when: cinder_api_name is defined
     ignore_errors: yes
 
   - name: CMDRunner - create glance api charts
@@ -50,6 +54,7 @@
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
       --include-labels {{ item }} --include-label-regex true --auto-scale no
     with_items: "{{ glance_api_name }}"
+    when: glance_api_name is defined
     ignore_errors: yes
 
   - name: CMDRunner - create transactions charts
@@ -60,6 +65,7 @@
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
       --include-labels {{ item }} --include-label-regex true --auto-scale no
     with_items: "{{ trx_name }}"
+    when: trx_name is defined
     ignore_errors: yes
 
   - name: CMDRunner - create identity request charts
@@ -70,6 +76,7 @@
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
       --include-labels {{ item }} --include-label-regex true --auto-scale no
     with_items: "{{ identity_api_name }}"
+    when: identity_api_name is defined
     ignore_errors: yes
 
   - name: CMDRunner - create project request charts
@@ -80,6 +87,7 @@
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
       --include-labels {{ item }} --include-label-regex true --auto-scale no
     with_items: "{{ project_api_name }}"
+    when: project_api_name is defined
     ignore_errors: yes
 
   - name: CMDRunner - create ssh charts
@@ -90,6 +98,7 @@
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
       --include-labels {{ item }}.* --include-label-regex true --auto-scale no
     with_items: "{{ ssh_name }}"
+    when: ssh_name is defined
     ignore_errors: yes
 
   - name: CMDRunner - create 05.SSH.PING.Instance TPS charts
