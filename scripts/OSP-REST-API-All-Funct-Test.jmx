@@ -225,7 +225,7 @@
           <stringProp name="username">${ospd.user}</stringProp>
         </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
         <hashTree>
-          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="keystone_server_ip" enabled="false">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="keystone_server_ip" enabled="true">
             <stringProp name="TestPlan.comments">keystone_server_ip</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">ssh_keystone_server_ip</stringProp>
@@ -235,7 +235,7 @@
             <stringProp name="RegexExtractor.match_number">1</stringProp>
           </RegexExtractor>
           <hashTree/>
-          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="keystone_server_ip" enabled="true">
+          <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="keystone_server_ip" enabled="false">
             <stringProp name="TestPlan.comments">keystone_server_ip</stringProp>
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">ssh_keystone_server_ip</stringProp>
