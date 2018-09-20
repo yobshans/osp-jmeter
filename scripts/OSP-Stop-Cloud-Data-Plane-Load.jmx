@@ -1022,7 +1022,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree/>
             </hashTree>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="GET.IPERF.PID.On.IPERF.SRV" enabled="false">
+            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="GET.IPERF.PID.On.IPERF.SRV" enabled="true">
               <stringProp name="command">sudo ps -ef | grep iperf3 |grep ${uc_port} |awk &apos;NR==1 {print $1$2$8}&apos;</stringProp>
               <intProp name="connectionTimeout">5000</intProp>
               <stringProp name="hostname">${iperf.host}</stringProp>
@@ -1069,7 +1069,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
               </UserParameters>
               <hashTree/>
             </hashTree>
-            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="KILL.IPERF.On.IPERF.SRV" enabled="false">
+            <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="KILL.IPERF.On.IPERF.SRV" enabled="true">
               <stringProp name="command">sudo kill -9 ${iperf_pid}</stringProp>
               <intProp name="connectionTimeout">5000</intProp>
               <stringProp name="hostname">${iperf.host}</stringProp>
