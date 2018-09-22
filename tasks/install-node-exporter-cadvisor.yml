@@ -106,25 +106,25 @@
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    register: container_status
-    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    register: cadvisor_status
+    until: ("Up" in cadvisor_status.stdout) or ("Restarting" in  cadvisor_status.stdout)
     retries: 10
     delay: 3
-  - debug: var=container_status.stdout_lines
+  - debug: var=cadvisor_status.stdout_lines
 
   - name: Node - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo iptables -I INPUT -p tcp -m tcp --dport {{ cadvisor_port }} -j ACCEPT\""
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+    when: cadvisor_status.stdout.find("cadvisor") == 1
 
   - name: Node - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport {{ cadvisor_port }} -j ACCEPT\""
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+    when: cadvisor_status.stdout.find("cadvisor") == 1
 
   - name: Node - Check Node-exporter container is installed
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo docker ps -f name='node-exporter'\""
@@ -155,7 +155,7 @@
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
     register: node_exporter_status
-    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    until: ("Up" in node_exporter_status.stdout) or ("Restarting" in  node_exporter_status.stdout)
     retries: 10
     delay: 3
   - debug: var=node_exporter_status.stdout_lines
@@ -165,21 +165,21 @@
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    when: node_exporter_status.stdout.find("node-exporter") == -1
+    when: node_exporter_status.stdout.find("node-exporter") == 1
 
   - name: Node - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9100 -j ACCEPT\""
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    when: node_exporter_status.stdout.find("node-exporter") == -1
+    when: node_exporter_status.stdout.find("node-exporter") == 1
 
   - name: Node - Save iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo /sbin/service iptables save\""
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    when: node_exporter_status.stdout.find("node-exporter") == -1
+    when: node_exporter_status.stdout.find("node-exporter") == 1
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
