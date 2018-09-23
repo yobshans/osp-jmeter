@@ -46,7 +46,7 @@
     ignore_errors: yes
 
   - name: UC - Remove old cAdvisor container
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f cadvisor\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker rm -f cadvisor\""
     ignore_errors: yes
     when: cadvisor_status.stdout.find("cadvisor") != -1
 
