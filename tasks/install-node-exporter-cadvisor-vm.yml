@@ -5,7 +5,7 @@
     register: datestr
 
   - name: Instance VM - OS
-    shell: "sudo ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
+    shell: "ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -tt cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
 #    shell: "sudo ssh -t -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
 #     become: true
 #     become_user: stack
@@ -84,7 +84,7 @@
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
     ignore_errors: yes
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+#    when: cadvisor_status.stdout.find("cadvisor") == -1
 
   - name: Instance VM - Update links
     shell: "ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo ln -s /sys/fs/cgroup/cpu,cpuacct /sys/fs/cgroup/cpuacct,cpu\""
@@ -92,14 +92,14 @@
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
     ignore_errors: yes
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+#    when: cadvisor_status.stdout.find("cadvisor") == -1
 
   - name: Instance VM - Docker run cAdvisor
     shell: "ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo docker run --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish=9191:9191 --detach=true --name=cadvisor --privileged=true google/cadvisor:latest --port=9191\""
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+#    when: cadvisor_status.stdout.find("cadvisor") == -1
 
   - name: Instance VM - Waiting for cAdvisor container is Up
     shell: "ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo docker ps -f name='cadvisor'\""
@@ -133,7 +133,7 @@
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    when: node_exporter_status.stdout.find("node-exporter") == -1
+#    when: node_exporter_status.stdout.find("node-exporter") == -1
 
   - name: Instance VM - Waiting for Node-exporter container is Up
     shell: "ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo docker ps -f name='node-exporter'\""
