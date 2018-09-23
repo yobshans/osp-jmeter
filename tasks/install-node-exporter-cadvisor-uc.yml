@@ -48,21 +48,21 @@
   - name: UC - Remove old cAdvisor container
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f cadvisor\""
     ignore_errors: yes
-    when: cadvisor_status.stdout.find("cadvisor") == 1
+    when: cadvisor_status.stdout.find("cadvisor") != -1
 
   - name: UC - Update mount
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo mount -o remount,rw '/sys/fs/cgroup'\""
     ignore_errors: yes
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+#    when: cadvisor_status.stdout.find("cadvisor") == -1
 
   - name: UC - Update links
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo ln -s /sys/fs/cgroup/cpu,cpuacct /sys/fs/cgroup/cpuacct,cpu\""
     ignore_errors: yes
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+#    when: cadvisor_status.stdout.find("cadvisor") == -1
 
   - name: UC - Docker run cAdvisor
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo sudo docker run --volume=/cgroup:/cgroup:ro --volume=/:/rootfs:ro --volume=/var/run:/var/run:rw --volume=/sys:/sys:ro --volume=/var/lib/docker/:/var/lib/docker:ro --publish={{ cadvisor_port }}:{{ cadvisor_port }} --detach=true --name=cadvisor --privileged=true google/cadvisor:latest --port={{ cadvisor_port }}\""
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+#    when: cadvisor_status.stdout.find("cadvisor") == -1
 
   - name: UC - Waiting for cAdvisor container is Up
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='cadvisor'\""
@@ -74,11 +74,11 @@
 
   - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport {{ cadvisor_port }} -j ACCEPT\""
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+#    when: cadvisor_status.stdout.find("cadvisor") == -1
 
   - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport {{ cadvisor_port }} -j ACCEPT\""
-    when: cadvisor_status.stdout.find("cadvisor") == -1
+#    when: cadvisor_status.stdout.find("cadvisor") == -1
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -90,11 +90,11 @@
 
   - name: UC - Remove old Node-exporter container
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker rm -f node-exporter\""
-    when: node_exporter_status.stdout.find("node-exporter") == 1
+    when: node_exporter_status.stdout.find("node-exporter") != -1
 
   - name: UC - Docker run Node-exporter
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker run -d --publish=9100:9100 --cap-add=SYS_TIME --volume=/proc:/host/proc --volume=/sys:/host/sys --volume=/:/rootfs --net=host --name=node-exporter prom/node-exporter --path.procfs=/host/proc --path.sysfs=/host/sys --collector.filesystem.ignored-mount-points='^/(sys|proc|dev|host|etc|rootfs/var/lib/docker/containers|rootfs/var/lib/docker/overlay2|rootfs/run/docker/netns|rootfs/var/lib/docker/aufs)($$|/)'\""
-    when: node_exporter_status.stdout.find("node-exporter") == -1
+#    when: node_exporter_status.stdout.find("node-exporter") == -1
 
   - name: UC - Waiting for Node-exporter container is Up
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='node-exporter'\""
@@ -106,15 +106,15 @@
 
   - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 9100 -j ACCEPT\""
-    when: node_exporter_status.stdout.find("node-exporter") == -1
+#    when: node_exporter_status.stdout.find("node-exporter") == -1
 
   - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9100 -j ACCEPT\""
-    when: node_exporter_status.stdout.find("node-exporter") == -1
+#    when: node_exporter_status.stdout.find("node-exporter") == -1
 
   - name: UC - Save iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo /sbin/service iptables save\""
-    when: node_exporter_status.stdout.find("node-exporter") == -1
+#    when: node_exporter_status.stdout.find("node-exporter") == -1
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
@@ -126,11 +126,11 @@
 
   - name: UC - Remove old Blackbox-exporter container
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker rm -f blackbox-exporter\""
-    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == 1
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") != -1
 
   - name: UC - Docker run Blackbox-exporter
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker run -d -p 9115:9115 --name blackbox-exporter prom/blackbox-exporter\""
-    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
 
   - name: UC - Waiting for Blackbox-exporter container is Up
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo docker ps -f name='blackbox-exporter'\""
@@ -142,15 +142,15 @@
 
   - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m tcp --dport 9115 -j ACCEPT\""
-    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
 
   - name: UC - Update iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9115 -j ACCEPT\""
-    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
 
   - name: UC - Save iptables filtering
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo /sbin/service iptables save\""
-    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END

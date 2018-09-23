@@ -76,7 +76,7 @@
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
     ignore_errors: yes
-    when: cadvisor_status.stdout.find("cadvisor") == 1
+    when: cadvisor_status.stdout.find("cadvisor") != -1
 
   - name: Instance VM - Update mount
     shell: "ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo mount -o remount,rw '/sys/fs/cgroup'\""
@@ -125,7 +125,7 @@
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
-    when: node_exporter_status.stdout.find("node-exporter") == 1
+    when: node_exporter_status.stdout.find("node-exporter") != -1
 
   - name: Instance VM - Docker run Node-exporter
     shell: "sudo ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo docker run -d --publish=9100:9100 --cap-add=SYS_TIME --volume=/proc:/host/proc --volume=/sys:/host/sys --volume=/:/rootfs --net=host --name=node-exporter prom/node-exporter --path.procfs=/host/proc --path.sysfs=/host/sys --no-collector.hwmon\""
