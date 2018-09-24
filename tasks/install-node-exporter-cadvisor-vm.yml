@@ -4,9 +4,12 @@
     shell: "date +'%Y-%m-%d-%I-%M-%S'"
     register: datestr
 
+  - name: Copy Hypervisor public key to Instance
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt stack@{{ uc_node_ip.stdout }} \"sudo ssh-copy-id -i hypervisor_id_rsa.pub cloud-user@{{ node_target }}\""
+
   - name: Instance VM - OS
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt root@{{ uc_node_ip.stdout }} sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
-#    shell: "sudo ssh -t -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
+#    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt root@{{ uc_node_ip.stdout }} sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
+    shell: "sudo ssh -t -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
