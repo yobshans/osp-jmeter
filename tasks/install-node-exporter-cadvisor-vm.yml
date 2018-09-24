@@ -5,7 +5,7 @@
     register: datestr
 
   - name: Copy Hypervisor public key to Instance
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} \"sudo ssh-copy-id -i hypervisor_id_rsa.pub cloud-user@{{ node_target }}\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} \"sudo ssh-copy-id -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i hypervisor_id_rsa.pub cloud-user@{{ node_target }}\""
 
   - name: Instance VM - OS
 #    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt root@{{ uc_node_ip.stdout }} sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
