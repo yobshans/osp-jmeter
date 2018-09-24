@@ -5,7 +5,7 @@
     register: datestr
 
   - name: Instance VM - OS
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt stack@{{ uc_node_ip.stdout }} sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt stack@{{ uc_node_ip.stdout }} sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
 #    shell: "sudo ssh -t -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@{{ node_target }} \"sudo cat /etc/system-release\""
 #     become: true
 #     become_user: stack
@@ -13,7 +13,8 @@
     register: vm_system_os
 
   - name: Instance VM - Install rhos-release-latest.noarch.rpm
-    shell: "ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo yum localinstall -y http://download.lab.bos.redhat.com/rcm-guest/puddles/OpenStack/rhos-release/rhos-release-latest.noarch.rpm\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -tt stack@{{ uc_node_ip.stdout }} sudo ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -t cloud-user@{{ node_target }} \"sudo yum localinstall -y http://download.lab.bos.redhat.com/rcm-guest/puddles/OpenStack/rhos-release/rhos-release-latest.noarch.rpm\""
+#   shell: "ssh -tt -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no stack@{{ uc_node_ip.stdout }} sudo ssh -t cloud-user@{{ node_target }} \"sudo yum localinstall -y http://download.lab.bos.redhat.com/rcm-guest/puddles/OpenStack/rhos-release/rhos-release-latest.noarch.rpm\""
 #     become: true
 #     become_user: stack
 #     delegate_to: '{{ uc_node_ip.stdout }}'
