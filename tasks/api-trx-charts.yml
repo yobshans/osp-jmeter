@@ -4,7 +4,7 @@
 
   - name: CMDRunner - create keystone api charts
     shell: >
-      java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
