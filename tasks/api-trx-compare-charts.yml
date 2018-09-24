@@ -1,47 +1,47 @@
 # Create APIs/transactions response time merged charts
 
   - name: CMDRunner - generate merged keystone api charts
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
     with_items: "{{ keystone_api_name }}"
     ignore_errors: yes
 
   - name: CMDRunner - generate merged nova api charts
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
     with_items: "{{ nova_api_name }}"
     ignore_errors: yes
 
   - name: CMDRunner - generate merged neutron api charts
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
     with_items: "{{ neutron_api_name }}"
     ignore_errors: yes
 
   - name: CMDRunner - generate merged cinder api charts
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
     with_items: "{{ cinder_api_name }}"
     ignore_errors: yes
 
   - name: CMDRunner - generate merged glance api charts
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
     with_items: "{{ glance_api_name }}"
     ignore_errors: yes
 
   - name: CMDRunner - generate merged transactions charts
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
     with_items: "{{ trx_name }}"
     ignore_errors: yes
     
   - name: CMDRunner - generate merged identity api charts
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
     with_items: "{{ identity_api_name }}"
     ignore_errors: yes
 
   - name: CMDRunner - generate merged project api charts
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
     with_items: "{{ project_api_name }}"
     ignore_errors: yes
 
   - name: CMDRunner - generate merged ssh api charts
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/result12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}-mrg.png  --plugin-type ResponseTimesOverTime --width 800 --height 600 --include-labels .*{{ item }} --include-label-regex true --relative-times yes"
     with_items: "{{ ssh_name }}"
     ignore_errors: yes
     
