@@ -34,10 +34,10 @@
     register: system_os
 
   - name: Copy Hypervisor Public Key to UC
-    shell: "scp /root/.ssh/id_rsa.pub stack@{{ uc_node_ip.stdout }}:/home/stack/hypervisor_id_rsa.pub"
+    shell: "sudo scp /root/.ssh/id_rsa.pub stack@{{ uc_node_ip.stdout }}:/home/stack/hypervisor_id_rsa.pub"
 
   - name: Copy Hypervisor Private Key to UC
-    shell: "scp /root/.ssh/id_rsa stack@{{ uc_node_ip.stdout }}:/home/stack/hypervisor_id_rsa"
+    shell: "sudo scp /root/.ssh/id_rsa stack@{{ uc_node_ip.stdout }}:/home/stack/hypervisor_id_rsa"
 
   - name: Gathering Stack env information
     include_tasks: tasks/get-stack-info-monitor.yml
