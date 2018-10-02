@@ -28,17 +28,23 @@
     delay: 3
   - debug: var=blackbox_exporter_status.stdout_lines
 
-  - name: Update iptables filtering
-    shell: "sudo iptables -I INPUT -p tcp -m tcp --dport 9115 -j ACCEPT"
-#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+  - name: Add firewall rule for Blackbox-exporter
+    shell: "sudo firewall-cmd --zone=public --add-port=9115/tcp --permanent"
 
-  - name: Update iptables filtering
-    shell: "sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9115 -j ACCEPT"
-#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+  - name: Reload firewall for Blackbox-exporter
+    shell: "sudo firewall-cmd --reload"
 
-  - name: Save iptables filtering
-    shell: "sudo /sbin/service iptables save"
-#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+#   - name: Update iptables filtering
+#     shell: "sudo iptables -I INPUT -p tcp -m tcp --dport 9115 -j ACCEPT"
+# #    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+# 
+#   - name: Update iptables filtering
+#     shell: "sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9115 -j ACCEPT"
+# #    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+# 
+#   - name: Save iptables filtering
+#     shell: "sudo /sbin/service iptables save"
+# #    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
