@@ -1,6 +1,9 @@
 # ------------------------------------------------------------------------------
 # Clone https://github.com/yobshans/osp-jmeter on Hypervisor
 # ------------------------------------------------------------------------------
+  - name: Current Date and Time
+    shell: "date +'%Y%m%d%m%H%S'"
+    register: cur_date_time
 
   - name: Verify osp-jmeter folder exists on Hypervisor
     stat:
