@@ -4,6 +4,44 @@
     shell: "date +'%Y-%m-%d-%I-%M-%S'"
     register: datestr
 
+# --------------------------------------------------------------------------------------------------------------------------------------
+
+  - name: Check Blackbox-exporter container is installed
+    shell: "sudo docker ps -f name='blackbox-exporter'"
+    register: blackbox_exporter_status
+    ignore_errors: yes
+  - debug: var=blackbox_exporter_status.stdout_lines
+
+  - name: Remove old Blackbox-exporter container
+    shell: "sudo docker rm -f blackbox-exporter"
+    when: blackbox_exporter_status.stdout.find("blackbox-exporter") != -1
+
+  - name: Docker run Blackbox-exporter
+    shell: "sudo docker run -d -p 9115:9115 --restart always --name blackbox-exporter prom/blackbox-exporter"
+#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+  - name: Waiting for Blackbox-exporter container is Up
+    shell: "sudo docker ps -f name='blackbox-exporter'"
+    register: blackbox_exporter_status
+    until: ("Up" in blackbox_exporter_status.stdout) or ("Restarting" in  blackbox_exporter_status.stdout)
+    retries: 10
+    delay: 3
+  - debug: var=blackbox_exporter_status.stdout_lines
+
+  - name: Update iptables filtering
+    shell: "sudo iptables -I INPUT -p tcp -m tcp --dport 9115 -j ACCEPT"
+#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+  - name: Update iptables filtering
+    shell: "sudo iptables -I INPUT -p tcp -m state --state NEW -m tcp --dport 9115 -j ACCEPT"
+#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+  - name: Save iptables filtering
+    shell: "sudo /sbin/service iptables save"
+#    when: blackbox_exporter_status.stdout.find("blackbox-exporter") == -1
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+
   - name: Create Prometheus configuration file
     shell: "mkdir -p {{ prometheus_conf_dir }} && touch {{ prometheus_conf_dir }}{{ prometheus_conf_file }}"
 
@@ -131,7 +169,7 @@
       \x20\x20\x20\x20\x20- source_labels: [__param_target]\n
       \x20\x20\x20\x20\x20\x20\x20target_label: instance\n
       \x20\x20\x20\x20\x20- target_label: __address__\n
-      \x20\x20\x20\x20\x20\x20\x20replacement: {{ uc_node_ip.stdout }}:9115\n" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
+      \x20\x20\x20\x20\x20\x20\x20replacement: localhost:9115\n" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
     with_items: "{{ vm_nodes.stdout_lines }}"
     when: vm_count.stdout != "0"
 
