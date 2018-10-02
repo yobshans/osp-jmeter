@@ -5,7 +5,7 @@
   - name: Verify osp-jmeter folder exists on Hypervisor
     stat:
       path: "{{ osp_jmeter_dir }}"
-      register: osp_dir
+    register: osp_dir
 
   - name: Rename old osp-jmeter folder on Hypervisor
     shell: "sudo mv {{ osp_jmeter_dir }} {{ osp_jmeter_dir }}-{{ cur_date_time.stdout }}"
