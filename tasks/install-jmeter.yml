@@ -1,4 +1,20 @@
 # ------------------------------------------------------------------------------
+# Clone https://github.com/yobshans/osp-jmeter on Hypervisor
+# ------------------------------------------------------------------------------
+
+  - name: Verify osp-jmeter folder exists on Hypervisor
+    stat:
+      path: "{{ osp_jmeter_dir }}"
+      register: osp_dir
+
+  - name: Rename old osp-jmeter folder on Hypervisor
+    shell: "sudo mv {{ osp_jmeter_dir }} {{ osp_jmeter_dir }}-{{ cur_date_time.stdout }}"
+    when: osp_dir.stat.exists
+
+  - name: Clone osp-jmeter on Hypervisor when run by Infrared
+    shell: "git clone https://github.com/yobshans/osp-jmeter /opt/osp-jmeter"
+
+# ------------------------------------------------------------------------------
 # Install Java, Unzip and Wget
 # ------------------------------------------------------------------------------
 
