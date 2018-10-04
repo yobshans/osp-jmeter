@@ -179,6 +179,16 @@
     with_items: "{{ vm_nodes.stdout_lines }}"
     when: vm_count.stdout != "0"
 
+  - name: Check Prometheus container is installed
+    shell: "sudo docker ps -f name='prometheus'"
+    register: prometheus_status
+    ignore_errors: yes
+  - debug: var=prometheus_status.stdout_lines
+
+  - name: Remove old Prometheus container
+    shell: "sudo docker rm -f prometheus"
+    when: prometheus_status.stdout.find("blackbox-exporter") != -1
+
   - name: Docker run Prometheus container
     shell: "sudo docker run -d -p 9090:9090 --net='host' -v /etc/prometheus:/etc/prometheus --name prometheus prom/prometheus --config.file=/etc/prometheus/prometheus.yml"
 
@@ -203,16 +213,26 @@
   - name:  Create a persistent volume for your data in /var/lib/grafana (database and plugins)
     shell: "sudo docker volume create grafana-storage"
 
+  - name: Check Grafana container is installed
+    shell: "sudo docker ps -f name='grafana'"
+    register: grafana_status
+    ignore_errors: yes
+  - debug: var=grafana_status.stdout_lines
+
+  - name: Remove old Grafana container
+    shell: "sudo docker rm -f grafana"
+    when: grafana_status.stdout.find("blackbox-exporter") != -1
+
   - name: Docker run Grafana container
     shell: "sudo docker run -d -p 3000:3000 --name=grafana -v grafana-storage:/var/lib/grafana grafana/grafana"
 
   - name: Waiting for Grafana container is Up
     shell: "sudo docker ps -f name='grafana'"
-    register: container_status
-    until: ("Up" in container_status.stdout) or ("Restarting" in  container_status.stdout)
+    register: grafana_status
+    until: ("Up" in grafana_status.stdout) or ("Restarting" in  grafana_status.stdout)
     retries: 10
     delay: 3
-  - debug: var=container_status.stdout_lines
+  - debug: var=grafana_status.stdout_lines
 
   - name: Add firewall rule for Grafana
     shell: "sudo firewall-cmd --zone=public --add-port=3000/tcp --permanent"
