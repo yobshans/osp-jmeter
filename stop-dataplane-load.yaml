@@ -28,7 +28,9 @@
    vm_amount: 1 
    perf_monitor: false 
    ssl_mode: false 
-   iperf_host: 127.0.0.1
+   iperf_host: 10.35.64.12 #127.0.0.1
+   iperf_user: root
+   iperf_pass: qum5net
 
   environment:
    JMETER_HOME: /opt/apache-jmeter-4.0

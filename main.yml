@@ -132,6 +132,8 @@
       perf_monitor="{{ test.perf.monitor }}"
       ssl_mode="{{ test.ssl.mode }}"
       iperf_host="{{ test.iperf.srv.host }}"
+      iperf_user="{{ test.iperf.srv.user }}"
+      iperf_pass="{{ test.iperf.srv.pass }}"
       cpu_workers="{{ test.cpu.workers }}"
       cpu_percent="{{ test.cpu.percent }}"
       vm_workers="{{ test.vm.workers }}"

@@ -112,6 +112,16 @@ subparsers:
                       help: |
                           IPERF server host IP
                       default: 127.0.0.1
+                  iperf-srv-user:
+                      type: Value
+                      help: |
+                          IPERF server user name
+                      default: root
+                  iperf-srv-pass:
+                      type: Value
+                      help: |
+                          IPERF server password
+                      default: qum5net
                   sys-action:
                       type: Value
                       help: |
