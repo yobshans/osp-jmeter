@@ -1,0 +1,80 @@
+# --------------------------------------------------------------------------------------------------------------------------------------
+# Stop test using JMeter 
+# --------------------------------------------------------------------------------------------------------------------------------------
+  
+  - name: JMeter - Stop Test
+    shell: "$JMETER_HOME/bin/stoptest.sh"
+
+  - block:
+      - replace:
+          dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+          regexp='testname="Thread Group - Monitor Not Full" enabled="true"'
+          replace='testname="Thread Group - Monitor Not Full" enabled="false"'
+          backup=no
+        when: ceph_count.stdout == "0"
+        
+      - replace:
+          dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+          regexp='testname="Thread Group - Monitor Full" enabled="true"'
+          replace='testname="Thread Group - Monitor Full" enabled="false"'
+          backup=no
+        when: ceph_count.stdout != "0"
+    when: perf_monitor
+
+  - replace: 
+      dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+      regexp='name=public</stringProp>'
+      replace='name=nova</stringProp>'
+      backup=no
+    when: system_os.stdout.find("CentOS") != -1
+
+  - replace: 
+      dest=/opt/osp-jmeter/scripts/{{ jmeter_test }}
+      regexp='centos'
+      replace='cloud-user'
+      backup=no
+    when: system_os.stdout.find("CentOS") != -1
+    
+  - name: JMeter - Stop Load Test
+    shell: >
+      $JMETER_HOME/bin/jmeter -n 
+      -t /opt/osp-jmeter/scripts/{{ jmeter_stop_test }} 
+      -l /opt/osp-jmeter/results/{{ test_run_name }}/xml/result-stop.jtl 
+      -j /opt/osp-jmeter/results/{{ test_run_name }}/log/jmeter-stop.log 
+      -Djmeter.save.saveservice.output_format=xml 
+      -Djmeter.save.saveservice.thread_counts=true 
+      -Djmeter.save.saveservice.bytes=true 
+      -Djmeter.save.saveservice.response_data.on_error=true 
+      -Jthreadgroup.count={{ thread_count }} 
+      -Jthreadgroup.rampup={{ thread_rampup }} 
+      -Jiteration.count={{ iteration_count }} 
+      -Jproj.path=/opt/osp-jmeter 
+      -Jrun.name={{ test_run_name }} 
+      -Jospd.host={{ uc_node_ip.stdout }} 
+      -Jcontr.host={{ contr_0_node.stdout }} 
+      -Jcomp.host={{ comp_0_node.stdout }} 
+      -Jceph.host={{ ceph_0_node.stdout | default('1.1.1.1')}} 
+      -Jiperf.host={{ iperf_host }} 
+      -Jiperf.user={{ iperf_user }} 
+      -Jiperf.pass={{ iperf_pass }} 
+      -Jimage.name={{ image_name }} 
+      -Jflavor.ref={{ flavor_ref }}
+      -Jvm.amount={{ vm_amount }}
+      -Jssl.mode={{ ssl_mode }}
+
+  - name: Start Date and Time
+    shell: "cat /opt/osp-jmeter/results/{{ test_run_name }}/log/start-date.txt"
+    register: start_date
+      
+  - name: End Date and Time
+    shell: "date +'%F %T'"
+    register: end_date
+    
+  - name: Test Duration
+    shell: "date -u -d @$(($(date -d \"{{ end_date.stdout}}\" '+%s') - $(date -d \"{{ start_date.stdout}}\" '+%s'))) '+%T'"
+    register: test_duration
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+
