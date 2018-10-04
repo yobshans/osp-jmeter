@@ -145,6 +145,16 @@
             <stringProp name="Argument.desc">--timeout N    timeout after N seconds</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="iperf.user" elementType="Argument">
+            <stringProp name="Argument.name">iperf.user</stringProp>
+            <stringProp name="Argument.value">${__P(iperf.user,root)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="iperf.pass" elementType="Argument">
+            <stringProp name="Argument.name">iperf.pass</stringProp>
+            <stringProp name="Argument.value">${__P(iperf.pass,qum5net)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -975,13 +985,13 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${iperf.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
-                <stringProp name="password">${ospd.pass}</stringProp>
+                <stringProp name="password">${iperf.pass}</stringProp>
                 <intProp name="port">22</intProp>
                 <boolProp name="printStdErr">true</boolProp>
                 <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
                 <boolProp name="useReturnCode">true</boolProp>
                 <boolProp name="useTty">false</boolProp>
-                <stringProp name="username">${ospd.user}</stringProp>
+                <stringProp name="username">${iperf.user}</stringProp>
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree>
                 <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
@@ -1002,13 +1012,13 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${iperf.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
-                <stringProp name="password">${ospd.pass}</stringProp>
+                <stringProp name="password">${iperf.pass}</stringProp>
                 <intProp name="port">22</intProp>
                 <boolProp name="printStdErr">true</boolProp>
                 <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
                 <boolProp name="useReturnCode">true</boolProp>
                 <boolProp name="useTty">false</boolProp>
-                <stringProp name="username">${ospd.user}</stringProp>
+                <stringProp name="username">${iperf.user}</stringProp>
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree>
                 <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
@@ -1056,13 +1066,13 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${iperf.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
-                <stringProp name="password">${ospd.pass}</stringProp>
+                <stringProp name="password">${iperf.pass}</stringProp>
                 <intProp name="port">22</intProp>
                 <boolProp name="printStdErr">true</boolProp>
                 <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
                 <boolProp name="useReturnCode">true</boolProp>
                 <boolProp name="useTty">false</boolProp>
-                <stringProp name="username">${ospd.user}</stringProp>
+                <stringProp name="username">${iperf.user}</stringProp>
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree>
                 <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
@@ -1581,13 +1591,13 @@ vars.put(&quot;stress.time.msec&quot;, String.valueOf(t_sec));</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${iperf.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
-                <stringProp name="password">${ospd.pass}</stringProp>
+                <stringProp name="password">${iperf.pass}</stringProp>
                 <intProp name="port">22</intProp>
                 <boolProp name="printStdErr">true</boolProp>
                 <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
                 <boolProp name="useReturnCode">true</boolProp>
                 <boolProp name="useTty">false</boolProp>
-                <stringProp name="username">${ospd.user}</stringProp>
+                <stringProp name="username">${iperf.user}</stringProp>
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree>
                 <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="iperf_pid" enabled="true">
@@ -1632,13 +1642,13 @@ vars.put(&quot;stress.time.msec&quot;, String.valueOf(t_sec));</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${iperf.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
-                <stringProp name="password">${ospd.pass}</stringProp>
+                <stringProp name="password">${iperf.pass}</stringProp>
                 <intProp name="port">22</intProp>
                 <boolProp name="printStdErr">true</boolProp>
                 <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
                 <boolProp name="useReturnCode">true</boolProp>
                 <boolProp name="useTty">false</boolProp>
-                <stringProp name="username">${ospd.user}</stringProp>
+                <stringProp name="username">${iperf.user}</stringProp>
               </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
               <hashTree/>
               <BeanShellSampler guiclass="BeanShellSamplerGui" testclass="BeanShellSampler" testname="SCRIPT Increment Counter Servers" enabled="true">
