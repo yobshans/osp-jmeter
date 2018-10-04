@@ -187,7 +187,7 @@
 
   - name: Remove old Prometheus container
     shell: "sudo docker rm -f prometheus"
-    when: prometheus_status.stdout.find("blackbox-exporter") != -1
+    when: prometheus_status.stdout.find("prometheus") != -1
 
   - name: Docker run Prometheus container
     shell: "sudo docker run -d -p 9090:9090 --net='host' -v /etc/prometheus:/etc/prometheus --name prometheus prom/prometheus --config.file=/etc/prometheus/prometheus.yml"
@@ -221,7 +221,7 @@
 
   - name: Remove old Grafana container
     shell: "sudo docker rm -f grafana"
-    when: grafana_status.stdout.find("blackbox-exporter") != -1
+    when: grafana_status.stdout.find("grafana") != -1
 
   - name: Docker run Grafana container
     shell: "sudo docker run -d -p 3000:3000 --name=grafana -v grafana-storage:/var/lib/grafana grafana/grafana"
