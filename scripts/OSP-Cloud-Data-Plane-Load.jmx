@@ -1143,7 +1143,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <hashTree/>
               </hashTree>
               <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="START.IPERF.SRV" enabled="true">
-                <stringProp name="command">sudo docker run  -d -i --name=iperf3-server --rm --publish ${uc_port}:${uc_port} networkstatic/iperf3 --port ${uc_port} --server &amp;</stringProp>
+                <stringProp name="command">sudo nohup docker run  -d -i --name=iperf3-server --rm --publish ${uc_port}:${uc_port} networkstatic/iperf3 --port ${uc_port} --server</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${iperf.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
@@ -1403,7 +1403,7 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 <hashTree/>
               </hashTree>
               <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="08.SSH.RUN.IPERF.On.Instance" enabled="true">
-                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo docker run -i --name iperf3 --rm networkstatic/iperf3 --client ${iperf.host} --port ${uc_port} --time ${stress.time.sec}s &amp;&gt; /tmp/${floating_ip}-${file_date}-iperf.txt &amp;&quot;</stringProp>
+                <stringProp name="command">sudo ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no cloud-user@${floating_ip} &quot;sudo nohup docker run -i --name iperf3 --rm networkstatic/iperf3 --client ${iperf.host} --port ${uc_port} --time ${stress.time.sec}s &gt; /tmp/${floating_ip}-${file_date}-iperf.txt 2&gt;&amp;1 &amp;&quot;</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
                 <stringProp name="hostname">${ospd.host}</stringProp>
                 <stringProp name="passphrase"></stringProp>
