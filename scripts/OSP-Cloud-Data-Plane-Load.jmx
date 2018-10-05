@@ -1034,6 +1034,87 @@ vars.put(&quot;vm_count&quot;, &quot;1&quot;);
                 </UserParameters>
                 <hashTree/>
               </hashTree>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="UPDATE.IPTABLES.On.IPERF.SRV" enabled="true">
+                <stringProp name="command">sudo /sbin/service iptables save</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${iperf.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${iperf.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${iperf.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree>
+                <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+                  <collectionProp name="UserParameters.names">
+                    <stringProp name="-610784366">uc_port</stringProp>
+                  </collectionProp>
+                  <collectionProp name="UserParameters.thread_values">
+                    <collectionProp name="1652365656">
+                      <stringProp name="-1381713232">52${tenant_count}${vm_count}</stringProp>
+                    </collectionProp>
+                  </collectionProp>
+                  <boolProp name="UserParameters.per_iteration">false</boolProp>
+                </UserParameters>
+                <hashTree/>
+              </hashTree>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="UPDATE.FIREWALL.On.IPERF.SRV" enabled="true">
+                <stringProp name="command">sudo firewall-cmd --zone=public --add-port=${uc_port}/tcp --permanent</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${iperf.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${iperf.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${iperf.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree>
+                <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+                  <collectionProp name="UserParameters.names">
+                    <stringProp name="-610784366">uc_port</stringProp>
+                  </collectionProp>
+                  <collectionProp name="UserParameters.thread_values">
+                    <collectionProp name="1652365656">
+                      <stringProp name="-1381713232">52${tenant_count}${vm_count}</stringProp>
+                    </collectionProp>
+                  </collectionProp>
+                  <boolProp name="UserParameters.per_iteration">false</boolProp>
+                </UserParameters>
+                <hashTree/>
+              </hashTree>
+              <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="UPDATE.FIREWALL.On.IPERF.SRV" enabled="true">
+                <stringProp name="command">sudo firewall-cmd --reload</stringProp>
+                <intProp name="connectionTimeout">5000</intProp>
+                <stringProp name="hostname">${iperf.host}</stringProp>
+                <stringProp name="passphrase"></stringProp>
+                <stringProp name="password">${iperf.pass}</stringProp>
+                <intProp name="port">22</intProp>
+                <boolProp name="printStdErr">true</boolProp>
+                <stringProp name="sshkeyfile">/root/.ssh/id_rsa</stringProp>
+                <boolProp name="useReturnCode">true</boolProp>
+                <boolProp name="useTty">false</boolProp>
+                <stringProp name="username">${iperf.user}</stringProp>
+              </org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler>
+              <hashTree>
+                <UserParameters guiclass="UserParametersGui" testclass="UserParameters" testname="User Parameters" enabled="true">
+                  <collectionProp name="UserParameters.names">
+                    <stringProp name="-610784366">uc_port</stringProp>
+                  </collectionProp>
+                  <collectionProp name="UserParameters.thread_values">
+                    <collectionProp name="1652365656">
+                      <stringProp name="-1381713232">52${tenant_count}${vm_count}</stringProp>
+                    </collectionProp>
+                  </collectionProp>
+                  <boolProp name="UserParameters.per_iteration">false</boolProp>
+                </UserParameters>
+                <hashTree/>
+              </hashTree>
               <org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler guiclass="TestBeanGUI" testclass="org.apache.jmeter.protocol.ssh.sampler.SSHCommandSampler" testname="START.IPERF.SRV" enabled="false">
                 <stringProp name="command">sudo iperf3 --server --daemon --port ${uc_port}</stringProp>
                 <intProp name="connectionTimeout">5000</intProp>
