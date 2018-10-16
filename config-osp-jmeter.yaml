@@ -52,6 +52,10 @@
 #   - name: Clone osp-jmeter on Hypervisor when run by Infrared
 #     shell: "git clone https://github.com/yobshans/osp-jmeter /opt/osp-jmeter"
 
+  - name: Indetify UC IP on virt
+    shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
+    register: uc_node_ip
+
   - name: Install JMeter
     include_tasks: tasks/install-jmeter.yml
 
