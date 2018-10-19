@@ -246,3 +246,8 @@ subparsers:
                       help: |
                           Compare 2 Stress Tests.
                       default: false
+                  upload-test-results:
+                      type: Bool
+                      help: |
+                          Upload JMeter test result to remote server storage.
+                      default: false
