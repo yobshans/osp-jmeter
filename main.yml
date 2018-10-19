@@ -210,4 +210,12 @@
       perf_monitor="{{ test.perf.monitor }}"
     when: 
       test.compare.stress.test|bool 
-  
+
+  - import_playbook: |
+      upload-test-results.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      remote_server="{{ test.remote.server }}"
+      remote_dir="{{ test.remote.dir }}"
+    when: 
+      test.upload.test.results|bool 
+      

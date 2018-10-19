@@ -146,6 +146,16 @@ subparsers:
                       help: |
                           Name of Current Test run name to be compared vs Baseline.
                       required_when: [ "compare-restapi-performance-test == True", "compare-horizon-performance-test == True", "compare-stress-test == True" ]
+                  remote_server:
+                      type: Value
+                      help: |
+                          server for store test results
+                      default: 127.0.0.1
+                  remote_dir:
+                      type: Value
+                      help: |
+                          directory on server for store test results
+                      default: /var/www/html/osp-jmeter/result/
             - title: REST API based tests
               options:
                   run-restapi-functional-test:
