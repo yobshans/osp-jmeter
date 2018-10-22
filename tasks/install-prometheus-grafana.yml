@@ -264,7 +264,6 @@
     register: grafana_prometheus
     failed_when: false
     changed_when: false
-    when: grafana_status.stdout.find("grafana") == -1
 
   - name: Enable Prometheus Datasource
     uri:
@@ -281,9 +280,7 @@
       force_basic_auth: yes
 #      status_code: 201
       body_format: json
-    when: 
-      - grafana_prometheus.status == 404 
-      - grafana_status.stdout.find("grafana") == -1
+    when: grafana_prometheus.status == 404 # and grafana_status.stdout.find("grafana") == -1
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
