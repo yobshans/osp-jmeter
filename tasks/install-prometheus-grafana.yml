@@ -195,7 +195,7 @@
 # 
   - name: Docker start Prometheus container
     shell: "sudo docker run -d -p 9090:9090 --net='host' -v /etc/prometheus:/etc/prometheus --name prometheus prom/prometheus --config.file=/etc/prometheus/prometheus.yml"
-    when: prometheus_status.stdout.find("prometheus") != 1
+    when: prometheus_status.stdout.find("prometheus") == -1
 
   - name: Waiting for Prometheus container is Up
     shell: "sudo docker ps -f name='prometheus'"
@@ -207,11 +207,11 @@
 
   - name: Add firewall rule for Prometheus
     shell: "sudo firewall-cmd --zone=public --add-port=9090/tcp --permanent"
-    when: prometheus_status.stdout.find("prometheus") != 1
+    when: prometheus_status.stdout.find("prometheus") == -1
 
   - name: Reload firewall for Prometheus
     shell: "sudo firewall-cmd --reload"
-    when: prometheus_status.stdout.find("prometheus") != 1
+    when: prometheus_status.stdout.find("prometheus") == -1
 
   - name: Hostname
     shell: "sudo hostname"
@@ -229,7 +229,7 @@
 
   - name:  Create a persistent volume for your data in /var/lib/grafana (database and plugins)
     shell: "sudo docker volume create grafana-storage"
-    when: grafana_status.stdout.find("grafana") != 1
+    when: grafana_status.stdout.find("grafana") == -1
 
 #   - name: Remove old Grafana container
 #     shell: "sudo docker rm -f grafana"
@@ -237,7 +237,7 @@
 
   - name: Docker run Grafana container
     shell: "sudo docker run -d -p 3000:3000 --name=grafana -v grafana-storage:/var/lib/grafana grafana/grafana"
-    when: grafana_status.stdout.find("grafana") != 1
+    when: grafana_status.stdout.find("grafana") == -1
 
   - name: Waiting for Grafana container is Up
     shell: "sudo docker ps -f name='grafana'"
@@ -249,11 +249,11 @@
 
   - name: Add firewall rule for Grafana
     shell: "sudo firewall-cmd --zone=public --add-port=3000/tcp --permanent"
-    when: grafana_status.stdout.find("grafana") != 1
+    when: grafana_status.stdout.find("grafana") == -1
 
   - name: Reload firewall for Grafana
     shell: "sudo firewall-cmd --reload"
-    when: grafana_status.stdout.find("grafana") != 1
+    when: grafana_status.stdout.find("grafana") == -1
 
   # Check that a page returns a status 200 and fail if the word AWESOME is not in the page contents.
   - uri:
@@ -264,7 +264,7 @@
     register: grafana_prometheus
     failed_when: false
     changed_when: false
-    when: grafana_status.stdout.find("grafana") != 1
+    when: grafana_status.stdout.find("grafana") == -1
 
   - name: Enable Prometheus Datasource
     uri:
@@ -283,7 +283,7 @@
       body_format: json
     when: 
       - grafana_prometheus.status == 404 
-      - grafana_status.stdout.find("grafana") != 1
+      - grafana_status.stdout.find("grafana") == -1
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
