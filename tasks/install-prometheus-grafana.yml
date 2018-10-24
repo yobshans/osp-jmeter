@@ -69,6 +69,10 @@
 #       \x20\x20\x20\x20\x20\x20\x20labels:\n
 #       \x20\x20\x20\x20\x20\x20\x20\x20\x20name: prometheus-server\n" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
 
+  - name: Generate scrape_configs configuration
+    shell: >
+      echo -e "scrape_configs:\n\n" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
+
   - name: Generate Prometheus configuration Undercloud Node
     shell: >
       echo -e "\x20\x20- job_name: 'Undercloud Node'\n\n
