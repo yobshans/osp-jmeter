@@ -59,15 +59,15 @@
       external_labels:\n 
       \x20\x20\x20\x20monitor: 'monitoring'\n" > {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
 
-  - name: Generate Prometheus configuration Prometheus-Server
-    shell: >
-      echo -e "scrape_configs:\n\n
-      \x20- job_name: 'Prometheus-Server'\n\n
-      \x20\x20\x20static_configs:\n
-      \x20\x20\x20\x20\x20- targets:\n
-      \x20\x20\x20\x20\x20\x20\x20- localhost:9090\n
-      \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: prometheus-server\n" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
+#   - name: Generate Prometheus configuration Prometheus-Server
+#     shell: >
+#       echo -e "scrape_configs:\n\n
+#       \x20- job_name: 'Prometheus-Server'\n\n
+#       \x20\x20\x20static_configs:\n
+#       \x20\x20\x20\x20\x20- targets:\n
+#       \x20\x20\x20\x20\x20\x20\x20- localhost:9090\n
+#       \x20\x20\x20\x20\x20\x20\x20labels:\n
+#       \x20\x20\x20\x20\x20\x20\x20\x20\x20name: prometheus-server\n" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
 
   - name: Generate Prometheus configuration Undercloud Node
     shell: >
@@ -90,14 +90,17 @@
   - name: Generate Prometheus configuration Controller Nodes
     shell: >
       echo -e "\x20\x20\x20\x20\x20\x20- targets:\n
-      \x20\x20\x20\x20\x20\x20\x20- {{ item }}:{{ cadvisor_port }}\n
+      \x20\x20\x20\x20\x20\x20\x20- {{ item.0 }}:{{ cadvisor_port }}\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item }}-cadvisor\n
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item.1 }}\n
       \x20\x20\x20\x20\x20- targets:\n
-      \x20\x20\x20\x20\x20\x20\x20- {{ item }}:9100\n
+      \x20\x20\x20\x20\x20\x20\x20- {{ item.0 }}:9100\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item }}-node-exporter" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
-    with_items: "{{ contr_nodes.stdout_lines }}"
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item.1 }}" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
+#    with_items: "{{ contr_nodes.stdout_lines }}"
+    with_together:
+      - "{{ contr_nodes.stdout_lines }}"
+      - "{{ contr_nodes_names.stdout_lines }}"
 
   - name: Generate Prometheus configuration Compute Node Title
     shell: >
@@ -107,14 +110,17 @@
   - name: Generate Prometheus configuration Compute Nodes
     shell: >
       echo -e "\x20\x20\x20\x20\x20\x20- targets:\n
-      \x20\x20\x20\x20\x20\x20\x20- {{ item }}:{{ cadvisor_port }}\n
+      \x20\x20\x20\x20\x20\x20\x20- {{ item.0 }}:{{ cadvisor_port }}\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item }}-cadvisor\n
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item.1 }}\n
       \x20\x20\x20\x20\x20- targets:\n
-      \x20\x20\x20\x20\x20\x20\x20- {{ item }}:9100\n
+      \x20\x20\x20\x20\x20\x20\x20- {{ item.0 }}:9100\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item }}-node-exporter" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
-    with_items: "{{ comp_nodes.stdout_lines }}"
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item.1 }}" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
+#    with_items: "{{ comp_nodes.stdout_lines }}"
+    with_together:
+      - "{{ comp_nodes.stdout_lines }}"
+      - "{{ comp_nodes_names.stdout_lines }}"
 
   - name: Generate Prometheus configuration Ceph Node Title
     shell: >
@@ -125,14 +131,17 @@
   - name: Generate Prometheus configuration Ceph Nodes
     shell: >
       echo -e "\x20\x20\x20\x20\x20\x20- targets:\n
-      \x20\x20\x20\x20\x20\x20\x20- {{ item }}:{{ cadvisor_port }}\n
+      \x20\x20\x20\x20\x20\x20\x20- {{ item.0 }}:{{ cadvisor_port }}\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item }}-cadvisor\n
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item.1 }}\n
       \x20\x20\x20\x20\x20- targets:\n
-      \x20\x20\x20\x20\x20\x20\x20- {{ item }}:9100\n
+      \x20\x20\x20\x20\x20\x20\x20- {{ item.0 }}:9100\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item }}-node-exporter" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
-    with_items: "{{ ceph_nodes.stdout_lines }}"
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item.1 }}" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
+#    with_items: "{{ ceph_nodes.stdout_lines }}"
+    with_together:
+      - "{{ ceph_nodes.stdout_lines }}"
+      - "{{ ceph_nodes_names.stdout_lines }}"
     when: ceph_count.stdout != "0"
 
   - name: Generate Prometheus configuration Instances VMs Title
@@ -144,14 +153,17 @@
   - name: Generate Prometheus configuration Instances VMs 
     shell: >
       echo -e "\x20\x20\x20\x20\x20\x20- targets:\n
-      \x20\x20\x20\x20\x20\x20\x20- {{ item }}:{{ cadvisor_port }}\n
+      \x20\x20\x20\x20\x20\x20\x20- {{ item.0 }}:{{ cadvisor_port }}\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item }}-cadvisor\n
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item.1 }}\n
       \x20\x20\x20\x20\x20- targets:\n
-      \x20\x20\x20\x20\x20\x20\x20- {{ item }}:9100\n
+      \x20\x20\x20\x20\x20\x20\x20- {{ item.0 }}:9100\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item }}-node-exporter" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
-    with_items: "{{ vm_nodes.stdout_lines }}"
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: {{ item.1 }}" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
+#    with_items: "{{ vm_nodes.stdout_lines }}"
+    with_together:
+      - "{{ vm_nodes.stdout_lines }}"
+      - "{{ vm_nodes_names.stdout_lines }}"
     when: vm_count.stdout != "0"
 
   - name: Generate Prometheus configuration ICMP blackbox-service

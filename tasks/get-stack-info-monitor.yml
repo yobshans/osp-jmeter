@@ -22,18 +22,36 @@
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name controller -f value -c Networks|awk -F = '{print \\$2}'\""
     register: contr_nodes
 
+  - name: Get Contr Node Names list
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name controller -f value -c Name\""
+    register: contr_nodes_names
+
   - name: Compute Nodes list
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name compute -f value -c Networks|awk -F = '{print \\$2}'\""
     register: comp_nodes
+
+  - name: Get Compute Node Names list
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name compute -f value -c Name\""
+    register: comp_nodes_names
 
   - name: Ceph Nodes list
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name ceph -f value -c Networks|awk -F = '{print \\$2}'\""
     register: ceph_nodes
     when: ceph_count.stdout != "0"
 
+  - name: Get Ceph Node Names list
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name ceph -f value -c Name\""
+    register: ceph_nodes_names
+    when: ceph_count.stdout != "0"
+
   - name: Instances VMs list
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && openstack server list --all --name cloud -f value -c Networks|awk -F ', '  '{print \\$2}'\""
     register: vm_nodes
+    when: vm_count.stdout != "0"
+
+  - name: Get Instances Names list
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && openstack server list --all --name cloud -f value -c Name\""
+    register: vm_nodes_names
     when: vm_count.stdout != "0"
 
 # --------------------------------------------------------------------------------------------------------------------------------------
