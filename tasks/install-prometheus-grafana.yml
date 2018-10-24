@@ -80,11 +80,11 @@
       \x20\x20\x20\x20\x20- targets:\n
       \x20\x20\x20\x20\x20\x20\x20- {{ uc_node_ip.stdout }}:{{ cadvisor_port }}\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: undercloud-cadvisor\n
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: undercloud\n
       \x20\x20\x20\x20\x20- targets:\n
       \x20\x20\x20\x20\x20\x20\x20- {{ uc_node_ip.stdout }}:9100\n
       \x20\x20\x20\x20\x20\x20\x20labels:\n
-      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: undercloud-node-exporter" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
+      \x20\x20\x20\x20\x20\x20\x20\x20\x20name: undercloud" >> {{ prometheus_conf_dir }}{{ prometheus_conf_file }}
 
   - name: Generate Prometheus configuration Controller Node Title
     shell: >
