@@ -7,7 +7,7 @@
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"touch /tmp/puddle-version.txt\""
 
   - name: Get puddle_version
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo cat /etc/yum.repos.d/latest-installed | tr -d \" \"\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo cat /etc/yum.repos.d/latest-installed | tr \-d \" \"\""
     register: cur_puddle_version
 
   - name: Store puddle_version
