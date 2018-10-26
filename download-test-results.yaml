@@ -1,0 +1,35 @@
+---
+- name: Verification where is running - InfraRed or Standalone
+  hosts: localhost
+  gather_facts: no
+  any_errors_fatal: true
+  vars:
+      hypervisor_name: 127.0.0.1
+  
+  tasks:
+
+  - name: Add Hypervisor hosts to host list when run standalone
+    add_host:
+        name: "{{ hypervisor_name }}"
+        groups: hypervisor
+    when:  "'hypervisor' not in groups"
+    
+- name: Upload test results to remote server
+  hosts: hypervisor
+  remote_user: root
+  gather_facts: no
+  vars:
+   test_run_name: func-restapi-test
+   remote_server: 10.12.68.21
+   remote_dir: /var/www/html/osp-jmeter/result/
+   notes: n/a 
+
+  tasks: 
+
+  - name: Download test results
+    shell: "rsync -a -e ssh --exclude='*.jtl' root@{{ remote_server }}:{{ remote_dir }}{{ test_run_name }} /opt/osp-jmeter/results/"
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+

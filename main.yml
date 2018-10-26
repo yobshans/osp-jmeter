@@ -218,4 +218,11 @@
       remote_dir="{{ test.remote.dir }}"
     when: 
       test.upload.test.results|bool 
-      
+
+  - import_playbook: |
+      download-test-results.yaml -e 
+      test_run_name="{{ test.run.name }}"
+      remote_server="{{ test.remote.server }}"
+      remote_dir="{{ test.remote.dir }}"
+    when: 
+      test.download.test.results|bool 

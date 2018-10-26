@@ -249,5 +249,10 @@ subparsers:
                   upload-test-results:
                       type: Bool
                       help: |
-                          Upload JMeter test result to remote server storage.
+                          Upload JMeter test result to remote server storage from /opt/osp-jmeter/results directory.
+                      default: false
+                  download-test-results:
+                      type: Bool
+                      help: |
+                          Download JMeter test result from remote server storage to /opt/osp-jmeter/results directory.
                       default: false
