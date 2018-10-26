@@ -33,9 +33,6 @@
     register: uc_node_ip
 
   - name: Upload images to Overcloud 
-    include_tasks: tasks/get-stack-puddle-version.yml
-
-  - name: Upload images to Overcloud 
     include_tasks: tasks/osp-upload-images.yml
   
   - name: Create Flavors on Overcloud
