@@ -27,7 +27,7 @@
   tasks: 
 
   - name: Download test results
-    shell: "rsync -a -e ssh --exclude='*.jtl' root@{{ remote_server }}:{{ remote_dir }}{{ test_run_name }} /opt/osp-jmeter/results/"
+    shell: "rsync -a -e ssh root@{{ remote_server }}:{{ remote_dir }}{{ test_run_name }} /opt/osp-jmeter/results/"
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
