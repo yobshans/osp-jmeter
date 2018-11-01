@@ -30,7 +30,7 @@
     register: uc_node_ip
 
   - name: Upload patch to undercloud /home/stack/ directory
-    shell: "scp {{ patch_location }}{{ patch_file }} root@{{ uc_node_ip.stdout }}:/home/stack/
+    shell: "scp {{ patch_location }}{{ patch_file }} root@{{ uc_node_ip.stdout }}:/home/stack/"
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
