@@ -156,6 +156,16 @@ subparsers:
                       help: |
                           directory on server for store test results
                       default: /var/www/html/osp-jmeter/result/
+                  patch-location:
+                      type: Value
+                      help: |
+                          directory where stored patch
+                      default: /opt/patches/
+                  patch-file:
+                      type: Value
+                      help: |
+                          Patch file name
+                      default: shoot.sh
             - title: REST API based tests
               options:
                   run-restapi-functional-test:
@@ -255,4 +265,9 @@ subparsers:
                       type: Bool
                       help: |
                           Download JMeter test result from remote server storage to /opt/osp-jmeter/results directory.
+                      default: false
+                  upload-patch:
+                      type: Bool
+                      help: |
+                          Upload patch to Undercloud /home/stack directory
                       default: false
