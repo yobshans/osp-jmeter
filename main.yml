@@ -226,11 +226,3 @@
       remote_dir="{{ test.remote.dir }}"
     when: 
       test.download.test.results|bool 
-
-  - import_playbook: |
-      upload-patch.yaml -e 
-      test_run_name="{{ test.run.name }}"
-      patch_location="{{ test.patch.location }}"
-      patch_file="{{ test.patch.file }}"
-    when: 
-      test.upload.patch|bool 
