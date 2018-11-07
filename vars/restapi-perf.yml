@@ -38,6 +38,8 @@
    - 34.NOVA.DELETE.Snapshot
    - 43.NOVA.DELETE.Server
    - 44.NOVA.GET.Search.Server
+   - 23.1.NOVA.POST.Add.Floating.IP
+   - 34.1.NOVA.POST.Remove.Floating.IP
 
    neutron_api_name: 
    - 15.NEUTRON.Get.List.Network
@@ -48,6 +50,13 @@
    - 46.NEUTRON.DELETE.Subnet
    - 47.NEUTRON.GET.Search.Network
    - 48.NEUTRON.DELETE.Network
+   - 18.1.NEUTRON.Get.External.Network
+   - 18.2.NEUTRON.POST.Create.Router
+   - 18.3.NEUTRON.PUT.Add.Interface.To.Router
+   - 18.4.NEUTRON.POST.Create.Floating.IP
+   - 45.1.NEUTRON.DELETE.Floating.IP
+   - 45.2.NEUTRON.PUT.Remove.Interface.From.Router
+   - 45.3.NEUTRON.DELETE.Router
 
    cinder_api_name: 
    - 12.CINDER.GET.List.Volume
