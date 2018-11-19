@@ -50,12 +50,14 @@
     vars: 
       node_target: "{{ item }}"
     with_items: "{{ contr_nodes.stdout_lines }}"
+    when: contr_count.stdout != "0"
 
   - name: Install cAdvisor and Node Exporter on Compute nodes 
     include_tasks: tasks/install-node-exporter-cadvisor.yml
     vars: 
       node_target: "{{ item }}"
     with_items: "{{ comp_nodes.stdout_lines }}"
+    when: comp_count.stdout != "0"
 
   - name: Install cAdvisor and Node Exporter on Ceph nodes 
     include_tasks: tasks/install-node-exporter-cadvisor.yml
