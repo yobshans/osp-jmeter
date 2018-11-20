@@ -17,6 +17,7 @@
   - name: Instances VMs count
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && openstack server list --all | grep cloud | wc -l\""
     register: vm_count
+    ignore_errors: yes
 
   - name: Controller Nodes list
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/stackrc && openstack server list --name controller -f value -c Networks|awk -F = '{print \\$2}'\""
