@@ -49,11 +49,13 @@
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && openstack server list --all --name cloud -f value -c Networks|awk -F ', '  '{print \\$2}'\""
     register: vm_nodes
     when: vm_count.stdout != "0"
+    ignore_errors: yes
 
   - name: Get Instances Names list
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack cd /home/stack/ && source /home/stack/overcloudrc && openstack server list --all --name cloud -f value -c Name\""
     register: vm_nodes_names
     when: vm_count.stdout != "0"
+    ignore_errors: yes
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
