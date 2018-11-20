@@ -256,3 +256,15 @@ subparsers:
                       help: |
                           Download JMeter test result from remote server storage to /opt/osp-jmeter/results directory.
                       default: false
+            - title: Utils
+              options:
+                  add-wan-emulation:
+                      type: Bool
+                      help: |
+                          Run tc qdisc add for start WAN emulation 
+                      default: false
+                  del-wan-emulation:
+                      type: Bool
+                      help: |
+                          Run tc qdisc del for end WAN emulation 
+                      default: false

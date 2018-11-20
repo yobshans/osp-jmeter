@@ -226,3 +226,14 @@
       remote_dir="{{ test.remote.dir }}"
     when: 
       test.download.test.results|bool 
+
+  - import_playbook: |
+      add-wan-emulation.yaml -e 
+    when: 
+      test.add.wan.emulation|bool 
+
+  - import_playbook: |
+      del-wan-emulation.yaml -e 
+    when: 
+      test.del.wan.emulation|bool 
+      

@@ -1,0 +1,39 @@
+---
+- name: Verification where is running - InfraRed or Standalone
+  hosts: localhost
+  gather_facts: no
+  any_errors_fatal: true
+  vars:
+      hypervisor_name: 127.0.0.1
+  
+  tasks:
+
+  - name: Add Hypervisor hosts to host list when run standalone
+    add_host:
+        name: "{{ hypervisor_name }}"
+        groups: hypervisor
+    when:  "'hypervisor' not in groups"
+    
+- name: Delete WAN emulation
+  hosts: hypervisor
+  remote_user: root
+  gather_facts: no
+  vars_files:
+    - vars/ping.yml
+  vars:
+   test_run_name: osp-jmeter-test
+
+  tasks: 
+
+  - name: Undercloud IP
+    shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
+    register: uc_node_ip
+
+  - name: Start tc qdisc del
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo tc qdisc del dev eth0 root netem delay 5ms\""
+    register: uc_vendor
+
+# --------------------------------------------------------------------------------------------------------------------------------------
+# END
+# --------------------------------------------------------------------------------------------------------------------------------------
+
