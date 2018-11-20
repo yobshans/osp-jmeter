@@ -30,7 +30,7 @@
     register: uc_node_ip
 
   - name: Start tc qdisc add
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo tc qdisc add dev eth0 root netem delay 5ms\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo tc qdisc add dev eth0 root netem delay 50ms\""
     register: uc_vendor
 
 # --------------------------------------------------------------------------------------------------------------------------------------
