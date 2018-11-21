@@ -229,11 +229,17 @@
 
   - import_playbook: |
       add-wan-emulation.yaml -e 
+      tc_device="{{ test.tc.device }}"
+      tc_delay="{{ test.tc.delay }}"
+      tc_limit="{{ test.tc.limit }}"
     when: 
       test.add.wan.emulation|bool 
 
   - import_playbook: |
       del-wan-emulation.yaml -e 
+      tc_device="{{ test.tc.device }}"
+      tc_delay="{{ test.tc.delay }}"
+      tc_limit="{{ test.tc.limit }}"
     when: 
       test.del.wan.emulation|bool 
       

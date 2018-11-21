@@ -156,6 +156,21 @@ subparsers:
                       help: |
                           directory on server for store test results
                       default: /var/www/html/osp-jmeter/result/
+                  tc-device:
+                      type: Value
+                      help: |
+                          name of device on which apply delay
+                      default: br-ctlplane
+                  tc-delay:
+                      type: Value
+                      help: |
+                          fixed amount of delay to all packets in ms
+                      default: 50
+                  tc-limit:
+                      type: Value
+                      help: |
+                          number of buffers allocated in the netem module
+                      default: 15000000
             - title: REST API based tests
               options:
                   run-restapi-functional-test:

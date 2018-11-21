@@ -18,10 +18,10 @@
   hosts: hypervisor
   remote_user: root
   gather_facts: no
-  vars_files:
-    - vars/ping.yml
   vars:
-   test_run_name: osp-jmeter-test
+   tc_device: br-ctlplane
+   tc_delay: 50
+   tc_limit: 15000000
 
   tasks: 
 
@@ -29,10 +29,24 @@
     shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
     register: uc_node_ip
 
-  - name: Start tc qdisc add
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo tc qdisc add dev eth0 root netem delay 50ms\""
-    register: uc_vendor
+  - name: Start tc qdisc add for outgoing traffic
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo tc qdisc add dev {{ tc_device }} root netem delay {{ tc_delay }}ms limit {{ tc_limit }}\""
 
+  - name: Create interface ifb for incoming traffic 
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo modprobe ifb\""
+
+  - name: Start interface ifb
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo ip link set dev ifb0 up\""
+
+  - name: Add device to be ingress
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo tc qdisc add dev {{ tc_device }} ingress\""
+
+  - name: Configure device to be ingress
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo tc filter add dev {{ tc_device }} parent ffff: protocol ip u32 match u32 0 0 flowid 1:1 action mirred egress redirect dev ifb0\""
+
+  - name: Start tc qdisc add for incoming traffic
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo tc qdisc add dev ifb0 root netem delay {{ tc_delay }}ms limit {{ tc_limit }}\""
+    
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
 # --------------------------------------------------------------------------------------------------------------------------------------
