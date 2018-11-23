@@ -2,14 +2,17 @@
 ---
 - name: Direct deploy
   hosts: undercloud-0
+  
   tasks:
 
-  - name: Prepare undercloud for direct deploy
-    shell: |
-      source ~/stackrc
-      openstack role add --user admin --project service ResellerAdmin
-      openstack --os-project-name service object store account set --property Temp-URL-Key=$(uuidgen | sha1sum | awk '{print $1}')
-      for node in $(openstack baremetal node list -f value -c UUID); do openstack baremetal node set $node --driver ipmi --deploy-interface direct; done
+  - name: Add role for ResellerAdmin
+    shell: "source /home/stack/stackrc && openstack role add --user admin --project service ResellerAdmin"
+
+  - name: Generate temporary URL
+    shell: "source /home/stack/stackrc && openstack --os-project-name service object store account set --property Temp-URL-Key=$(uuidgen | sha1sum | awk '{print $1}')"
+
+  - name: Change BM to direct deploy
+    shell: "source /home/stack/stackrc && for node in $(openstack baremetal node list -f value -c UUID); do openstack baremetal node set $node --driver ipmi --deploy-interface direct; done"
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # END
