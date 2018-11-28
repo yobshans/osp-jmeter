@@ -10,12 +10,12 @@
   
   tasks:
 
-  - name: Enable the admin user access to other Swift accounts
+  - name: Controller nodes count
     shell: "source /home/stack/stackrc && openstack server list | grep controller | wc -l"
     register: contr_count
 
-  - name: Enable the admin user access to other Swift accounts
-    shell: "source /home/stack/stackrc && openstack server list --name controller -f value -c Networks|awk -F = '{print \\$2}'"
+  - name: Controller nodes IPs
+    shell: "source /home/stack/stackrc && openstack server list --name controller -f value -c Networks|awk -F = '{print $2}'"
     register: contr_nodes
 
 # Undercloud add Delay
