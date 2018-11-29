@@ -54,7 +54,7 @@
     when: contr_count.stdout != "0"
 
   - name: Add device to be ingress
-    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ itemut }} \"sudo tc qdisc add dev {{ tc_ctrl_device }} ingress\""
+    shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ item }} \"sudo tc qdisc add dev {{ tc_ctrl_device }} ingress\""
     with_items: "{{ contr_nodes.stdout_lines }}"
     when: contr_count.stdout != "0"
 
