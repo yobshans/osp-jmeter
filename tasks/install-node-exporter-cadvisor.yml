@@ -32,11 +32,13 @@
 
   - name: Node - Start Docker
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo systemctl start docker\""
-    when: docker_result is failed
+#    when: docker_result is failed
+    ignore_errors: True
 
   - name: Node - Enable Docker
     shell: "ssh -q -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no heat-admin@{{ node_target }} \"sudo systemctl enable docker\""
-    when: docker_result is failed
+#    when: docker_result is failed
+    ignore_errors: True
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 
