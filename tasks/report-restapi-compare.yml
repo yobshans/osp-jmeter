@@ -43,6 +43,17 @@
       -XSL /opt/osp-jmeter/templates/compare-restapi-report.xsl
       -OUT /opt/osp-jmeter/results/{{ test_run_name }}/html/api.html -HTML
 
+  - name: Xalan-J - Generate comparison CSV report
+    shell: >
+      java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
+      -PARAM testRunName '{{ test_run_name }}' 
+      -PARAM baselineTest '{{ baseline_run_name }}' 
+      -PARAM currentTest '{{ current_run_name }}' 
+      -PARAM testRes2 /opt/osp-jmeter/results/{{ baseline_run_name }}/xml/result-90percent.xml 
+      -IN /opt/osp-jmeter/results/{{ current_run_name }}/xml/result-90percent.xml 
+      -XSL /opt/osp-jmeter/templates/compare-restapi-csv-report.xsl
+      -OUT /opt/osp-jmeter/results/{{ test_run_name }}/mrg/compare-api.csv -TEXT
+
   - name: Xalan-J - Generate comparison HTML Transaction report
     shell: >
       java -classpath $JMETER_HOME/lib/xalan-2.7.2.jar:$JMETER_HOME/lib/serializer-2.7.2.jar:$JMETER_HOME/lib/xercesImpl-2.11.0.jar:$JMETER_HOME/lib/xml-apis-1.4.01.jar org.apache.xalan.xslt.Process 
