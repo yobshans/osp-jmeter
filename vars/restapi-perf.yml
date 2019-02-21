@@ -5,7 +5,7 @@
 # List of APIs and transactions names used in JMeter script
 # --------------------------------------------------------------------------------------------------------------------------------------
 
-   keystone_api_name: 
+   keystone_api_name:
    - 01.KEYSTONE.POST.Admin.Token
    - 02.KEYSTONE.GET.Admin.Tenant
    - 03.KEYSTONE.GET.List.Tenant
@@ -15,80 +15,80 @@
    - 07.KEYSTONE.GET.Search.Admin.Role
    - 08.KEYSTONE.PUT.Grant.Admin.Role
    - 09.KEYSTONE.POST.Tenant.Token
-   - 49.KEYSTONE.DELETE.Tenant
-   - 50.KEYSTONE.DELETE.User
+   - 58.KEYSTONE.DELETE.Tenant
+   - 59.KEYSTONE.DELETE.User
 
    nova_api_name: 
    - 10.NOVA.GET.Search.Image
    - 11.NOVA.GET.Search.Flavor
-   - 19.NOVA.GET.List.Server
-   - 20.NOVA.POST.Boot.Server
-   - 21.NOVA.GET.Server.Details
-   - 23.NOVA.PUT.Update.Server
-   - 24.NOVA.POST.Pause.Server
-   - 25.NOVA.POST.Unpause.Server
-   - 26.NOVA.POST.Suspend.Server
-   - 27.NOVA.POST.Resume.Server
-   - 28.NOVA.POST.Soft.Reboot.Server
-   - 29.NOVA.POST.Hard.Reboot.Server
-   - 30.NOVA.POST.Stop.Server
-   - 31.NOVA.POST.Start.Server
-   - 32.NOVA.POST.Create.Snapshot
-   - 33.NOVA.GET.Search.Snapshot
-   - 34.NOVA.DELETE.Snapshot
-   - 43.NOVA.DELETE.Server
-   - 44.NOVA.GET.Search.Server
-   - 23.1.NOVA.POST.Add.Floating.IP
-   - 34.1.NOVA.POST.Remove.Floating.IP
+   - 23.NOVA.GET.List.Server
+   - 24.NOVA.POST.Boot.Server
+   - 25.NOVA.GET.Server.Details
+   - 27.NOVA.PUT.Update.Server
+   - 28.NOVA.POST.Add.Floating.IP
+   - 29.NOVA.POST.Pause.Server
+   - 30.NOVA.POST.Unpause.Server
+   - 31.NOVA.POST.Suspend.Server
+   - 32.NOVA.POST.Resume.Server
+   - 33.NOVA.POST.Soft.Reboot.Server
+   - 34.NOVA.POST.Hard.Reboot.Server
+   - 35.NOVA.POST.Stop.Server
+   - 36.NOVA.POST.Start.Server
+   - 37.NOVA.POST.Create.Snapshot
+   - 38.NOVA.GET.Search.Snapshot
+   - 39.NOVA.DELETE.Snapshot
+   - 40.NOVA.POST.Remove.Floating.IP
+   - 49.NOVA.DELETE.Server
+   - 50.NOVA.GET.Search.Server
 
    neutron_api_name: 
    - 15.NEUTRON.Get.List.Network
    - 16.NEUTRON.POST.Create.Network
    - 17.NEUTRON.Get.List.Subnet
    - 18.NEUTRON.POST.Create.Subnet
-   - 45.NEUTRON.GET.Search.Subnet
-   - 46.NEUTRON.DELETE.Subnet
-   - 47.NEUTRON.GET.Search.Network
-   - 48.NEUTRON.DELETE.Network
-   - 18.1.NEUTRON.Get.External.Network
-   - 18.2.NEUTRON.POST.Create.Router
-   - 18.3.NEUTRON.PUT.Add.Interface.To.Router
-   - 18.4.NEUTRON.POST.Create.Floating.IP
-   - 45.1.NEUTRON.DELETE.Floating.IP
-   - 45.2.NEUTRON.PUT.Remove.Interface.From.Router
-   - 45.3.NEUTRON.DELETE.Router
+   - 19.NEUTRON.Get.External.Network
+   - 20.NEUTRON.POST.Create.Router
+   - 21.NEUTRON.PUT.Add.Interface.To.Router
+   - 22.NEUTRON.POST.Create.Floating.IP
+   - 51.NEUTRON.DELETE.Floating.IP
+   - 52.NEUTRON.PUT.Remove.Interface.From.Router
+   - 53.NEUTRON.DELETE.Router
+   - 54.NEUTRON.GET.Search.Subnet
+   - 55.NEUTRON.DELETE.Subnet
+   - 56.NEUTRON.GET.Search.Network
+   - 57.NEUTRON.DELETE.Network
 
    cinder_api_name: 
    - 12.CINDER.GET.List.Volume
    - 13.CINDER.POST.Create.Volume
    - 14.CINDER.GET.Volume.Details
-   - 22.CINDER.POST.Attach.Volume
-   - 40.CINDER.GET.Search.Volume
-   - 41.CINDER.POST.Dettach.Volume
-   - 42.CINDER.DELETE.Volume
+   - 26.CINDER.POST.Attach.Volume
+   - 46.CINDER.GET.Search.Volume
+   - 47.CINDER.POST.Dettach.Volume
+   - 48.CINDER.DELETE.Volume
 
    glance_api_name: 
-   - 35.GLANCE.GET.List.Image
-   - 36.GLANCE.POST.Create.Image
-   - 37.GLANCE.PATCH.Update.Image
-   - 38.GLANCE.GET.Image.Details
-   - 39.GLANCE.DELETE.Image
+   - 41.GLANCE.GET.List.Image
+   - 42.GLANCE.POST.Create.Image
+   - 43.GLANCE.PATCH.Update.Image
+   - 44.GLANCE.GET.Image.Details
+   - 45.GLANCE.DELETE.Image
    
    trx_name: 
    - 13.CINDER.POST.Create.Volume.Trx
-   - 20.NOVA.POST.Boot.Server.Trx
-   - 22.CINDER.POST.Attach.Volume.Trx
-   - 24.NOVA.POST.Pause.Server.Trx
-   - 25.NOVA.POST.Unpause.Server.Trx
-   - 26.NOVA.POST.Suspend.Server.Trx
-   - 27.NOVA.POST.Resume.Server.Trx
-   - 28.NOVA.POST.Soft.Reboot.Server.Trx
-   - 29.NOVA.POST.Hard.Reboot.Server.Trx
-   - 30.NOVA.POST.Stop.Server.Trx
-   - 31.NOVA.POST.Start.Server.Trx
-   - 32.NOVA.POST.Create.Snapshot.Trx
-   - 41.CINDER.POST.Dettach.Volume.Trx
-   - 43.NOVA.DELETE.Server.Trx
+   - 24.NOVA.POST.Boot.Server.Trx
+   - 26.CINDER.POST.Attach.Volume.Trx
+   - 29.NOVA.POST.Pause.Server.Trx
+   - 30.NOVA.POST.Unpause.Server.Trx
+   - 31.NOVA.POST.Suspend.Server.Trx
+   - 32.NOVA.POST.Resume.Server.Trx
+   - 33.NOVA.POST.Soft.Reboot.Server.Trx
+   - 34.NOVA.POST.Hard.Reboot.Server.Trx
+   - 35.NOVA.POST.Stop.Server.Trx
+   - 36.NOVA.POST.Start.Server.Trx
+   - 37.NOVA.POST.Create.Snapshot.Trx
+   - 47.CINDER.POST.Dettach.Volume.Trx
+   - 49.NOVA.DELETE.Server.Trx
 
 # --------------------------------------------------------------------------------------------------------------------------------------
 # List of server/processes statistics names used in JMeter script with PerfMon Plugin
