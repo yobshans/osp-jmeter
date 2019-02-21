@@ -5,6 +5,7 @@ if [ "$1" != "" ]; then
   TRX_RESULT=$(grep 'FAIL' $1/mrg/compare-api.csv |wc -l)
   if [[ $TRX_RESULT -gt 0 ]]; then
     echo "Detected API performance degradation"
+    echo "API_Label,Status,Diff_Msec,Diff_Percent"
     cat $1/mrg/compare-api.csv | while read line
     do
         LINE_RESULT=$(echo $line | cut -d',' -f2)
