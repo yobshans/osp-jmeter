@@ -11,9 +11,8 @@
 <xsl:param    name="buildNum" select="'date not defined'"/>
 <xsl:param    name="testRunName" select="'date not defined'"/>
 
-<xsl:template match="testResults">
-API,count,average,90,min,max
-    <xsl:for-each select="httpSample[contains(@lb, '.') and not(@lb = preceding::*/@lb)]">
+<xsl:template match="testResults">API,count,average,90,min,max
+<xsl:for-each select="httpSample[contains(@lb, '.') and not(@lb = preceding::*/@lb)]">
       <xsl:variable name="label" select="@lb" />
       <xsl:variable name="count" select="count(../*[@lb = current()/@lb])" />
       <xsl:variable name="failureCount" select="count(../*[@lb = current()/@lb][attribute::s='false'])" />
