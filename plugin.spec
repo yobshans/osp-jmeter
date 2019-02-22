@@ -156,21 +156,6 @@ subparsers:
                       help: |
                           directory on server for store test results
                       default: /var/www/html/osp-jmeter/result/
-                  tc-device:
-                      type: Value
-                      help: |
-                          name of device on which apply delay
-                      default: br-ctlplane
-                  tc-delay:
-                      type: Value
-                      help: |
-                          fixed amount of delay to all packets in ms
-                      default: 50
-                  tc-limit:
-                      type: Value
-                      help: |
-                          number of buffers allocated in the netem module
-                      default: 15000000
             - title: REST API based tests
               options:
                   run-restapi-functional-test:
@@ -270,16 +255,4 @@ subparsers:
                       type: Bool
                       help: |
                           Download JMeter test result from remote server storage to /opt/osp-jmeter/results directory.
-                      default: false
-            - title: Utils
-              options:
-                  add-wan-emulation:
-                      type: Bool
-                      help: |
-                          Run tc qdisc add for start WAN emulation 
-                      default: false
-                  del-wan-emulation:
-                      type: Bool
-                      help: |
-                          Run tc qdisc del for end WAN emulation 
                       default: false
