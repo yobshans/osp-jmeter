@@ -13,7 +13,7 @@
 <xsl:param    name="currentTest" select="'date not defined'"/>
 <xsl:param    name="testRes2" expression="'date not defined'"/>
 <xsl:param    name="perfMon" select="'n'"/>
-<xsl:variable name="percent-fail-factor" select="0.2" />
+<xsl:variable name="percent-fail-factor" select="0.25" />
 <xsl:variable name="file2" select="document($testRes2)" />
 
 <xsl:template match="test">
