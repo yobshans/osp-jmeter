@@ -53,7 +53,7 @@
 #     shell: "git clone https://github.com/yobshans/osp-jmeter /opt/osp-jmeter"
 
   - name: Indetify UC IP on virt
-    shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
+    shell: "sudo virsh domifaddr `virsh list |grep undercloud-0 |awk '{print $2}'` |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
     register: uc_node_ip
 
   - name: Install JMeter
