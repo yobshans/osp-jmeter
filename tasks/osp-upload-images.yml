@@ -10,6 +10,9 @@
       url={{ cirros_image_url }}{{ cirros_image }}
       dest='/home/stack/images'
 
+  - name: Undercloud - install wget
+    shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack yum install wget -y \""
+
   - name: Undercloud - Download RHEL image
     shell: "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no root@{{ uc_node_ip.stdout }} \"sudo -u stack wget {{ rhel_image_url }}{{ rhel_image }} -P /home/stack/images\""
 
