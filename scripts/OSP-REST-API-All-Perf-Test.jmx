@@ -1776,7 +1776,7 @@ vars.put(&quot;net_count&quot;, String.valueOf(threadNum));
           <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Extract ext_net_id" enabled="true">
             <stringProp name="RegexExtractor.useHeaders">false</stringProp>
             <stringProp name="RegexExtractor.refname">ext_net_id</stringProp>
-            <stringProp name="RegexExtractor.regex">&quot;id&quot;:&quot;(.+?)&quot;.*&quot;router:external&quot;:true</stringProp>
+            <stringProp name="RegexExtractor.regex">&quot;id&quot;:\s*&quot;(.+?)&quot;.*&quot;router:external&quot;:\s*true</stringProp>
             <stringProp name="RegexExtractor.template">$1$</stringProp>
             <stringProp name="RegexExtractor.default">None</stringProp>
             <stringProp name="RegexExtractor.match_number">1</stringProp>
