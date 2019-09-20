@@ -18,57 +18,66 @@
    - 07.KEYSTONE.GET.Search.Admin.Role
    - 08.KEYSTONE.PUT.Grant.Admin.Role
    - 09.KEYSTONE.POST.Tenant.Token
-   - 49.KEYSTONE.DELETE.Tenant
-   - 50.KEYSTONE.DELETE.User
+   - 58.KEYSTONE.DELETE.Tenant
+   - 59.KEYSTONE.DELETE.User
 
    nova_api_name: 
    - 10.NOVA.GET.Search.Image
    - 11.NOVA.GET.Search.Flavor
-   - 19.NOVA.GET.List.Server
-   - 20.NOVA.POST.Boot.Server
-   - 21.NOVA.GET.Server.Details
-   - 23.NOVA.PUT.Update.Server
-   - 24.NOVA.POST.Pause.Server
-   - 25.NOVA.POST.Unpause.Server
-   - 26.NOVA.POST.Suspend.Server
-   - 27.NOVA.POST.Resume.Server
-   - 28.NOVA.POST.Soft.Reboot.Server
-   - 29.NOVA.POST.Hard.Reboot.Server
-   - 30.NOVA.POST.Stop.Server
-   - 31.NOVA.POST.Start.Server
-   - 32.NOVA.POST.Create.Snapshot
-   - 33.NOVA.GET.Search.Snapshot
-   - 34.NOVA.DELETE.Snapshot
-   - 43.NOVA.DELETE.Server
-   - 44.NOVA.GET.Search.Server
-   - 21.NOVA.GET.Server.Details.Check
+   - 23.NOVA.GET.List.Server
+   - 24.NOVA.POST.Boot.Server
+   - 25.NOVA.GET.Server.Details
+   - 27.NOVA.PUT.Update.Server
+   - 28.NOVA.POST.Add.Floating.IP
+   - 29.NOVA.POST.Pause.Server
+   - 30.NOVA.POST.Unpause.Server
+   - 31.NOVA.POST.Suspend.Server
+   - 32.NOVA.POST.Resume.Server
+   - 33.NOVA.POST.Soft.Reboot.Server
+   - 34.NOVA.POST.Hard.Reboot.Server
+   - 35.NOVA.POST.Stop.Server
+   - 36.NOVA.POST.Start.Server
+   - 37.NOVA.POST.Create.Snapshot
+   - 38.NOVA.GET.Search.Snapshot
+   - 39.NOVA.DELETE.Snapshot
+   - 40.NOVA.POST.Remove.Floating.IP
+   - 49.NOVA.DELETE.Server
+   - 50.NOVA.GET.Search.Server
+   - 25.NOVA.GET.Server.Details.Check
 
    neutron_api_name: 
    - 15.NEUTRON.Get.List.Network
    - 16.NEUTRON.POST.Create.Network
    - 17.NEUTRON.Get.List.Subnet
    - 18.NEUTRON.POST.Create.Subnet
-   - 45.NEUTRON.GET.Search.Subnet
-   - 46.NEUTRON.DELETE.Subnet
-   - 47.NEUTRON.GET.Search.Network
-   - 48.NEUTRON.DELETE.Network
+   - 19.NEUTRON.Get.External.Network
+   - 20.NEUTRON.POST.Create.Router
+   - 21.NEUTRON.PUT.Add.Interface.To.Router
+   - 22.NEUTRON.POST.Create.Floating.IP
+   - 51.NEUTRON.DELETE.Floating.IP
+   - 52.NEUTRON.PUT.Remove.Interface.From.Router
+   - 53.NEUTRON.DELETE.Router
+   - 54.NEUTRON.GET.Search.Subnet
+   - 55.NEUTRON.DELETE.Subnet
+   - 56.NEUTRON.GET.Search.Network
+   - 57.NEUTRON.DELETE.Network
 
    cinder_api_name: 
    - 12.CINDER.GET.List.Volume
    - 13.CINDER.POST.Create.Volume
    - 14.CINDER.GET.Volume.Details
-   - 22.CINDER.POST.Attach.Volume
-   - 40.CINDER.GET.Search.Volume
-   - 41.CINDER.POST.Dettach.Volume
-   - 42.CINDER.DELETE.Volume
+   - 26.CINDER.POST.Attach.Volume
+   - 46.CINDER.GET.Search.Volume
+   - 47.CINDER.POST.Dettach.Volume
+   - 48.CINDER.DELETE.Volume
    - 14.CINDER.GET.Volume.Details.Check
    
    glance_api_name: 
-   - 35.GLANCE.GET.List.Image
-   - 36.GLANCE.POST.Create.Image
-   - 37.GLANCE.PATCH.Update.Image
-   - 38.GLANCE.GET.Image.Details
-   - 39.GLANCE.DELETE.Image
+   - 41.GLANCE.GET.List.Image
+   - 42.GLANCE.POST.Create.Image
+   - 43.GLANCE.PATCH.Update.Image
+   - 44.GLANCE.GET.Image.Details
+   - 45.GLANCE.DELETE.Image
    
    
    
