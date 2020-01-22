@@ -14,7 +14,7 @@
         groups: hypervisor
     when:  "'hypervisor' not in groups"
     
-- name: Run REST API Performance Sanity Test
+- name: Compare Stress Test
   hosts: hypervisor
   remote_user: root
   gather_facts: no
@@ -28,7 +28,7 @@
    perf_monitor: false 
 
   environment:
-   JMETER_HOME: /opt/apache-jmeter-4.0
+   JMETER_HOME: /opt/apache-jmeter-5.2.1
 
   tasks: 
 

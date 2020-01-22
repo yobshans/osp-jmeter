@@ -42,7 +42,7 @@
    jmeter_stop_test: OSP-Stop-Cloud-Data-Plane-Load.jmx
 
   environment:
-   JMETER_HOME: /opt/apache-jmeter-4.0
+   JMETER_HOME: /opt/apache-jmeter-5.2.1
 
   tasks: 
 

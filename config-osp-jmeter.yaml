@@ -27,33 +27,33 @@
    osp_jmeter_dir: /opt/osp-jmeter
    perf_monitor: false # JMeter with PerfMon Plugin Agents (true/false)
    jdk_ver: java-1.8.0-openjdk.x86_64 
-   jmeter_ver: apache-jmeter-4.0 
+   jmeter_ver: apache-jmeter-5.2.1
    jmeter_base_dir: /opt
-   jmeter_home: /opt/apache-jmeter-4.0
+   jmeter_home: /opt/apache-jmeter-5.2.1
    jmeter_dir_tmp: /tmp
    jmeter_url: https://archive.apache.org/dist/jmeter/binaries/{{ jmeter_ver }}.zip
    jmeter_plugins_manager_url: https://jmeter-plugins.org/get/
-   jmeter_plugins_cmn_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-cmn-jmeter/0.4/jmeter-plugins-cmn-jmeter-0.4.jar 
-   jmeter_perfmon_url: http://central.maven.org/maven2/kg/apc/perfmon/2.2.2/perfmon-2.2.2.jar
-   jmeter_plugins_perfmon_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-perfmon/2.1/jmeter-plugins-perfmon-2.1.jar
-   jmeter_plugins_graphs_basic_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-graphs-basic/2.0/jmeter-plugins-graphs-basic-2.0.jar
-   jmeter_plugins_graphs_add_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-graphs-additional/2.0/jmeter-plugins-graphs-additional-2.0.jar
-   jmeter_plugins_cmd_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-cmd/2.1/jmeter-plugins-cmd-2.1.jar  
-   jmeter_plugins_mrg_url: http://central.maven.org/maven2/kg/apc/jmeter-plugins-mergeresults/2.1/jmeter-plugins-mergeresults-2.1.jar
+   jmeter_plugins_cmn_url: https://repo1.maven.org/maven2/kg/apc/jmeter-plugins-cmn-jmeter/0.6/jmeter-plugins-cmn-jmeter-0.6.jar 
+   jmeter_perfmon_url: https://repo1.maven.org/maven2/kg/apc/perfmon/2.2.2/perfmon-2.2.2.jar
+   jmeter_plugins_perfmon_url: https://repo1.maven.org/maven2/kg/apc/jmeter-plugins-perfmon/2.1/jmeter-plugins-perfmon-2.1.jar
+   jmeter_plugins_graphs_basic_url: https://repo1.maven.org/maven2/kg/apc/jmeter-plugins-graphs-basic/2.0/jmeter-plugins-graphs-basic-2.0.jar
+   jmeter_plugins_graphs_add_url: https://repo1.maven.org/maven2/kg/apc/jmeter-plugins-graphs-additional/2.0/jmeter-plugins-graphs-additional-2.0.jar
+   jmeter_plugins_cmd_url: https://repo1.maven.org/maven2/kg/apc/jmeter-plugins-cmd/2.2/jmeter-plugins-cmd-2.2.jar
+   jmeter_plugins_mrg_url: https://repo1.maven.org/maven2/kg/apc/jmeter-plugins-mergeresults/2.1/jmeter-plugins-mergeresults-2.1.jar
    jmeter_ssh_sampler_url: https://github.com/yciabaud/jmeter-ssh-sampler/releases/download/jmeter-ssh-sampler-1.1.1/ApacheJMeter_ssh-1.1.1.jar
-   jmeter_jsch_url: https://github.com/yciabaud/jmeter-ssh-sampler/releases/download/jmeter-ssh-sampler-1.1.1/jsch-0.1.54.jar
-   jmeter_cmdrunner_url: http://central.maven.org/maven2/kg/apc/cmdrunner/2.0/cmdrunner-2.0.jar
-   jmeter_parallel_url: http://central.maven.org/maven2/com/blazemeter/jmeter-parallel/0.4/jmeter-parallel-0.4.jar
-   jmeter_serveragent: ServerAgent-2.2.1
-   jmeter_serveragent_url: https://jmeter-plugins.org/downloads/file/{{ jmeter_serveragent }}.zip
-
+   jmeter_jsch_url: https://github.com/yciabaud/jmeter-ssh-sampler/releases/download/jmeter-ssh-sampler-1.2.0/jsch-0.1.55.jar
+   jmeter_cmdrunner_url: https://repo1.maven.org/maven2/kg/apc/cmdrunner/2.2.1/cmdrunner-2.2.1.jar
+   jmeter_parallel_url: https://repo1.maven.org/maven2/com/blazemeter/jmeter-parallel/0.9/jmeter-parallel-0.9.jar 
+   jmeter_serveragent: ServerAgent-2.2.3
+   jmeter_serveragent_url: https://github.com/undera/perfmon-agent/releases/download/2.2.3/ServerAgent-2.2.3.zip
+   
   tasks: 
 
 #   - name: Clone osp-jmeter on Hypervisor when run by Infrared
 #     shell: "git clone https://github.com/yobshans/osp-jmeter /opt/osp-jmeter"
 
   - name: Indetify UC IP on virt
-    shell: "sudo virsh domifaddr `virsh list |grep undercloud-0 |awk '{print $2}'` |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
+    shell: "sudo virsh domifaddr undercloud-0 |grep ipv4 | awk 'FNR == 2 {print $4}' | awk -F '/' '{print $1}'"
     register: uc_node_ip
 
   - name: Install JMeter

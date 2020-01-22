@@ -19,10 +19,10 @@
   remote_user: root
   gather_facts: no
   vars:
-   rhel_image_url: http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/7.5/211/images/
-   rhel_image: rhel-guest-image-7.5-211.x86_64.qcow2
-   cirros_image_url: http://download.cirros-cloud.net/0.3.4/
-   cirros_image: cirros-0.3.4-x86_64-disk.img
+   rhel_image_url: http://download-node-02.eng.bos.redhat.com/brewroot/packages/rhel-guest-image/7.6/210/images/
+   rhel_image: rhel-guest-image-7.6-210.x86_64.qcow2
+   cirros_image_url: http://download.cirros-cloud.net/0.4.0/
+   cirros_image: cirros-0.4.0-x86_64-disk.img
    centos_image_url: http://cloud.centos.org/centos/7/images/
    centos_image: CentOS-7-x86_64-GenericCloud-1711.qcow2 
   

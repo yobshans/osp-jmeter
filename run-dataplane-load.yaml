@@ -42,7 +42,7 @@
    iperf_pass: qum5net
 
   environment:
-   JMETER_HOME: /opt/apache-jmeter-4.0
+   JMETER_HOME: /opt/apache-jmeter-5.2.1
 
   tasks: 
 
