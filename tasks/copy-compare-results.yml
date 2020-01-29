@@ -11,6 +11,9 @@
   - name: Copy current test img directory under compare test directory
     copy: src=/opt/osp-jmeter/results/{{ current_run_name }}/img dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ current_run_name }}/
 
+  - name: Copy current test log directory under compare test directory
+    copy: src=/opt/osp-jmeter/results/{{ current_run_name }}/log dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ current_run_name }}/
+
   - name: Copy current test result.html file under compare test directory
     copy: src=/opt/osp-jmeter/results/{{ current_run_name }}/index.html dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ current_run_name }}/index.html
 
@@ -22,6 +25,9 @@
 
   - name: Copy baseline test img  directory under compare test directory
     copy: src=/opt/osp-jmeter/results/{{ baseline_run_name }}/img dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ baseline_run_name }}/
+
+  - name: Copy baseline test log  directory under compare test directory
+    copy: src=/opt/osp-jmeter/results/{{ baseline_run_name }}/log dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ baseline_run_name }}/
 
   - name: Copy baseline test result.html file under compare test directory
     copy: src=/opt/osp-jmeter/results/{{ baseline_run_name }}/index.html dest=/opt/osp-jmeter/results/{{ test_run_name }}/{{ baseline_run_name }}/index.html
