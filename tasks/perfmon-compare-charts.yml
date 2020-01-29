@@ -3,85 +3,85 @@
 # ----------------------------------------------------------------------
 
   - name: CMDRunner - generate merged charts - Monitor_CPU_Undercloud
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_cpu[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_cpu[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ cpu_over_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_CPU_Controller
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_cpu[1] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_cpu[1] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ cpu_contr_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_CPU_Compute
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_cpu[2] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_cpu[2] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ cpu_comp_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_CPU_Ceph
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_cpu[3] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_cpu[3] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ cpu_ceph_name }}"
     when: perf_monitor
     ignore_errors: yes
     
   - name: CMDRunner - generate merged charts - Monitor_Memory_Undercloud
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_mem[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_mem[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ mem_over_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_Memory_Controller
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_mem[1] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_mem[1] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ mem_contr_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_Memory_Compute
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_mem[2] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_mem[2] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ mem_comp_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_Memory_Ceph
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_mem[3] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_mem[3] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ mem_ceph_name }}"
     when: perf_monitor
     ignore_errors: yes
     
   - name: CMDRunner - generate merged charts - Monitor_Disk Undercloud
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_disk[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_disk[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ disk_over_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_Disk Controller
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_disk[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_disk[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ disk_contr_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_Disk Compute
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_disk[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_disk[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ disk_comp_name }}"
     when: perf_monitor
         
   - name: CMDRunner - generate merged charts - Monitor_Disk Ceph
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_disk[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_disk[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ disk_ceph_name }}"
     when: perf_monitor
     ignore_errors: yes
 
   - name: CMDRunner - generate merged charts - Monitor_Network Undercloud
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_net[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_net[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ net_over_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_Network Controller
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_net[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_net[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ net_contr_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_Network Compute
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_net[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_net[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ net_comp_name }}"
     when: perf_monitor
 
   - name: CMDRunner - generate merged charts - Monitor_Network Ceph
-    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_net[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
+    shell: "cd /opt/osp-jmeter/results/{{ test_run_name }}/mrg/ && java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/mrg/{{ perfmon_net[0] }}12.csv --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ item }}\"-mrg.png  --plugin-type PerfMon --width 800 --height 600 --include-labels \".*{{ item }}\" --include-label-regex true --relative-times yes"
     with_items: "{{ net_ceph_name }}"
     when: perf_monitor
     ignore_errors: yes

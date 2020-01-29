@@ -3,85 +3,85 @@
 # --------------------------------------------------------------------------------------------------------------------------------------
 
   - name: CMDRunner - create Undercloud node CPU Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ uc_node_ip.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_cpu[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ uc_node_ip.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ uc_node_ip.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_cpu[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ uc_node_ip.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ cpu_over_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create controller node CPU Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ contr_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_cpu[1] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ contr_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ contr_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_cpu[1] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ contr_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ cpu_contr_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create compute node CPU Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ comp_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_cpu[2] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ comp_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ comp_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_cpu[2] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ comp_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ cpu_comp_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create ceph node CPU Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ ceph_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_cpu[3] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ ceph_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ ceph_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_cpu[3] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ ceph_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ cpu_ceph_name }}"
     when: perf_monitor
     ignore_errors: yes
 
   - name: CMDRunner - create Undercloud node Memory Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ uc_node_ip.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_mem[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ uc_node_ip.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ uc_node_ip.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_mem[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ uc_node_ip.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ mem_over_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create controller node Memory Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ contr_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_mem[1] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ contr_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ contr_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_mem[1] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ contr_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ mem_contr_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create compute node Memory Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ comp_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_mem[2] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ comp_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ comp_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_mem[2] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ comp_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ mem_comp_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create ceph node Memory Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ ceph_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_mem[3] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ ceph_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ ceph_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_mem[3] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ ceph_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ mem_ceph_name }}"
     when: perf_monitor
     ignore_errors: yes
     
   - name: CMDRunner - create Undercloud node Disk Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ uc_node_ip.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_disk[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ uc_node_ip.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ uc_node_ip.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_disk[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ uc_node_ip.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ disk_over_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create controller node Disk Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ contr_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_disk[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ contr_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ contr_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_disk[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ contr_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ disk_contr_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create compute node Disk Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ comp_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_disk[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ comp_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ comp_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_disk[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ comp_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ disk_comp_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create ceph node Disk Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ ceph_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_disk[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ ceph_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ ceph_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_disk[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ ceph_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ disk_ceph_name }}"
     when: perf_monitor
     ignore_errors: yes
     
   - name: CMDRunner - create Undercloud node Network Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ uc_node_ip.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_net[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ uc_node_ip.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ uc_node_ip.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_net[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ uc_node_ip.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ net_over_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create controller node Network Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ contr_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_net[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ contr_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ contr_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_net[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ contr_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ net_contr_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create compute node Network Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ comp_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_net[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ comp_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ comp_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_net[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ comp_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ net_comp_name }}"
     when: perf_monitor
 
   - name: CMDRunner - create ceph node Network Util charts
-    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ ceph_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_net[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ ceph_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
+    shell: "java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/\"{{ ceph_0_node.stdout }} {{ item }}\".png --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/{{ perfmon_net[0] }}.jtl --plugin-type PerfMon --width 800 --height 600 --include-labels \"{{ ceph_0_node.stdout }} {{ item }}\" --include-label-regex true --auto-scale no"
     with_items: "{{ net_ceph_name }}"
     when: perf_monitor
     ignore_errors: yes

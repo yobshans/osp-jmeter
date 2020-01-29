@@ -4,7 +4,7 @@
 
   - name: CMDRunner - create keystone api charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
@@ -15,7 +15,7 @@
     
   - name: CMDRunner - create nova api charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
@@ -26,7 +26,7 @@
 
   - name: CMDRunner - create neutron api charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
@@ -37,7 +37,7 @@
 
   - name: CMDRunner - create cinder api charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
@@ -48,7 +48,7 @@
 
   - name: CMDRunner - create glance api charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
@@ -59,7 +59,7 @@
 
   - name: CMDRunner - create transactions charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
@@ -70,7 +70,7 @@
 
   - name: CMDRunner - create identity request charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
@@ -81,7 +81,7 @@
 
   - name: CMDRunner - create project request charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
@@ -92,7 +92,7 @@
 
   - name: CMDRunner - create ssh charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/{{ item }}.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/result.jtl 
       --plugin-type ResponseTimesOverTime --width 800 --height 600 
@@ -103,7 +103,7 @@
 
   - name: CMDRunner - create 05.SSH.PING.Instance TPS charts
     shell: >
-      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.0.jar --tool Reporter 
+      java -jar -Dlog4j.configurationFile=$JMETER_HOME/bin/log4j2.xml $JMETER_HOME/lib/cmdrunner-2.2.1.jar --tool Reporter 
       --generate-png /opt/osp-jmeter/results/{{ test_run_name }}/img/05.SSH.PING.Instance.TPS.png 
       --input-jtl /opt/osp-jmeter/results/{{ test_run_name }}/xml/TPS.jtl
       --plugin-type TransactionsPerSecond --width 800 --height 600 
